@@ -26,45 +26,14 @@ narrative %>%
   filter(harm == 0, section == "Introduction") %>% 
   pull("text") %>% 
   p()
-
-div(class = "row fluid-row",
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          h3(class = "panel-title", a("Direct health impacts", href = "detail.html#1_direct_health_harms"))),
-      div(class = "panel-body", plots[["1_sparklines"]])
-    )),
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          h3(class = "panel-title", a("Health harms not directly related to COVID-19", href = "detail.html#2_indirect_health_harms"))),
-      div(class = "panel-body", plots[["2_sparklines"]])
-    )))
-
-
-div(class = "row fluid-row",
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          h3(class = "panel-title", a("Societal impacts", href = "detail.html#3_societal_harms"))),
-      div(class = "panel-body", plots[["3_sparklines"]])
-    )),
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          h3(class = "panel-title", a("Economic impacts", href = "detail.html#4_economic_harms"))),
-      div(class = "panel-body", plots[["4_sparklines"]])
-    )))
 ```
 
 <div class="text-right">
   <a type="button" class="btn btn-primary btn-lg" href = "detail.html" role="button">
-    Current evidence in detail
+    Current evidence
     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
   </a>
 </div>
-
-## The 4 harms of COVID-19
 
 ### Direct health impacts
 ```{r}
@@ -96,4 +65,35 @@ narrative %>%
   filter(harm == 4, section == "Definition") %>% 
   pull("text") %>% 
   p()
+```
+
+```{r}
+# div(class = "row fluid-row",
+#     div(class = "col-md-6", div(
+#       class = "panel panel-default",
+#       div(class = "panel-heading",
+#           h3(class = "panel-title", a("Direct health impacts", href = "detail.html#1_direct_health_harms"))),
+#       div(class = "panel-body", plots[["1_sparklines"]])
+#     )),
+#     div(class = "col-md-6", div(
+#       class = "panel panel-default",
+#       div(class = "panel-heading",
+#           h3(class = "panel-title", a("Health harms not directly related to COVID-19", href = "detail.html#2_indirect_health_harms"))),
+#       div(class = "panel-body", plots[["2_sparklines"]])
+#     )))
+# 
+# 
+# div(class = "row fluid-row",
+#     div(class = "col-md-6", div(
+#       class = "panel panel-default",
+#       div(class = "panel-heading",
+#           h3(class = "panel-title", a("Societal impacts", href = "detail.html#3_societal_harms"))),
+#       div(class = "panel-body", plots[["3_sparklines"]])
+#     )),
+#     div(class = "col-md-6", div(
+#       class = "panel panel-default",
+#       div(class = "panel-heading",
+#           h3(class = "panel-title", a("Economic impacts", href = "detail.html#4_economic_harms"))),
+#       div(class = "panel-body", plots[["4_sparklines"]])
+#     )))
 ```
