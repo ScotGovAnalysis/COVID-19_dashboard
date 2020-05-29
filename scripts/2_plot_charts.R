@@ -113,19 +113,30 @@ plots[["1c"]] <- plot_ly(
 
 # Harms 2 ---------------------------------------------------------------------
 plots[["2a"]] <- plot_ly(
-  data = datasets[["2a"]],
-  x = ~ week_ending_date,
+  x = ~ lubridate::week(week_ending_date),
   y = ~ attendance,
-  marker = list(size = 7),
   hoverinfo = ~ "text"
 ) %>%
-  add_trace(type = "scatter",
+  add_trace(data = datasets[["2a"]] %>% 
+              group_by(year = year(week_ending_date)) %>% 
+              filter(year != 2020),
+            type = "scatter",
+            mode = "lines",
+            text = ~ text) %>%
+  add_trace(data = datasets[["2a"]] %>% 
+              filter(year(week_ending_date) == 2020),
+            type = "scatter",
             mode = "markers+lines",
+            marker = list(size = 7),
             text = ~ text) %>% 
   add_style_chart() %>% 
   layout(
+    xaxis = list(title = "Week number"),
+    showlegend = FALSE,
+    colorway = c(col_palette),
     shapes = shapes[["2a"]],
-    annotations = filter(annotations, plot == "2a", dataset == "2a")
+    annotations = filter(annotations, plot == "2a", dataset == "2a") %>% 
+      mutate(x = week(x)) # Use week numbers instead of dates
   )
 
 # Harms 3 ---------------------------------------------------------------------

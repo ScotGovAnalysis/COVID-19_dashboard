@@ -70,18 +70,18 @@ shapes <- list(
     list(
       type = "line",
       layer = "below",
-      x0 = as.Date("2020-03-29"),
-      x1 = as.Date("2020-03-29"),
-      y0 = 11059,
-      y1 = 30000,
+      x0 = 13,
+      x1 = 13,
+      y0 = 3000,
+      y1 = 11059,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     ),
     list(
       type = "line",
       layer = "below",
-      x0 = as.Date("2020-04-26"),
-      x1 = as.Date("2020-04-26"),
-      y0 = 0,
+      x0 = 17,
+      x1 = 17,
+      y0 = 3000,
       y1 = 15056,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )

@@ -100,7 +100,7 @@ datasets[["1c_hosp_conf"]] <- datasets[["1c"]] %>%
 datasets[["2a"]] <- read.csv(paths[["phs"]]) %>% 
   select(week_ending_date, attendance) %>% 
   mutate(week_ending_date = as.Date(week_ending_date, format = "%Y-%m-%d")) %>% 
-  filter(week_ending_date > as.Date('2018-12-31')) %>% 
+  # filter(week_ending_date > as.Date('2018-12-31')) %>% 
   mutate(text = paste0(
     "<b>",
     attendance %>% format(big.mark = ","),
@@ -203,6 +203,18 @@ annotations <- read_excel(path = paths[["text"]],
       rename(y = covid_patients,
              text = location_label,
              x = date),
+    datasets[["2a"]] %>% 
+      filter(week_ending_date == max(week_ending_date)) %>%
+      select(week_ending_date, attendance) %>% 
+      mutate(plot = "2a",
+             dataset = "2a",
+             text = "2020",
+             showarrow = FALSE,
+             xanchor = "left",
+             xshift = 8,
+             align = "left") %>% 
+      rename(y = attendance,
+             x = week_ending_date),
     datasets[["4a"]] %>% 
       filter(date == max(date)) %>%
       select(claims_7day_avg, date) %>% 
