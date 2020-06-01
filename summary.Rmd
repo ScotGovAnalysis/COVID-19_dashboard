@@ -1,0 +1,60 @@
+---
+title: "Summary of evidence"
+output: html_document
+date: 'Last updated: `r format.Date(Sys.Date(), "%d %b %Y")`'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(htmltools)
+
+source("scripts/0_set_up.R")
+source("scripts/1_read_data.R")
+source("scripts/2_plot_charts.R")
+source("scripts/3_plot_sparklines.R")
+```
+
+<script>
+  $(document).ready(function(){
+    $head = $('#header');
+    $head.prepend('<a href=\"https://www.gov.scot\"><img src=\"images/scotgovlogo.svg\" style=\"float: right; height: 38px;\"  alt=\"Scottish Government logo\"/></a>')
+  });
+</script>
+
+```{r}
+div(class = "row fluid-row",
+    div(class = "col-md-6", div(
+      class = "panel panel-default",
+      div(class = "panel-heading",
+          h3(class = "panel-title", a("Direct health impacts", href = "detail.html#1_direct_health_harms"))),
+      div(class = "panel-body", plots[["1_sparklines"]])
+    )),
+    div(class = "col-md-6", div(
+      class = "panel panel-default",
+      div(class = "panel-heading",
+          h3(class = "panel-title", a("Health harms not directly related to COVID-19", href = "detail.html#2_indirect_health_harms"))),
+      div(class = "panel-body", plots[["2_sparklines"]])
+    )))
+
+
+div(class = "row fluid-row",
+    div(class = "col-md-6", div(
+      class = "panel panel-default",
+      div(class = "panel-heading",
+          h3(class = "panel-title", a("Societal impacts", href = "detail.html#3_societal_harms"))),
+      div(class = "panel-body", plots[["3_sparklines"]])
+    )),
+    div(class = "col-md-6", div(
+      class = "panel panel-default",
+      div(class = "panel-heading",
+          h3(class = "panel-title", a("Economic impacts", href = "detail.html#4_economic_harms"))),
+      div(class = "panel-body", plots[["4_sparklines"]])
+    )))
+```
+
+<div class="text-right">
+  <a type="button" class="btn btn-primary btn-lg" href = "detail.html" role="button">
+    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    Evidence in detail
+  </a>
+</div>

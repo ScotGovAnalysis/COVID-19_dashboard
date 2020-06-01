@@ -28,10 +28,14 @@ narrative %>%
   p()
 ```
 
-<div class="text-right">
+<div class="text-center">
+  <a type="button" class="btn btn-primary btn-lg" href = "summary.html" role="button">
+    <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+    Summary of evidence
+  </a>
   <a type="button" class="btn btn-primary btn-lg" href = "detail.html" role="button">
-    Current evidence
-    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    Evidence in detail
   </a>
 </div>
 

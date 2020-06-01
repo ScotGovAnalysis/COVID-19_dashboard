@@ -1,5 +1,5 @@
 ---
-title: "Current evidence"
+title: "Evidence in detail"
 output:
   html_document:
     toc: yes
@@ -26,43 +26,6 @@ source("scripts/3_plot_sparklines.R")
 ```
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean hendrerit lectus quis odio luctus, non suscipit turpis rutrum. Etiam dictum sollicitudin nisl nec consequat. Sed placerat bibendum diam, a finibus nulla eleifend non. Integer rhoncus lacus eu ante ullamcorper commodo.
-
-## Summary
-
-Nullam molestie lorem eget sapien feugiat pharetra. Phasellus pulvinar, lacus vel consequat vehicula, urna libero egestas massa, in imperdiet ex nisi sed tellus. Integer ac justo et dui tempus tempor at non mauris. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
-
-```{r}
-div(class = "row fluid-row",
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          p(class = "panel-title", "Direct health impacts")),
-      div(class = "panel-body", plots[["1_sparklines"]])
-    )),
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          p(class = "panel-title", "Health harms not directly related to COVID-19")),
-      div(class = "panel-body", plots[["2_sparklines"]])
-    )))
-
-
-div(class = "row fluid-row",
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          p(class = "panel-title", "Societal impacts")),
-      div(class = "panel-body", plots[["3_sparklines"]])
-    )),
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          p(class = "panel-title", "Economic impacts")),
-      div(class = "panel-body", plots[["4_sparklines"]])
-    )))
-```
-
-
 
 ## The Four harms
 

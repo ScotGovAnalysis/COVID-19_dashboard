@@ -3,9 +3,12 @@ output: html_document
 navbar:
   title: "COVID-19 in Scotland"
   left:
-  - text: "Current evidence"
+  - text: "Summary of evidence"
+    href: summary.html
+    icon: glyphicon-stats
+  - text: "Evidence in detail"
     href: detail.html
-    icon: glyphicon-signal
+    icon: glyphicon-search
   right: 
   - text: "About"
     href: https://www.gov.scot/publications/coronavirus-covid-19-framework-decision-making/
