@@ -1,5 +1,5 @@
 ---
-title: "Summary of evidence"
+title: "One page summary"
 output: html_document
 date: 'Last updated: `r format.Date(Sys.Date(), "%d %b %Y")`'
 ---
@@ -51,10 +51,3 @@ div(class = "row fluid-row",
       div(class = "panel-body", plots[["4_sparklines"]])
     )))
 ```
-
-<div class="text-right">
-  <a type="button" class="btn btn-primary btn-lg" href = "detail.html" role="button">
-    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-    Evidence in detail
-  </a>
-</div>

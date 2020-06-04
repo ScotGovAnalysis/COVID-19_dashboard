@@ -1,5 +1,5 @@
 ---
-title: "Evidence in detail"
+title: "Detailed analysis"
 output:
   html_document:
     toc: yes
