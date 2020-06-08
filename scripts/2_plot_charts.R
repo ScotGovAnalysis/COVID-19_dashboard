@@ -1,4 +1,29 @@
 # Harms 1 ---------------------------------------------------------------------
+plots[["1r"]] <- plot_ly(
+  data = datasets[["1r"]],
+  x = ~ date,
+  hoverinfo = "text",
+  y = ~ middle
+) %>%
+  add_trace(
+    type = "scatter",
+    mode = "markers",
+    marker = list(opacity = 0),
+    error_y = ~list(array = high - middle,
+                    arrayminus = middle - low,
+                    color = col_palette["sg_blue"],
+                    thickness = 5,
+                    width = 6),
+    text = ~ text
+  ) %>% 
+  add_style_chart() %>%
+  layout(
+    xaxis = list(showspikes = TRUE,
+                 spikemode = "across"),
+    shapes = shapes[["1r"]],
+    annotations = filter(annotations, plot == "1r", dataset == "1r")
+  )
+
 plots[["1a"]] <- plot_ly(
   data = datasets[["1a"]],
   x = ~ Date,

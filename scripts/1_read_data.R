@@ -1,4 +1,22 @@
 # Read Harms 1 ------------------------------------------------------------
+# Dummy data used to mock-up a chart for the R number
+datasets[["1r"]] <- data.frame(date = as.Date(c("2020-02-19",
+                                        "2020-03-11",
+                                        "2020-03-16",
+                                        "2020-03-18",
+                                        "2020-03-23",
+                                        "2020-05-20",
+                                        "2020-05-27")),
+                               high = c(6.8, 6.5, 3.1, 3, 1, 0.9, 0.9),
+                               low = c(4.1, 4, 1.9, 1.8, 0.7, 0.7, 0.7)) %>% 
+  mutate(middle = (high + low) / 2,
+         text = paste("<b>R estimated between", low, "and", high, "</b>\n",
+                      "on", format(date, "%d %B %Y")))
+
+datasets[["1r_recent"]] <- datasets[["1r"]] %>% 
+  filter(date > as.Date('2020-03-22'))
+# Dummy data used to mock-up a chart for the R number
+
 datasets[["1a"]] <- read_excel(
   path = paths[["nrs"]],
   sheet = "Figure 1 data",
@@ -161,7 +179,9 @@ datasets[["4a"]] <- read_excel(path = paths[["sitrep"]],
 # Read annotations --------------------------------------------------------
 annotations <- read_excel(path = paths[["text"]],
                           sheet = "annotations") %>% 
-  mutate(x = as.Date(x)) %>% 
+  mutate(x = as.Date(x),
+         text = case_when(id == 8 ~ stringr::str_wrap(text, width = 45),
+                          TRUE ~ text)) %>% 
   bind_rows(
     datasets[["1a"]] %>% 
       filter(Date == max(Date)) %>%

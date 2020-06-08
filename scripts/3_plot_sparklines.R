@@ -1,12 +1,70 @@
 plots[["1_sparklines"]] <-
   subplot(
-    nrows = 3,
+    nrows = 4,
     shareX = TRUE,
+    datasets[["1r_recent"]] %>%
+      plot_ly(
+        x = ~ date,
+        y = ~ middle,
+        height = spark_height * 4,
+        hoverinfo = "text"
+      ) %>%
+      add_trace(
+        type = "scatter",
+        mode = "markers",
+        marker = list(opacity = 0,
+                      color = "black"),
+        error_y = ~list(array = high - middle,
+                        arrayminus = middle - low,
+                        color = "black",
+                        thickness = 2,
+                        width = 3),
+        text = ~ text
+      ) %>% 
+      config(displayModeBar = FALSE,
+             showAxisDragHandles = FALSE) %>% 
+      layout(
+        paper_bgcolor = "rgba(0, 0, 0, 0)",
+        plot_bgcolor = "rgba(0, 0, 0, 0)",
+        yaxis = list(
+          fixedrange = TRUE,
+          title = "",
+          showgrid = FALSE,
+          zeroline = FALSE,
+          showticklabels = FALSE
+        ),
+        xaxis = list(
+          fixedrange = TRUE,
+          title = "",
+          showgrid = FALSE,
+          showticklabels = FALSE,
+          range = c(dates[["start_sparklines"]], as.character(Sys.Date()))
+        ),
+        margin = list(l = 0,
+                      r = 0,
+                      t = 0,
+                      b = 0),
+        shapes = list(
+          list(
+            type = "line",
+            layer = "below",
+            x0 = "2020-03-23",
+            x1 = "2020-05-27",
+            y0 = 1,
+            y1 = 1,
+            line = list(color = col_palette["sg_grey"], dash = "dot")
+          )
+        ),
+        annotations = filter(annotations, plot == "1_sparklines", dataset == "1r")
+      ) %>% 
+      htmlwidgets::onRender(
+        "function(el, x) {
+    Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
+      ),
     datasets[["1a"]] %>%
       plot_ly(
         x = ~ Date,
         y = ~ count_7day_avg,
-        height = spark_height * 3,
         text = ~ count_7day_avg_text
       ) %>%
       add_style_spark() %>%

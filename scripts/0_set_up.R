@@ -45,6 +45,26 @@ spark_height <- 50
 
 # Create shapes -----------------------------------------------------------
 shapes <- list(
+  "1r" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = "2020-02-19",
+      x1 = "2020-05-27",
+      y0 = 1,
+      y1 = 1,
+      line = list(color = "black", dash = "dot")
+    ),
+    list(
+      type = "line",
+      layer = "below",
+      x0 = "2020-03-26",
+      x1 = "2020-03-26",
+      y0 = 0,
+      y1 = 7,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
   "1a" = list(
     type = "line",
     layer = "below",

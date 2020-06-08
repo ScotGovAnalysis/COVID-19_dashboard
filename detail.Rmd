@@ -35,6 +35,15 @@ Vivamus auctor mauris eu nisl vehicula, vel sagittis neque rhoncus. Praesent bib
 
 Vestibulum in erat molestie, hendrerit dolor vel, porttitor est. Aliquam at velit non nunc volutpat scelerisque sed at elit. Morbi consequat, dolor vitae blandit sollicitudin, augue justo congue arcu, at rhoncus nisl elit ut quam. Phasellus volutpat ut mauris sit amet laoreet. Ut mi purus, sagittis sed ante in, gravida blandit metus.
 
+#### R value
+
+Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
+```{r}
+plots[["1r"]]
+```
+
+Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
+
 #### Deaths
 
 Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
