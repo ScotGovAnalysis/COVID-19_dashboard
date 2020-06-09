@@ -24,6 +24,96 @@ plots[["1r"]] <- plot_ly(
     annotations = filter(annotations, plot == "1r", dataset == "1r")
   )
 
+plots[["1_infect"]] <- plot_ly(
+  data = datasets[["1_infect"]],
+  x = ~ date,
+  hoverinfo = "text",
+  y = ~ Mid
+) %>%
+  add_trace(
+    type = "scatter",
+    mode = "markers",
+    marker = list(color = col_palette["sg_blue"],
+                  size = 10),
+    error_y = ~list(array = Upper - Mid,
+                    arrayminus = Mid - Lower,
+                    color = col_palette["sg_grey"]),
+    text = ~ text
+  ) %>% 
+  add_style_chart()
+
+plots[["1_infect"]] <- plot_ly(
+  data = datasets[["1_infect"]],
+  x = ~ date,
+  hoverinfo = "text",
+  y = ~ Mid
+) %>%
+  add_ribbons(
+    ymin = ~ Lower,
+    ymax = ~ Upper,
+    line = list(color = "transparent"),
+    fillcolor = col_palette["sg_light_blue"]
+  ) %>%
+  add_trace(
+    type = "scatter",
+    mode = "lines+markers",
+    marker = list(color = col_palette["sg_blue"]),
+    line = list(color = col_palette["sg_blue"]),
+    text = ~ text
+  ) %>%
+  add_style_chart() %>%
+  layout(
+    showlegend = FALSE,
+    annotations = filter(annotations, plot == "1_infect", dataset == "1_infect"),
+    shapes = shapes[["1_infect"]],
+    xaxis = list(range = c(
+      "2020-03-23", datasets[["1_infect"]][["date"]] %>%
+        max(. + lubridate::days(10)) %>%
+        as.character()
+    ))
+  )
+
+plots[["1_cases"]] <- plot_ly(
+  data = datasets[["1_cases"]],
+  x = ~ date,
+  y = ~ cases,
+  hoverinfo = "text"
+) %>%
+  add_trace(
+    name = "Cases",
+    y = ~ cases,
+    type = "bar",
+    marker = list(color = col_palette["sg_grey"]),
+    text = ~ cases_text
+  ) %>%
+  add_trace(
+    name = "7 day average",
+    y = ~ cases_7day_avg,
+    type = "scatter",
+    mode = "markers+lines",
+    marker = list(size = 7, color = col_palette["sg_blue"]),
+    line = list(color = col_palette["sg_blue"]),
+    text = ~ cases_7day_avg_text
+  ) %>%
+  add_style_chart() %>%
+  layout(
+    showlegend = FALSE,
+    shapes = list(
+      list(
+        type = "line",
+        layer = "below",
+        x0 = dates[["lockdown"]],
+        x1 = dates[["lockdown"]],
+        y0 = 0,
+        y1 = 450,
+        line = list(color = col_palette["sg_grey"], dash = "dot")
+      )
+    ),
+    annotations = filter(annotations, plot == "1_cases", dataset == "1_cases"),
+    legend = list(orientation = 'h',
+                  x = 0, y = 100)
+  )
+
 plots[["1a"]] <- plot_ly(
   data = datasets[["1a"]],
   x = ~ Date,

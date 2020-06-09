@@ -1,12 +1,12 @@
 plots[["1_sparklines"]] <-
   subplot(
-    nrows = 4,
+    nrows = 6,
     shareX = TRUE,
     datasets[["1r_recent"]] %>%
       plot_ly(
         x = ~ date,
         y = ~ middle,
-        height = spark_height * 4,
+        height = spark_height * 6,
         hoverinfo = "text"
       ) %>%
       add_trace(
@@ -20,9 +20,9 @@ plots[["1_sparklines"]] <-
                         thickness = 2,
                         width = 3),
         text = ~ text
-      ) %>% 
+      ) %>%
       config(displayModeBar = FALSE,
-             showAxisDragHandles = FALSE) %>% 
+             showAxisDragHandles = FALSE) %>%
       layout(
         paper_bgcolor = "rgba(0, 0, 0, 0)",
         plot_bgcolor = "rgba(0, 0, 0, 0)",
@@ -56,10 +56,28 @@ plots[["1_sparklines"]] <-
           )
         ),
         annotations = filter(annotations, plot == "1_sparklines", dataset == "1r")
-      ) %>% 
+      ) %>%
       htmlwidgets::onRender(
         "function(el, x) {
     Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
+      ),
+    datasets[["1_infect"]] %>%
+      plot_ly(x = ~ date,
+              y = ~ Mid,
+              text = ~ text) %>%
+      add_style_spark() %>%
+      layout(
+        annotations = filter(annotations, plot == "1_sparklines", dataset == "1_infect")
+      ),
+    datasets[["1_cases"]] %>%
+      plot_ly(
+        x = ~ date,
+        y = ~ cases_7day_avg,
+        text = ~ cases_7day_avg_text
+      ) %>%
+      add_style_spark() %>%
+      layout(
+        annotations = filter(annotations, plot == "1_sparklines", dataset == "1_cases")
       ),
     datasets[["1a"]] %>%
       plot_ly(

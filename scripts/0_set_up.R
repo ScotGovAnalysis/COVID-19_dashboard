@@ -38,9 +38,9 @@ hoverlabel_spark <- list(
 dates <- c(
   lockdown = "2020-03-26",
   WHO_declares_pandemic = "2020-03-11",
-  start_sparklines = "2020-03-07"
+  start_sparklines = "2020-01-01"
 )
-spark_height <- 50
+spark_height <- 80
 
 
 # Create shapes -----------------------------------------------------------
@@ -60,10 +60,19 @@ shapes <- list(
       layer = "below",
       x0 = "2020-03-26",
       x1 = "2020-03-26",
-      y0 = 0,
+      y0 = 1,
       y1 = 7,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
+  ),
+  "1_infect" = list(
+    type = "line",
+    layer = "below",
+    x0 = dates[["lockdown"]],
+    x1 = dates[["lockdown"]],
+    y0 = 0,
+    y1 = 25000,
+    line = list(color = col_palette["sg_grey"], dash = "dot")
   ),
   "1a" = list(
     type = "line",

@@ -17,6 +17,67 @@ datasets[["1r_recent"]] <- datasets[["1r"]] %>%
   filter(date > as.Date('2020-03-22'))
 # Dummy data used to mock-up a chart for the R number
 
+datasets[["1_infect"]] <- data.frame(date = as.Date(c("2020-05-08",
+                                                      "2020-05-15",
+                                                      "2020-05-22",
+                                                      "2020-05-29",
+                                                      "2020-06-05",
+                                                      "2020-06-12")),
+                               Mid = c(20500,
+                                       17000,
+                                       14000,
+                                       11500,
+                                       9500,
+                                       8000),
+                               Lower = c(15000,
+                                         11500,
+                                         9000,
+                                         7000,
+                                         5500,
+                                         4000),
+                               Upper = c(27000,
+                                         23000,
+                                         20000,
+                                         17000,
+                                         14500,
+                                         12500)) %>% 
+  mutate(text = paste0("Between ", format(Lower, big.mark = ","), " and ",
+                       format(Upper, big.mark = ","),
+                       "\ninfectious people on ", format(date, "%d %B %Y")))
+
+datasets[["1_cases"]] <- read_excel(path = paths[["sitrep"]],
+                                    sheet = "Data",
+                                    range = cell_rows(1:52)) %>%
+  filter(Data == "Overnight change in total confirmed cases TOTAL") %>%
+  select(-c(Slide, Data)) %>%
+  gather(key = "date", value = "cases") %>%
+  drop_na(cases) %>% 
+  mutate(
+    date = as.Date(as.numeric(date), origin = "1899-12-30"),
+    cases = as.numeric(cases),
+    cases_7day_avg = data.table::frollmean(cases, 7),
+    cases_text = case_when(
+      !is.na(cases) ~ paste0(
+        "<b>",
+        format(cases, big.mark = ","),
+        " cases</b>\n",
+        "(",
+        format(date, "%d %B %Y"),
+        ")"
+      )
+    ),
+    cases_7day_avg_text = case_when(
+      !is.na(cases_7day_avg) ~ paste0(
+        "<b>",
+        format(round(cases_7day_avg, digits = 1), big.mark = ","),
+        " average cases per day</b>\n",
+        "(week ending ",
+        format(date, "%d %B %Y"),
+        ")"
+      )
+    )
+  )
+
 datasets[["1a"]] <- read_excel(
   path = paths[["nrs"]],
   sheet = "Figure 1 data",
@@ -181,8 +242,34 @@ annotations <- read_excel(path = paths[["text"]],
                           sheet = "annotations") %>% 
   mutate(x = as.Date(x),
          text = case_when(id == 8 ~ stringr::str_wrap(text, width = 45),
+                          stringr::str_ends(plot, "sparklines") & dataset != "3a" ~ stringr::str_wrap(text, width = 35), # str_wrap starts a new line inside a html tag for sparkline 3a. I've not figure out how to fix this properly so have hardcoded it to ignore this one.
                           TRUE ~ text)) %>% 
   bind_rows(
+    datasets[["1_infect"]] %>% 
+      filter(date == max(date)) %>%
+      select(date, Mid, Lower, Upper) %>% 
+      gather(key = "estimate", value = "value", -date) %>% 
+      mutate(text = paste0("<b>", estimate, "</b>\nestimate"),
+             plot = "1_infect",
+             dataset = "1_infect",
+             showarrow = FALSE,
+             xanchor = "left",
+             xshift = 10,
+             align = "left") %>% 
+      rename(y = value,
+             x = date),
+    datasets[["1_cases"]] %>% 
+      filter(date == max(date)) %>%
+      select(cases_7day_avg, date) %>% 
+      mutate(text = "7 day average",
+             plot = "1_cases",
+             dataset = "1_cases",
+             showarrow = FALSE,
+             xanchor = "left",
+             xshift = 5,
+             align = "left") %>% 
+      rename(y = cases_7day_avg,
+             x = date),
     datasets[["1a"]] %>% 
       filter(Date == max(Date)) %>%
       select(count_7day_avg, Date) %>% 
