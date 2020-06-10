@@ -38,7 +38,7 @@ hoverlabel_spark <- list(
 dates <- c(
   lockdown = "2020-03-26",
   WHO_declares_pandemic = "2020-03-11",
-  start_sparklines = "2020-01-01"
+  start_sparklines = "2020-03-07"
 )
 spark_height <- 80
 
@@ -180,7 +180,7 @@ add_style_spark <- function(p) {
         showticklabels = FALSE,
         range = c(dates[["start_sparklines"]], as.character(Sys.Date()))
       ),
-      margin = list(l = 0,
+      margin = list(l = 200,
                     r = 0,
                     t = 0,
                     b = 0)
