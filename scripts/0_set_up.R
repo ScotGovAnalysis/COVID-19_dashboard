@@ -2,6 +2,7 @@
 library(readxl)
 library(dplyr)
 library(tidyr)
+library(purrr)
 library(here)
 library(sf)
 library(lubridate)
@@ -214,6 +215,6 @@ add_style_chart <- function(p) {
     ) %>% 
     htmlwidgets::onRender(
       "function(el, x) {
-      Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
+      Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
     )
 }
