@@ -11,5 +11,5 @@ navbar:
     icon: glyphicon-stats
   right: 
   - text: "About"
-    href: https://www.gov.scot/publications/coronavirus-covid-19-framework-decision-making/
+    href: about.html
     icon: glyphicon-info-sign

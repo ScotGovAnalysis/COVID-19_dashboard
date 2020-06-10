@@ -35,11 +35,11 @@ narrative %>%
 div(class = "row fluid-row text-center",
     div(class = "col-md-6",
         a(href="summary.html",
-          img(src="images/navigation_summary.svg", style="width: 90%;", alt="W3Schools.com")),
+          img(src="images/navigation_summary.svg", style="width: 90%;", alt="The four harms of Covid-19: direct health, indirect health, society, economy")),
         a(href="summary.html", h3("One page summary"))),
     div(class = "col-md-6",
         a(href="detail.html",
-          img(src="images/navigation_detail.svg", style="width: 90%;", alt="W3Schools.com")),
+          img(src="images/navigation_detail.svg", style="width: 90%;", alt="A rough sketch of a chart and text")),
     a(href="detail.html", h3("Detailed analysis"))))
 ```
 

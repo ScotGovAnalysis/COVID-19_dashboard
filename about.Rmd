@@ -1,0 +1,36 @@
+---
+title: "About"
+output: html_document
+---
+
+<script>
+  $(document).ready(function(){
+    $head = $('#header');
+    $head.prepend('<a href=\"https://www.gov.scot\"><img src=\"images/scotgovlogo.svg\" style=\"float: right; height: 38px;\"  alt=\"Scottish Government logo\"/></a>')
+  });
+</script>
+
+This site presents analysis on COVID-19 in Scotland. It is part of [our commitment to bring transparency to our work](https://www.gov.scot/publications/coronavirus-covid-19-framework-decision-making/) and decisions on the crisis and to support understanding and public engagement with some of the very difficult issues that we face. We have drawn together data and evidence on the various harms and wider impacts - health, societal and economic - caused by the crisis. Much of this evidence is still emerging, and the scale and nature of the impacts will change over time.
+
+# Accessibility
+This website is run by the Scottish Government. We've made the text as simple as possible to understand. You should be able to:
+
+* zoom in up to 300% without the text spilling off the screen
+* navigate most of the pages using only a keyboard
+* navigate most of the pages using speech recognition software
+* listen to most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)
+
+We know some parts of this website are not fully accessible:
+
+* Some links might not have distinctive enough styling for: hover, focus, and visited
+* Some text does not appear in high contrast mode. This is mostly annotations and tooltips within charts
+
+Let us know if you:
+
+*	Find any problems not listed on this page
+*	Need information on this website in a different format. Such as accessible PDF, large print, easy read, audio recording or braille. We'll consider your request and get back to you as soon as we can.
+
+# Contact
+* Email: modellingcoronavirus@gov.scot
+* Phone: 0300 244 4000 (Scottish Government central enquiry unit)
+* Scottish Government [general enquiries](https://www.gov.scot/about/contact-information/)
