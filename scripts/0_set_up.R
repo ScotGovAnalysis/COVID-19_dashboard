@@ -2,7 +2,6 @@
 library(readxl)
 library(dplyr)
 library(tidyr)
-library(purrr)
 library(here)
 library(sf)
 library(lubridate)
@@ -215,11 +214,6 @@ add_style_chart <- function(p) {
     ) %>% 
     htmlwidgets::onRender(
       "function(el, x) {
-      Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+      Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
     )
-}
-
-#convert data.frame to list, where elements correspond to each row of the data.frame
-annotations_list <- function(df) {
-  map(1:nrow(df), ~map(df, .x))
 }

@@ -60,7 +60,7 @@ plots[["1a"]] <- plot_ly(
         line = list(color = col_palette["sg_grey"], dash = "dot")
       )
     ),
-    annotations = filter(annotations, plot == "1a", dataset == "1a") %>% annotations_list(), #convert to list
+    annotations = filter(annotations, plot == "1a", dataset == "1a"),
     legend = list(orientation = 'h',
                   x = 0, y = 100)
   )
@@ -109,7 +109,7 @@ plots[["1b"]] <- plot_ly(
                   r = 0),
     legend = list(orientation = 'h',
                   x = 0, y = 100),
-    annotations = filter(annotations, plot == "1b", dataset == "1b") %>% annotations_list() #convert to list
+    annotations = filter(annotations, plot == "1b", dataset == "1b")
   ) %>% 
   htmlwidgets::onRender(
     "function(el, x) {
@@ -132,7 +132,7 @@ plots[["1c"]] <- plot_ly(
          colorway = c(col_palette),
          legend = list(orientation = 'v',
                        x = 0, y = 100),
-         annotations = filter(annotations, plot == "1c", dataset == "1c") %>% annotations_list(), #convert to list
+         annotations = filter(annotations, plot == "1c", dataset == "1c"),
          shapes = shapes[["1c"]])
   
 
@@ -161,8 +161,7 @@ plots[["2a"]] <- plot_ly(
     colorway = c(col_palette),
     shapes = shapes[["2a"]],
     annotations = filter(annotations, plot == "2a", dataset == "2a") %>% 
-      mutate(x = week(x)) %>% # Use week numbers instead of dates
-      annotations_list() #convert to list
+      mutate(x = week(x)) # Use week numbers instead of dates
   )
 
 # Harms 3 ---------------------------------------------------------------------
@@ -193,19 +192,17 @@ plots[["4a"]] <- plot_ly(
   add_trace(name = "Universal Credit Claims",
             type = "bar",
             y = ~ claims,
-            text = ~ claims_text
-            ) %>% 
+            text = ~ claims_text) %>% 
   add_trace(name = "7 day average",
             type = "scatter",
             mode = "markers+lines",
             y = ~ claims_7day_avg,
-            text = ~ claims_7day_avg_text
-            ) %>% 
+            text = ~ claims_7day_avg_text) %>% 
   layout(
     showlegend = FALSE,
     colorway = c(col_palette),
     legend = list(orientation = 'h',
                   x = 0, y = 100),
     shapes = shapes[["4a"]],
-    annotations = filter(annotations, plot == "4a", dataset == "4a") %>% annotations_list() #convert to list
+    annotations = filter(annotations, plot == "4a", dataset == "4a")
   )
