@@ -188,7 +188,7 @@ add_style_spark <- function(p) {
     ) %>% 
     htmlwidgets::onRender(
       "function(el, x) {
-      Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
+      Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
     )
 }
 

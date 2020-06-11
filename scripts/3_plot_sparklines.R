@@ -59,7 +59,7 @@ plots[["1_sparklines"]] <-
       ) %>%
       htmlwidgets::onRender(
         "function(el, x) {
-    Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
       ),
     datasets[["1_infect"]] %>%
       plot_ly(x = ~ date,
@@ -106,7 +106,11 @@ plots[["1_sparklines"]] <-
         annotations = filter(annotations, plot == "1_sparklines", dataset == "1c_hosp_conf")
       )
   ) %>%
-  layout(showlegend = FALSE)
+  layout(showlegend = FALSE) %>% 
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
 
 plots[["2_sparklines"]] <- list(
   datasets[["2a_recent"]] %>%
@@ -120,7 +124,11 @@ plots[["2_sparklines"]] <- list(
     )) %>%
   subplot(nrows = 1,
           shareX = TRUE) %>%
-  layout(showlegend = FALSE)
+  layout(showlegend = FALSE) %>% 
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
 
 plots[["3_sparklines"]] <- list(
   datasets[["3a"]] %>%
@@ -132,7 +140,11 @@ plots[["3_sparklines"]] <- list(
     )) %>% 
   subplot(nrows = 1,
           shareX = TRUE) %>% 
-  layout(showlegend = FALSE)
+  layout(showlegend = FALSE) %>% 
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
 
 plots[["4_sparklines"]] <- list(
   datasets[["4a"]] %>%
@@ -144,6 +156,10 @@ plots[["4_sparklines"]] <- list(
     )) %>% 
   subplot(nrows = 1,
           shareX = TRUE) %>% 
-  layout(showlegend = FALSE)
+  layout(showlegend = FALSE) %>% 
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
 
 
