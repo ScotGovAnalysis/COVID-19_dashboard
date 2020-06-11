@@ -257,11 +257,11 @@ plots[["2a"]] <- plot_ly(
 
 plots[["2_excess"]] <- plot_ly(
   data = datasets[["2_excess"]],
-  x = ~ date,
+  x = ~ week,
   y = ~ count
 ) %>%
   add_ribbons(
-    data = datasets[["2_excess_spark"]] %>% filter(date > as.Date("2020-03-10")),
+    data = datasets[["2_excess_spark"]],
     ymin = ~ avg_2015_19,
     ymax = ~ all_2020,
     line = list(color = "transparent"),
@@ -300,7 +300,9 @@ plots[["2_excess"]] <- plot_ly(
       zeroline = FALSE
     ),
     shapes = shapes[["2_excess"]],
-    annotations = filter(annotations, plot == "2_excess", dataset == "2_excess") %>% pmap(list),
+    annotations = filter(annotations, plot == "2_excess", dataset == "2_excess") %>%
+      mutate(x = lubridate::week(x)) %>% 
+      pmap(list),
     colorway = c(col_palette[c("sg_blue", "sg_grey", "sg_grey")]),
     paper_bgcolor = "rgba(0, 0, 0, 0)",
     plot_bgcolor = "rgba(0, 0, 0, 0)",

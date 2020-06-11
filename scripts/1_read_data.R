@@ -201,16 +201,19 @@ datasets[["2_excess"]] <- read_excel(path = paths[["sitrep"]],
   gather(key = "date", value = "count", -Data) %>% 
   drop_na() %>% 
   mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
+         week = lubridate::week(date),
          count = as.numeric(count),
          linetype = case_when(Data == "Average deaths 2015-19" ~ "solid",
                               TRUE ~ "dot")) %>% 
+  filter(date > as.Date("2020-03-11")) %>% 
   rename(measure = Data)
 
 datasets[["2_excess_spark"]] <- datasets[["2_excess"]] %>% 
   filter(measure != "COVID deaths 2020") %>% 
   select(-linetype) %>% 
   spread(key = measure, value = count) %>% 
-  mutate(excess_deaths = `All deaths 2020` - `Average deaths 2015-19`) %>% 
+  mutate(excess_deaths = `All deaths 2020` - `Average deaths 2015-19`,
+         week = lubridate::week(date)) %>% 
   rename(all_2020 = `All deaths 2020`,
          avg_2015_19 = `Average deaths 2015-19`)
 
