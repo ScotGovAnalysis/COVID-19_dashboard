@@ -116,13 +116,21 @@ plots[["2_sparklines"]] <- list(
   datasets[["2a_recent"]] %>%
     plot_ly(x = ~ week_ending_date,
             y = ~ attendance,
-            height = spark_height,
+            height = spark_height * 2,
             text = ~ text) %>%
     add_style_spark() %>%
     layout(
       annotations = filter(annotations, plot == "2_sparklines", dataset == "2a_recent")
+    ),
+  datasets[["2_excess_spark"]] %>%
+    plot_ly(x = ~ date,
+            y = ~ excess_deaths,
+            text = ~ text) %>%
+    add_style_spark() %>%
+    layout(
+      annotations = filter(annotations, plot == "2_sparklines", dataset == "2_excess_spark")
     )) %>%
-  subplot(nrows = 1,
+  subplot(nrows = 2,
           shareX = TRUE) %>%
   layout(showlegend = FALSE) %>% 
   htmlwidgets::onRender(

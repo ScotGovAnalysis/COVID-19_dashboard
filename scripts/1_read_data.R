@@ -191,7 +191,28 @@ datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
 
 datasets[["2a_recent"]] <- datasets[["2a"]] %>% 
   filter(week_ending_date > as.Date('2020-03-01'))
-  
+
+datasets[["2_excess"]] <- read_excel(path = paths[["sitrep"]],
+                                     sheet = "Data") %>% 
+  filter(Data %in% c("All deaths 2020",
+                     "Average deaths 2015-19",
+                     "COVID deaths 2020")) %>% 
+  select(-c(Slide)) %>% 
+  gather(key = "date", value = "count", -Data) %>% 
+  drop_na() %>% 
+  mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
+         count = as.numeric(count),
+         linetype = case_when(Data == "Average deaths 2015-19" ~ "solid",
+                              TRUE ~ "dot")) %>% 
+  rename(measure = Data)
+
+datasets[["2_excess_spark"]] <- datasets[["2_excess"]] %>% 
+  filter(measure != "COVID deaths 2020") %>% 
+  select(-linetype) %>% 
+  spread(key = measure, value = count) %>% 
+  mutate(excess_deaths = `All deaths 2020` - `Average deaths 2015-19`) %>% 
+  rename(all_2020 = `All deaths 2020`,
+         avg_2015_19 = `Average deaths 2015-19`)
 
 # Read Harms 3 ------------------------------------------------------------
 datasets[["3a"]] <- read_excel(path = paths[["sitrep"]],
@@ -242,6 +263,7 @@ annotations <- read_excel(path = paths[["text"]],
                           sheet = "annotations") %>% 
   mutate(x = as.Date(x),
          text = case_when(id == 8 ~ stringr::str_wrap(text, width = 45),
+                          id == 22 ~ stringr::str_wrap(text, width = 20),
                           stringr::str_ends(plot, "sparklines") & dataset != "3a" ~ stringr::str_wrap(text, width = 35), # str_wrap starts a new line inside a html tag for sparkline 3a. I've not figure out how to fix this properly so have hardcoded it to ignore this one.
                           TRUE ~ text)) %>% 
   bind_rows(
@@ -328,6 +350,21 @@ annotations <- read_excel(path = paths[["text"]],
              align = "left") %>% 
       rename(y = attendance,
              x = week_ending_date),
+    datasets[["2_excess"]] %>% 
+      filter(date == max(date)) %>%
+      select(date, measure, count) %>% 
+      mutate(plot = "2_excess",
+             dataset = "2_excess",
+             showarrow = FALSE,
+             font = c(list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_blue"]))),
+             xanchor = "left",
+             xshift = 8,
+             align = "left") %>% 
+      rename(y = count,
+             x = date,
+             text = measure),
     datasets[["4a"]] %>% 
       filter(date == max(date)) %>%
       select(claims_7day_avg, date) %>% 

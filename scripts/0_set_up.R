@@ -116,6 +116,17 @@ shapes <- list(
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),
+  "2_excess" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = as.Date("2020-04-20"),
+      x1 = as.Date("2020-04-20"),
+      y0 = 0,
+      y1 = 659,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
   "3a" = list(
     list(
       type = "rect",

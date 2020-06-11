@@ -255,6 +255,64 @@ plots[["2a"]] <- plot_ly(
       pmap(list) #transpose and convert to list
   )
 
+plots[["2_excess"]] <- plot_ly(
+  data = datasets[["2_excess"]],
+  x = ~ date,
+  y = ~ count
+) %>%
+  add_ribbons(
+    data = datasets[["2_excess_spark"]] %>% filter(date > as.Date("2020-03-10")),
+    ymin = ~ avg_2015_19,
+    ymax = ~ all_2020,
+    line = list(color = "transparent"),
+    fillcolor = col_palette["sg_light_blue"],
+    fill = "tonext"
+  ) %>%
+  add_trace(
+    data = datasets[["2_excess"]],
+    type = "scatter",
+    mode = "markers+lines",
+    marker = list(size = 7),
+    name = ~ measure,
+    linetype = ~ linetype
+  ) %>% 
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  layout(
+    showlegend = FALSE,
+    xaxis = list(
+      linecolor = rgb(255, 255, 255, maxColorValue = 255),
+      width = 0,
+      fill = NA,
+      fixedrange = TRUE,
+      bty = "n",
+      showline = FALSE,
+      title = "",
+      showgrid = FALSE,
+      zeroline = FALSE
+    ),
+    yaxis = list(
+      fixedrange = TRUE,
+      showline = FALSE,
+      title = "",
+      showgrid = FALSE,
+      tick0 = 0,
+      zeroline = FALSE
+    ),
+    shapes = shapes[["2_excess"]],
+    annotations = filter(annotations, plot == "2_excess", dataset == "2_excess") %>% pmap(list),
+    colorway = c(col_palette[c("sg_blue", "sg_grey", "sg_grey")]),
+    paper_bgcolor = "rgba(0, 0, 0, 0)",
+    plot_bgcolor = "rgba(0, 0, 0, 0)",
+    margin = list(l = 0,
+                  r = 0)
+  ) %>% 
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
+
+
 # Harms 3 ---------------------------------------------------------------------
 plots[["3a"]] <- plot_ly(
   data = datasets[["3a"]],
