@@ -238,3 +238,23 @@ add_style_chart <- function(p) {
       Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
     )
 }
+
+#set start and end tick marks
+format_xaxis <- function(p,tick0, tickn, dtick = 14, ...) {
+  tickvals <- seq(tick0, tickn, dtick)
+  #tickvals <- c(tickvals[-length(tickvals)], tickn) #move last tick mark to end of tick range?
+  #tickvals <- c(tick0, tickn) #only include start and end ticks?
+  if(is.Date(tick0)) {
+    layout(p,
+           xaxis = list(
+             tickvals = tickvals,
+             ticktext = c(tickvals[1] %>% format("%b %d\n%Y"), tickvals[-1] %>% format("%b %d")),
+             ...
+           ))
+  } else {
+    layout(p,
+           xaxis = list(
+             tickvals = tickvals,
+             ...))
+  }
+}

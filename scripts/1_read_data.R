@@ -287,6 +287,7 @@ annotations <- read_excel(path = paths[["text"]],
       filter(date == max(date)) %>%
       select(cases_7day_avg, date) %>% 
       mutate(text = "7 day average",
+             font = list(list(color = col_palette["sg_blue"])),
              plot = "1_cases",
              dataset = "1_cases",
              showarrow = FALSE,

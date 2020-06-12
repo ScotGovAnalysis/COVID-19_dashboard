@@ -62,6 +62,8 @@ plots[["1_infect"]] <- plot_ly(
     text = ~ text
   ) %>%
   add_style_chart() %>%
+  format_xaxis(tick0 = as.Date("2020-03-29"), tickn = max(datasets[["1_infect"]]$date))%>%#,
+             #  range = c(as.Date("2020-03-23"), datasets[["1_infect"]][["date"]] %>% max(. + lubridate::days(10)))) %>%
   layout(
     showlegend = FALSE,
     annotations = filter(annotations, plot == "1_infect", dataset == "1_infect"),
@@ -96,6 +98,8 @@ plots[["1_cases"]] <- plot_ly(
     text = ~ cases_7day_avg_text
   ) %>%
   add_style_chart() %>%
+  format_xaxis(tick0 = as.Date("2020-03-29"), tickn = max(datasets[["1_cases"]]$date), 
+               range = c(as.Date("2020-03-15"), Sys.Date() + 3)) %>%
   layout(
     showlegend = FALSE,
     shapes = list(
@@ -109,7 +113,7 @@ plots[["1_cases"]] <- plot_ly(
         line = list(color = col_palette["sg_grey"], dash = "dot")
       )
     ),
-    annotations = filter(annotations, plot == "1_cases", dataset == "1_cases"),
+    annotations = filter(annotations, plot == "1_cases", dataset == "1_cases") %>% pmap(list),
     legend = list(orientation = 'h',
                   x = 0, y = 100)
   )
@@ -137,6 +141,8 @@ plots[["1a"]] <- plot_ly(
     text = ~ count_7day_avg_text
   ) %>%
   add_style_chart() %>%
+  format_xaxis(tick0 = as.Date("2020-03-29"), tickn = max(as.Date(datasets[["1a"]]$Date)), 
+               range = c(as.Date("2020-03-15"), Sys.Date() + 3)) %>%
   layout(
     showlegend = FALSE,
     shapes = list(
@@ -171,6 +177,8 @@ plots[["1b"]] <- plot_ly(
   ) %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
+  format_xaxis(tick0 = as.Date("2020-03-29"), tickn = max(as.Date(datasets[["1b"]]$week_ending_date)),
+               range = c(as.Date("2020-03-15"), Sys.Date() + 3)) %>%
   layout(
     showlegend = FALSE,
     xaxis = list(
@@ -218,8 +226,12 @@ plots[["1c"]] <- plot_ly(
             mode = "markers+lines",
             text = ~ text) %>%
   add_style_chart() %>% 
+  format_xaxis(tick0 = as.Date("2020-03-29"), tickn = max(as.Date(datasets[["1c"]]$date)), 
+               range = c(as.Date("2020-03-15"), Sys.Date() + 3)) %>%
   layout(showlegend = FALSE,
          colorway = c(col_palette),
+         margin = list(l = 0,
+                       r = 0),
          legend = list(orientation = 'v',
                        x = 0, y = 100),
          annotations = filter(annotations, plot == "1c", dataset == "1c") %>% pmap(list), #transpose and convert to list
@@ -245,6 +257,7 @@ plots[["2a"]] <- plot_ly(
             marker = list(size = 7),
             text = ~ text) %>% 
   add_style_chart() %>% 
+  format_xaxis(tick0 = 0, tickn = 50, dtick = 10) %>%
   layout(
     xaxis = list(title = "Week number"),
     showlegend = FALSE,
@@ -278,6 +291,7 @@ plots[["2_excess"]] <- plot_ly(
   ) %>% 
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
+  format_xaxis(tick0 = 0, tickn = max(datasets[["2_excess"]]$week), dtick = 2) %>%
   layout(
     showlegend = FALSE,
     xaxis = list(
@@ -333,6 +347,7 @@ plots[["3a"]] <- plot_ly(
   )
 
 # Harms 4 ---------------------------------------------------------------------
+
 plots[["4a"]] <- plot_ly(
   data = datasets[["4a"]],
   x = ~ date,
@@ -351,6 +366,7 @@ plots[["4a"]] <- plot_ly(
             y = ~ claims_7day_avg,
             text = ~ claims_7day_avg_text
             ) %>% 
+  format_xaxis(tick0 = min(datasets[["4a"]]$date),tickn = max(datasets[["4a"]]$date)) %>%
   layout(
     showlegend = FALSE,
     colorway = c(col_palette),
