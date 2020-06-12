@@ -48,8 +48,8 @@ plots[["1_sparklines"]] <-
           list(
             type = "line",
             layer = "below",
-            x0 = "2020-03-23",
-            x1 = "2020-05-27",
+            x0 = dates[["start_sparklines"]],
+            x1 = as.character(Sys.Date()),
             y0 = 1,
             y1 = 1,
             line = list(color = col_palette["sg_grey"], dash = "dot")
@@ -63,7 +63,7 @@ plots[["1_sparklines"]] <-
       ),
     datasets[["1_infect"]] %>%
       plot_ly(x = ~ date,
-              y = ~ Mid,
+              y = ~ midpoint,
               text = ~ text) %>%
       add_style_spark() %>%
       layout(
@@ -116,11 +116,29 @@ plots[["2_sparklines"]] <- list(
   datasets[["2a_recent"]] %>%
     plot_ly(x = ~ week_ending_date,
             y = ~ attendance,
-            height = spark_height * 2,
+            height = spark_height * 4,
             text = ~ text) %>%
     add_style_spark() %>%
     layout(
       annotations = filter(annotations, plot == "2_sparklines", dataset == "2a_recent")
+    ),
+  datasets[["2_admissions"]] %>%
+    filter(Admission_type == "Emergency") %>% 
+    plot_ly(x = ~ Week_ending,
+            y = ~ variation,
+            text = ~ text_variation) %>%
+    add_style_spark() %>%
+    layout(
+      annotations = filter(annotations, plot == "2_sparklines", dataset == "2_admissions_emergency")
+    ),
+  datasets[["2_admissions"]] %>%
+    filter(Admission_type == "Planned") %>% 
+    plot_ly(x = ~ Week_ending,
+            y = ~ variation,
+            text = ~ text_variation) %>%
+    add_style_spark() %>%
+    layout(
+      annotations = filter(annotations, plot == "2_sparklines", dataset == "2_admissions_planned")
     ),
   datasets[["2_excess_spark"]] %>%
     plot_ly(x = ~ date,
@@ -130,7 +148,7 @@ plots[["2_sparklines"]] <- list(
     layout(
       annotations = filter(annotations, plot == "2_sparklines", dataset == "2_excess_spark")
     )) %>%
-  subplot(nrows = 2,
+  subplot(nrows = 4,
           shareX = TRUE) %>%
   layout(showlegend = FALSE) %>% 
   htmlwidgets::onRender(

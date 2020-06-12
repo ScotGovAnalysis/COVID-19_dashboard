@@ -18,10 +18,12 @@ plots[["1r"]] <- plot_ly(
   ) %>% 
   add_style_chart() %>%
   layout(
+    title = "Note: this chart shows dummy data",
     xaxis = list(showspikes = TRUE,
                  spikemode = "across"),
     shapes = shapes[["1r"]],
-    annotations = filter(annotations, plot == "1r", dataset == "1r")
+    annotations = filter(annotations, plot == "1r", dataset == "1r") %>% pmap(list)
+      
   )
 
 plots[["1_infect"]] <- plot_ly(
@@ -46,11 +48,11 @@ plots[["1_infect"]] <- plot_ly(
   data = datasets[["1_infect"]],
   x = ~ date,
   hoverinfo = "text",
-  y = ~ Mid
+  y = ~ midpoint
 ) %>%
   add_ribbons(
-    ymin = ~ Lower,
-    ymax = ~ Upper,
+    ymin = ~ lowbound,
+    ymax = ~ upperbound,
     line = list(color = "transparent"),
     fillcolor = col_palette["sg_light_blue"]
   ) %>%
@@ -65,12 +67,7 @@ plots[["1_infect"]] <- plot_ly(
   layout(
     showlegend = FALSE,
     annotations = filter(annotations, plot == "1_infect", dataset == "1_infect"),
-    shapes = shapes[["1_infect"]],
-    xaxis = list(range = c(
-      "2020-03-23", datasets[["1_infect"]][["date"]] %>%
-        max(. + lubridate::days(10)) %>%
-        as.character()
-    ))
+    shapes = shapes[["1_infect"]]
   )
 
 plots[["1_cases"]] <- plot_ly(
@@ -255,10 +252,41 @@ plots[["2a"]] <- plot_ly(
       pmap(list) #transpose and convert to list
   )
 
+plots[["2_admissions"]] <- plot_ly(
+  data = datasets[["2_admissions"]],
+  x = ~ week,
+  marker = list(size = 7),
+  name = ~ Admission_type,
+  hoverinfo = ~ "text"
+) %>%
+  add_trace(
+    type = "scatter",
+    y = ~ Average_2018_2019,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_grey"]),
+    marker = list(color = col_palette["sg_grey"]),
+    text = ~text_2018_19
+  ) %>%
+  add_trace(
+    type = "scatter",
+    y = ~ Count,
+    text = ~text_2020,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart() %>%
+  layout(showlegend = FALSE,
+         xaxis = list(title = "Week number"),
+         annotations = filter(annotations, plot == "2_admissions", dataset == "2_admissions") %>%  
+           mutate(x = week(x)) %>% # Use week numbers instead of dates
+           pmap(list))
+
 plots[["2_excess"]] <- plot_ly(
   data = datasets[["2_excess"]],
   x = ~ week,
-  y = ~ count
+  y = ~ count,
+  hoverinfo = ~ "text"
 ) %>%
   add_ribbons(
     data = datasets[["2_excess_spark"]],
@@ -270,6 +298,7 @@ plots[["2_excess"]] <- plot_ly(
   ) %>%
   add_trace(
     data = datasets[["2_excess"]],
+    text = ~text,
     type = "scatter",
     mode = "markers+lines",
     marker = list(size = 7),
@@ -287,7 +316,7 @@ plots[["2_excess"]] <- plot_ly(
       fixedrange = TRUE,
       bty = "n",
       showline = FALSE,
-      title = "",
+      title = "Week number",
       showgrid = FALSE,
       zeroline = FALSE
     ),
@@ -301,9 +330,9 @@ plots[["2_excess"]] <- plot_ly(
     ),
     shapes = shapes[["2_excess"]],
     annotations = filter(annotations, plot == "2_excess", dataset == "2_excess") %>%
-      mutate(x = lubridate::week(x)) %>% 
+      mutate(x = lubridate::week(x)) %>%
       pmap(list),
-    colorway = c(col_palette[c("sg_blue", "sg_grey", "sg_grey")]),
+    colorway = c(col_palette[c("sg_blue", "sg_grey", "sg_blue")]),
     paper_bgcolor = "rgba(0, 0, 0, 0)",
     plot_bgcolor = "rgba(0, 0, 0, 0)",
     margin = list(l = 0,

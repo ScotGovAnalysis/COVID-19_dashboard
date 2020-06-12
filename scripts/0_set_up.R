@@ -20,8 +20,10 @@ data_path <- function(pattern) {
 
 paths <- list(
   sg = data_path("^Trends\\+in\\+daily\\+COVID-19\\+data\\+.*\\.xlsx"),
+  sg_template = here::here("data/template.xlsx"),
   nrs = data_path("^covid-deaths-data-week-[0-9][0-9]\\.xlsx"),
   phs = data_path("^202[0-9]-[0-9][0-9]-[0-9][0-9]-ed-weekly-nhsscotland-data.csv$"),
+  phs_admissions = here::here("data/data_extract.csv"),
   pop_est = here::here("data/mid-year-pop-est-19-info.xlsx"),
   sitrep = here::here("data/Dashboard - Time series.xlsx"),
   text = here::here("data/text.xlsx")
@@ -72,7 +74,7 @@ shapes <- list(
     x0 = dates[["lockdown"]],
     x1 = dates[["lockdown"]],
     y0 = 0,
-    y1 = 25000,
+    y1 = 18500,
     line = list(color = col_palette["sg_grey"], dash = "dot")
   ),
   "1a" = list(
@@ -120,8 +122,8 @@ shapes <- list(
     list(
       type = "line",
       layer = "below",
-      x0 = as.Date("2020-04-20") %>% lubridate::week(),
-      x1 = as.Date("2020-04-20") %>% lubridate::week(),
+      x0 = 17,
+      x1 = 17,
       y0 = 0,
       y1 = 659,
       line = list(color = col_palette["sg_grey"], dash = "dot")
@@ -135,7 +137,7 @@ shapes <- list(
       x0 = as.Date("2020-04-06"),
       x1 = as.Date("2020-04-20"),
       y0 = 0,
-      y1 = 2106,
+      y1 = 3500,
       line = list(width = 0)
     )
   ),

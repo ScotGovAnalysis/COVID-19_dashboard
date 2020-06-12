@@ -123,7 +123,12 @@ Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitu
 plots[["2_excess"]]
 ```
 
-#### Indirect health harm 3
+#### Emergency and planned admissions
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+```{r}
+plots[["2_admissions"]]
+```
 
 ### 3. Societal harms
 

@@ -13,37 +13,29 @@ datasets[["1r"]] <- data.frame(date = as.Date(c("2020-02-19",
          text = paste("<b>R estimated between", low, "and", high, "</b>\n",
                       "on", format(date, "%d %B %Y")))
 
-datasets[["1r_recent"]] <- datasets[["1r"]] %>% 
-  filter(date > as.Date('2020-03-22'))
+
+datasets[["1r_recent"]] <- read_excel(path = paths[["sg_template"]],
+                                      sheet = "R") %>% 
+  spread(key = Variable, value = Value) %>% 
+  rename(low = `R lower bound`,
+         high = `R upper bound`) %>% 
+  mutate(Date = as.Date(Date),
+         middle = (high + low) / 2,
+         text = paste("<b>R estimated between", low, "and", high, "</b>\n",
+                      "on", format(Date, "%d %B %Y"))) %>% 
+  rename(date = Date)
 # Dummy data used to mock-up a chart for the R number
 
-datasets[["1_infect"]] <- data.frame(date = as.Date(c("2020-05-08",
-                                                      "2020-05-15",
-                                                      "2020-05-22",
-                                                      "2020-05-29",
-                                                      "2020-06-05",
-                                                      "2020-06-12")),
-                               Mid = c(20500,
-                                       17000,
-                                       14000,
-                                       11500,
-                                       9500,
-                                       8000),
-                               Lower = c(15000,
-                                         11500,
-                                         9000,
-                                         7000,
-                                         5500,
-                                         4000),
-                               Upper = c(27000,
-                                         23000,
-                                         20000,
-                                         17000,
-                                         14500,
-                                         12500)) %>% 
-  mutate(text = paste0("Between ", format(Lower, big.mark = ","), " and ",
-                       format(Upper, big.mark = ","),
-                       "\ninfectious people on ", format(date, "%d %B %Y")))
+datasets[["1_infect"]] <- read_excel(path = paths[["sg_template"]],
+                                     sheet = "Infectious_people") %>% 
+  spread(key = Variable, value = Value) %>% 
+  rename_at(.vars = vars(starts_with("Infectious_people_")),
+            ~stringr::str_remove(., "Infectious_people_")) %>% 
+  mutate(Date = as.Date(Date),
+         text = paste0("<b>Between ", format(lowbound, big.mark = ","), " and ",
+                       format(upperbound, big.mark = ","),
+                       " infectious people</b>\non ", format(Date, "%d %B %Y"))) %>% 
+  rename(date = Date)
 
 datasets[["1_cases"]] <- read_excel(path = paths[["sitrep"]],
                                     sheet = "Data",
@@ -106,7 +98,7 @@ datasets[["1b_weeknum_lookup"]] <- read_excel(path = paths[["nrs"]],
                                               range = cell_rows(3:4)) %>%
   select(-`Week number`) %>%
   gather(key = "week", value = "week_ending_date") %>%
-  mutate(week_ending_date = dmy(paste(week_ending_date, "2020")),
+  mutate(week_ending_date = dmy(paste(week_ending_date, if_else(week == "Week 1", "2019", "2020"))),
          week = as.numeric(substr(
            week, start = 6, stop = length(week)
          )))
@@ -192,38 +184,155 @@ datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
 datasets[["2a_recent"]] <- datasets[["2a"]] %>% 
   filter(week_ending_date > as.Date('2020-03-01'))
 
-datasets[["2_excess"]] <- read_excel(path = paths[["sitrep"]],
-                                     sheet = "Data") %>% 
-  filter(Data %in% c("All deaths 2020",
-                     "Average deaths 2015-19",
-                     "COVID deaths 2020")) %>% 
-  select(-c(Slide)) %>% 
-  gather(key = "date", value = "count", -Data) %>% 
-  drop_na() %>% 
-  mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
-         week = lubridate::week(date),
-         count = as.numeric(count),
-         linetype = case_when(Data == "Average deaths 2015-19" ~ "solid",
+datasets[["2_excess"]] <- read_excel(path = paths[["nrs"]],
+                                     sheet = "Figure 5 data",
+                                     range = cell_rows(3:7)) %>% 
+  drop_na() %>%
+  rename(measure = `Week number`) %>%
+  gather(key = "week", value = "count", -measure) %>%
+  mutate(week = stringr::str_remove(week, pattern = "Week "),
+         week = as.integer(week),
+         count = as.numeric(count)) %>% 
+  left_join(datasets[["1b_weeknum_lookup"]], by = "week") %>% 
+  rename(date = week_ending_date) %>% 
+  mutate(linetype = case_when(measure == "Average for previous 5 years" ~ "solid",
                               TRUE ~ "dot")) %>% 
   filter(date > as.Date("2020-03-11")) %>% 
-  rename(measure = Data)
+  mutate(text = case_when(
+    measure == "Total deaths 2020" ~ paste0(
+      "<b>",
+      count %>% as.integer() %>% format(big.mark = ","),
+      " deaths</b>\n",
+      "(week ending ",
+      format(date, "%d %B %Y"),
+      ")"
+    ),
+    measure == "Average for previous 5 years" ~ paste0(
+      "<b>",
+      count %>% format(big.mark = ","),
+      " average deaths this week in 2015-19</b>\n",
+      "(week ending ",
+      format(date, "%d %B %Y"),
+      ")"
+    ),
+    measure == "COVID-19 deaths 2020" ~ paste0(
+      "<b>",
+      count %>% as.integer() %>% format(big.mark = ","),
+      " COVID-19 deaths</b>\n",
+      "(week ending ",
+      format(date, "%d %B %Y"),
+      ")"
+    )
+  ))
+
+# %>% 
+#   View()
+#   rename(measure = "..1") %>% 
+#   mutate(date = paste(date, "2020") %>% as.Date(format = "%d %b %Y"),
+#          week = lubridate::week(date)) %>% 
+#   filter()
+
+# datasets[["2_excess"]] <- read_excel(path = paths[["sitrep"]],
+#                                      sheet = "Data") %>% 
+#   filter(Data %in% c("All deaths 2020",
+#                      "Average deaths 2015-19",
+#                      "COVID deaths 2020")) %>% 
+#   select(-c(Slide)) %>% 
+#   gather(key = "date", value = "count", -Data) %>% 
+#   drop_na() %>% 
+#   mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
+#          week = lubridate::week(date),
+#          count = as.numeric(count),
+#          linetype = case_when(Data == "Average deaths 2015-19" ~ "solid",
+#                               TRUE ~ "dot")) %>% 
+#   filter(date > as.Date("2020-03-11")) %>% 
+#   rename(measure = Data) %>% 
+  # mutate(text = case_when(
+  #   measure == "All deaths 2020" ~ paste0(
+  #     "<b>",
+  #     count %>% as.integer() %>% format(big.mark = ","),
+  #     " deaths</b>\n",
+  #     "(week ending ",
+  #     format(date, "%d %B %Y"),
+  #     ")"
+  #   ),
+  #   measure == "Average deaths 2015-19" ~ paste0(
+  #     "<b>",
+  #     count %>% format(big.mark = ","),
+  #     " average deaths this week in 2015-19</b>\n",
+  #     "(week ending ",
+  #     format(date, "%d %B %Y"),
+  #     ")"
+  #   ),
+  #   measure == "COVID deaths 2020" ~ paste0(
+  #     "<b>",
+  #     count %>% as.integer() %>% format(big.mark = ","),
+  #     " COVID-19 deaths</b>\n",
+  #     "(week ending ",
+  #     format(date, "%d %B %Y"),
+  #     ")"
+  #   )
+  # ))
 
 datasets[["2_excess_spark"]] <- datasets[["2_excess"]] %>% 
-  filter(measure != "COVID deaths 2020") %>% 
-  select(-linetype) %>% 
+  filter(measure != "COVID-19 deaths 2020") %>% 
+  select(-c(linetype, text)) %>% 
   spread(key = measure, value = count) %>% 
-  mutate(excess_deaths = `All deaths 2020` - `Average deaths 2015-19`,
-         week = lubridate::week(date)) %>% 
-  rename(all_2020 = `All deaths 2020`,
-         avg_2015_19 = `Average deaths 2015-19`)
+  mutate(excess_deaths = `Total deaths 2020` - `Average for previous 5 years`,
+         text = paste0(
+           "<b>",
+           excess_deaths,
+           " excess deaths</b>\n",
+           "(week ending ",
+           format(date, "%d %B %Y"),
+           ")"
+         )) %>% 
+  rename(all_2020 = `Total deaths 2020`,
+         avg_2015_19 = `Average for previous 5 years`)
+
+
+datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>% 
+  select(-c(Area_name, Area_type, Category, Specialty)) %>% 
+  rename(variation = Variation....) %>% 
+  mutate(Week_ending = as.Date(Week_ending, format = "%d-%b-%y"),
+         week = lubridate::week(Week_ending),
+         text_variation = paste0(
+           "<b>",
+           -variation,
+           "% fewer admissions</b>\n",
+           "than the same weeks in 2018 and 2019\n",
+           "(week ending ",
+           format(Week_ending, "%d %B %Y"),
+           ")"
+         ),
+         text_2020 = paste0(
+           "<b>",
+           format(Count, big.mark = ","),
+           " ",
+           stringr::str_to_lower(Admission_type),
+           " admissions</b>\n",
+           "(week ending ",
+           format(Week_ending, "%d %B %Y"),
+           ")"
+         ),
+         text_2018_19 = paste0(
+           "<b>",
+           format(Average_2018_2019, big.mark = ","),
+           " ",
+           stringr::str_to_lower(Admission_type),
+           " admissions</b>\n",
+           "(average for week ",
+           week,
+           " in 2018 and 2019)"
+         ))
 
 # Read Harms 3 ------------------------------------------------------------
 datasets[["3a"]] <- read_excel(path = paths[["sitrep"]],
                       sheet = "Data",
-                      range = cell_rows(1:159)) %>% 
+                      range = cell_rows(1:162)) %>% 
   filter(Data == "Children vulnerable attending") %>% 
   select(-c(Slide, Data)) %>% 
-  gather(key = "date", value = "children") %>% 
+  gather(key = "date", value = "children") %>%
   mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
          children = as.numeric(children),
          text = paste0(
@@ -266,15 +375,15 @@ annotations <- read_excel(path = paths[["text"]],
                           sheet = "annotations") %>% 
   mutate(x = as.Date(x),
          text = case_when(id == 8 ~ stringr::str_wrap(text, width = 45),
-                          id == 22 ~ stringr::str_wrap(text, width = 20),
+                          id == 24 ~ stringr::str_wrap(text, width = 25),
                           stringr::str_ends(plot, "sparklines") & dataset != "3a" ~ stringr::str_wrap(text, width = 35), # str_wrap starts a new line inside a html tag for sparkline 3a. I've not figure out how to fix this properly so have hardcoded it to ignore this one.
                           TRUE ~ text)) %>% 
   bind_rows(
     datasets[["1_infect"]] %>% 
       filter(date == max(date)) %>%
-      select(date, Mid, Lower, Upper) %>% 
+      select(date, lowbound, midpoint, upperbound) %>% 
       gather(key = "estimate", value = "value", -date) %>% 
-      mutate(text = paste0("<b>", estimate, "</b>\nestimate"),
+      mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
              plot = "1_infect",
              dataset = "1_infect",
              showarrow = FALSE,
@@ -355,7 +464,7 @@ annotations <- read_excel(path = paths[["text"]],
              x = week_ending_date),
     datasets[["2_excess"]] %>% 
       filter(date == max(date)) %>%
-      select(date, measure, count) %>% 
+      select(date, measure, count, week) %>% 
       mutate(plot = "2_excess",
              dataset = "2_excess",
              showarrow = FALSE,
@@ -364,10 +473,29 @@ annotations <- read_excel(path = paths[["text"]],
                       list(list(color = col_palette["sg_blue"]))),
              xanchor = "left",
              xshift = 8,
-             align = "left") %>% 
+             align = "left",
+             date = date + lubridate::weeks(1)) %>% 
       rename(y = count,
              x = date,
              text = measure),
+    datasets[["2_admissions"]] %>% 
+      filter(Week_ending == max(Week_ending)) %>%
+      select(Week_ending, Count, Average_2018_2019, Admission_type) %>% 
+      gather(key = measure, value = count, -Week_ending, -Admission_type) %>% 
+      mutate(plot = "2_admissions",
+             dataset = "2_admissions",
+             showarrow = FALSE,
+             font = c(list(list(color = col_palette["sg_blue"])),
+                      list(list(color = col_palette["sg_blue"])),
+                      list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_grey"]))),
+             xanchor = "left",
+             xshift = 8,
+             align = "left",
+             text = case_when(measure == "Count" ~ paste0("<b>", Admission_type, "</b>\n", "admissions 2020"),
+                              TRUE ~ paste0("<b>", Admission_type, "</b>", "\nadmissions\n(average 2018-19)"))) %>% 
+      rename(y = count,
+             x = Week_ending),
     datasets[["4a"]] %>% 
       filter(date == max(date)) %>%
       select(claims_7day_avg, date) %>% 
