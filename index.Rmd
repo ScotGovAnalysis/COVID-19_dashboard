@@ -9,18 +9,11 @@ knitr::opts_chunk$set(echo = FALSE)
 library(htmltools)
 library(tidyr)
 
-source("scripts/0_set_up.R")
-source("scripts/1_read_data.R")
-source("scripts/2_plot_charts.R")
-source("scripts/3_plot_sparklines.R")
+for (script in list.files("scripts", full.names = TRUE)) {
+  source(script)
+}
 ```
 
-<script>
-  $(document).ready(function(){
-    $head = $('#header');
-    $head.prepend('<a href=\"https://www.gov.scot\"><img src=\"images/scotgovlogo.svg\" style=\"float: right; height: 38px;\"  alt=\"Scottish Government logo\"/></a>')
-  });
-</script>
 
 ```{r}
 narrative %>% 

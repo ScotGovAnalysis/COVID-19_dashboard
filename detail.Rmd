@@ -7,22 +7,14 @@ output:
 date: 'Last updated: `r format.Date(Sys.Date(), "%d %b %Y")`'
 ---
 
-<script>
-  $(document).ready(function(){
-    $head = $('#header');
-    $head.prepend('<a href=\"https://www.gov.scot\"><img src=\"images/scotgovlogo.svg\" style=\"float: right; height: 38px;\"  alt=\"Scottish Government logo\"/></a>')
-  });
-</script>
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, out.width = '100%')
 library(htmltools)
 
-source("scripts/0_set_up.R")
-source("scripts/1_read_data.R")
-source("scripts/2_plot_charts.R")
-source("scripts/3_plot_sparklines.R")
+for (script in list.files("scripts", full.names = TRUE)) {
+  source(script)
+}
 ```
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean hendrerit lectus quis odio luctus, non suscipit turpis rutrum. Etiam dictum sollicitudin nisl nec consequat. Sed placerat bibendum diam, a finibus nulla eleifend non. Integer rhoncus lacus eu ante ullamcorper commodo.
@@ -140,8 +132,21 @@ Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitu
 plots[["3a"]]
 ```
 
-#### Societal harm 2
-#### Societal harm 3
+#### Crisis applications
+
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+```{r}
+plots[["3_crisis_applications"]]
+```
+
+#### Recorded Crime
+
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+```{r}
+plots[["3_crime"]]
+```
 
 ### 4. Economic harms
 
