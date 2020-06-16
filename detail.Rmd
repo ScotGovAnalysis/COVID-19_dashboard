@@ -9,7 +9,7 @@ date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, out.width = '100%', results = "markup")
+knitr::opts_chunk$set(echo = FALSE, out.width = '100%')
 library(htmltools)
 
 for (script in list.files("scripts", full.names = TRUE)) {
@@ -59,6 +59,7 @@ get_text(worksheet = "R",
          column = "methodology") %>%
     paste("Methodology:", .) %>%
   p()
+
 ```
 
 ```{r}
