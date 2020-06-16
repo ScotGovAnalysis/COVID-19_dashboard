@@ -1,3 +1,20 @@
+# Read files ------------------------------------------------------------------
+# These files are used multiple times - so we read them in once here. Other
+# files are only used once, so they are read in as and when needed.
+datasets[["sg_template"]] <- paths[["sg_template"]] %>%
+  excel_sheets() %>%
+  set_names() %>%
+  map(read_excel, path = paths[["sg_template"]])
+
+datasets[["nrs"]] <- paths[["nrs"]] %>%
+  excel_sheets() %>%
+  stringr::str_subset(pattern = "Table|data") %>%
+  set_names() %>%
+  map(read_excel, path = paths[["nrs"]])
+
+datasets[["sitrep"]] <- read_excel(path = paths[["sitrep"]],
+                                   sheet = "Data")
+
 # 1 Direct health -------------------------------------------------------------
 # Dummy data used to mock-up a chart for the R number
 datasets[["1r"]] <- data.frame(date = as.Date(c("2020-02-19",
@@ -14,8 +31,7 @@ datasets[["1r"]] <- data.frame(date = as.Date(c("2020-02-19",
                       "on", format(date, "%d %B %Y")))
 
 
-datasets[["1r_recent"]] <- read_excel(path = paths[["sg_template"]],
-                                      sheet = "R") %>%
+datasets[["1r_recent"]] <- datasets[["sg_template"]][["R"]] %>%
   spread(key = Variable, value = Value) %>%
   rename(low = `R lower bound`,
          high = `R upper bound`) %>%
@@ -26,8 +42,7 @@ datasets[["1r_recent"]] <- read_excel(path = paths[["sg_template"]],
   rename(date = Date)
 # Dummy data used to mock-up a chart for the R number
 
-datasets[["1_infect"]] <- read_excel(path = paths[["sg_template"]],
-                                     sheet = "Infectious_people") %>%
+datasets[["1_infect"]] <- datasets[["sg_template"]][["Infectious_people"]] %>%
   spread(key = Variable, value = Value) %>%
   rename_at(.vars = vars(starts_with("Infectious_people_")),
             ~stringr::str_remove(., "Infectious_people_")) %>%
@@ -38,9 +53,7 @@ datasets[["1_infect"]] <- read_excel(path = paths[["sg_template"]],
                        format(Date, "%d %B %Y"))) %>%
   rename(date = Date)
 
-datasets[["1_cases"]] <- read_excel(path = paths[["sitrep"]],
-                                    sheet = "Data",
-                                    range = cell_rows(1:52)) %>%
+datasets[["1_cases"]] <- datasets[["sitrep"]] %>%
   filter(Data == "Overnight change in total confirmed cases TOTAL") %>%
   select(-c(Slide, Data)) %>%
   gather(key = "date", value = "cases") %>%
@@ -71,13 +84,14 @@ datasets[["1_cases"]] <- read_excel(path = paths[["sitrep"]],
     )
   )
 
-datasets[["1a"]] <- read_excel(
-  path = paths[["nrs"]],
-  sheet = "Figure 1 data",
-  range = anchored("A3", dim = c(NA, 2)),
-  col_types = c("date", "numeric")
-) %>%
+
+datasets[["1a"]] <- datasets[["nrs"]][["Figure 1 data"]] %>%
+  select(1:2) %>%
+  `names<-`(.[2,]) %>%
   drop_na() %>%
+  filter(Date != "Date") %>%
+  mutate(Date = as.Date(as.numeric(Date), origin = "1899-12-30"),
+         Count = as.numeric(Count)) %>%
   rename(count_cumulative = Count) %>%
   mutate(
     count = c(0, diff(count_cumulative)),
@@ -94,22 +108,30 @@ datasets[["1a"]] <- read_excel(
                         format(Date, "%a %d %B %Y"))
   )
 
-datasets[["1b_weeknum_lookup"]] <- read_excel(path = paths[["nrs"]],
-                                              sheet = "Figure 5 data",
-                                              range = cell_rows(3:4)) %>%
-  select(-`Week number`) %>%
+datasets[["1b_weeknum_lookup"]] <-
+  datasets[["nrs"]][["Figure 5 data"]][2:3,] %>%
+  select(-1) %>%
+  `names<-`(.[1,]) %>%
+  filter(`Week 1` != "Week 1") %>%
   gather(key = "week", value = "week_ending_date") %>%
   mutate(week_ending_date = dmy(
     paste(week_ending_date,
           if_else(week == "Week 1", "2019", "2020"))),
-         week = as.numeric(substr(
-           week, start = 6, stop = length(week)
-         )))
+    week = as.numeric(substr(
+      week, start = 6, stop = length(week)
+    )))
 
-datasets[["1b"]] <- read_excel(path = paths[["nrs"]],
-                      sheet = "Figure 7 data",
-                      range = cell_rows(3:9)) %>%
-  drop_na() %>%
+datasets[["1b"]] <- datasets[["nrs"]][["Figure 7 data"]][2:8,] %>%
+  filter(
+    `Figure 7: Deaths involving COVID-19 by location of death, weeks 14 to 23, 2020` %in%
+      c("Week number",
+        "Care Home",
+        "Home / Non-institution",
+        "Hospital",
+        "Other institution")
+  ) %>%
+  `names<-`(.[1,]) %>%
+  filter(`Week number` != "Week number") %>%
   rename(setting = `Week number`) %>%
   gather(key = "week", value = "deaths", -setting) %>%
   mutate(linetype = case_when(
@@ -189,10 +211,16 @@ datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
 datasets[["2a_recent"]] <- datasets[["2a"]] %>%
   filter(week_ending_date > as.Date("2020-03-01"))
 
-datasets[["2_excess"]] <- read_excel(path = paths[["nrs"]],
-                                     sheet = "Figure 5 data",
-                                     range = cell_rows(3:7)) %>%
-  drop_na() %>%
+datasets[["2_excess"]] <- datasets[["nrs"]][["Figure 5 data"]] %>%
+  filter(
+    `Figure 5: Deaths by week of registration, Scotland, 2020` %in%
+      c("Week number",
+        "Total deaths 2020",
+        "Average for previous 5 years",
+        "COVID-19 deaths 2020")
+  ) %>%
+  `names<-`(.[1,]) %>%
+  filter(`Week number` != "Week number") %>%
   rename(measure = `Week number`) %>%
   gather(key = "week", value = "count", -measure) %>%
   mutate(week = stringr::str_remove(week, pattern = "Week "),
@@ -285,9 +313,7 @@ datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>%
 
 # 3 Society -------------------------------------------------------------------
 ## Vulnerable children at school ----------------------------------------------
-datasets[["3a"]] <- read_excel(path = paths[["sitrep"]],
-                      sheet = "Data",
-                      range = cell_rows(1:162)) %>%
+datasets[["3a"]] <- datasets[["sitrep"]] %>%
   filter(Data == "Children vulnerable attending") %>%
   select(-c(Slide, Data)) %>%
   gather(key = "date", value = "children") %>%
@@ -303,9 +329,10 @@ datasets[["3a"]] <- read_excel(path = paths[["sitrep"]],
          ))
 
 ## Crisis applications --------------------------------------------------------
-datasets[["3_crisis_applications"]] <- read_excel(path = paths[["sg_template"]],
-                                          sheet = "data_crisis_applications",
-                                          range = cell_cols(1:2)) %>%
+
+
+datasets[["3_crisis_applications"]] <-
+  datasets[["sg_template"]][["data_crisis_applications"]] %>%
   mutate(month_ending_date = as.Date(month_ending_date),
          text = paste0(
            "<b>",
@@ -342,8 +369,7 @@ datasets[["3_crisis_applications_spark"]] <-
   filter(month > "Feb")
   
 ## Crime ----------------------------------------------------------------------
-datasets[["3_crime"]] <- read_excel(path = paths[["sg_template"]],
-                                    sheet = "data_recorded_crime") %>%
+datasets[["3_crime"]] <- datasets[["sg_template"]][["data_recorded_crime"]] %>%
   mutate(
     text = paste0(
       "<b>",
@@ -374,9 +400,7 @@ datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
            lubridate::days(1))
 
 # 4 Economy -------------------------------------------------------------------
-datasets[["4a"]] <- read_excel(path = paths[["sitrep"]],
-                               sheet = "Data",
-                               range = cell_rows(1:256)) %>%
+datasets[["4a"]] <- datasets[["sitrep"]] %>%
   filter(Data == "Number of Universal Credit Claims") %>%
   select(-c(Slide, Data)) %>%
   gather(key = "date", value = "claims") %>%

@@ -1,3 +1,12 @@
+# Define function to read text --------------------------------------------
+get_text <- function(worksheet,
+                     column,
+                     source = datasets[["sg_template"]][["text - used indicators"]]) {
+  source %>%
+    filter(worksheet_name == worksheet) %>%
+    pull(column)
+}
+
 # Read annotations --------------------------------------------------------
 annotations <- read_excel(path = paths[["text"]],
                           sheet = "annotations") %>%
@@ -165,8 +174,6 @@ annotations <- read_excel(path = paths[["text"]],
       rename(y = claims_7day_avg,
              x = date)
   )
-
-
 
 # Read web text -----------------------------------------------------------
 narrative <- read_excel(path = paths[["text"]],

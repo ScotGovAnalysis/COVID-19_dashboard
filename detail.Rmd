@@ -4,7 +4,7 @@ output:
   html_document:
     toc: yes
     toc_float: yes
-date: 'Last updated: `r format.Date(Sys.Date(), "%d %b %Y")`'
+date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 ---
 
 
@@ -17,47 +17,100 @@ for (script in list.files("scripts", full.names = TRUE)) {
 }
 ```
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean hendrerit lectus quis odio luctus, non suscipit turpis rutrum. Etiam dictum sollicitudin nisl nec consequat. Sed placerat bibendum diam, a finibus nulla eleifend non. Integer rhoncus lacus eu ante ullamcorper commodo.
+<PLACEHOLDER FOR TEXT>
 
 ## The Four harms
 
-Vivamus auctor mauris eu nisl vehicula, vel sagittis neque rhoncus. Praesent bibendum nisi nec enim sodales consectetur. Sed convallis eros laoreet metus tincidunt suscipit.
+<PLACEHOLDER FOR TEXT>
 
 ### 1. Direct health harms
 
-Vestibulum in erat molestie, hendrerit dolor vel, porttitor est. Aliquam at velit non nunc volutpat scelerisque sed at elit. Morbi consequat, dolor vitae blandit sollicitudin, augue justo congue arcu, at rhoncus nisl elit ut quam. Phasellus volutpat ut mauris sit amet laoreet. Ut mi purus, sagittis sed ante in, gravida blandit metus.
+<PLACEHOLDER FOR TEXT>
 
-#### Estimated R value
-
-Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
 ```{r}
+
+get_text(worksheet = "R",
+         column = "headline") %>%
+  h4()
+
+get_text(worksheet = "R",
+         column = "next_update") %>%
+  format("%d %B %Y") %>%
+  paste("Next update:", .) %>%
+  p()
+
+get_text(worksheet = "R",
+         column = "summary_max_30_words") %>%
+  p()
+
 plots[["1r"]]
+
+
+get_text(worksheet = "R",
+         column = "discussion_max_100_words") %>%
+  p()
+
+get_text(worksheet = "R",
+         column = "source") %>%
+  paste("Source:", .) %>%
+  p()
+
+get_text(worksheet = "R",
+         column = "methodology") %>%
+    paste("Methodology:", .) %>%
+  p()
 ```
 
-Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
 
-#### Estimated number of infectious people
-
-Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
 ```{r}
+
+get_text(worksheet = "Infectious_people",
+         column = "headline") %>%
+  h4()
+
+get_text(worksheet = "Infectious_people",
+         column = "next_update") %>%
+  format("%d %B %Y") %>%
+  paste("Next update:", .) %>%
+  p()
+
+get_text(worksheet = "Infectious_people",
+         column = "summary_max_30_words") %>%
+  p()
+
 plots[["1_infect"]]
+
+
+get_text(worksheet = "Infectious_people",
+         column = "discussion_max_100_words") %>%
+  p()
+
+get_text(worksheet = "Infectious_people",
+         column = "source") %>%
+  paste("Source:", .) %>%
+  p()
+
+get_text(worksheet = "Infectious_people",
+         column = "methodology") %>%
+  paste("Methodology:", .) %>%
+  p()
+
 ```
 
-Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
 
 #### Cases
 
-Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
+<PLACEHOLDER FOR TEXT>
+
 ```{r}
 plots[["1_cases"]]
 ```
 
-Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
+<PLACEHOLDER FOR TEXT>
 
 #### Deaths
 
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
-
+<PLACEHOLDER FOR TEXT>
 ```{r}
 plots[["1a"]]
 ```
@@ -67,56 +120,62 @@ plots[["1a"]]
 <div id="BlockName" class="collapse">  
 
 ##### Source
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+<PLACEHOLDER FOR TEXT>
 
 ##### Methodology
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+<PLACEHOLDER FOR TEXT>
 
 ##### Assumptions
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+<PLACEHOLDER FOR TEXT>
 
 </div>
 
-Vestibulum placerat, purus non consequat mattis, mauris velit posuere velit, vel facilisis nulla lacus vel libero.
+<PLACEHOLDER FOR TEXT>
 
 #### Deaths by setting
 
-Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
+<PLACEHOLDER FOR TEXT>
+
 ```{r}
 plots[["1b"]]
 ```
 
-Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
+<PLACEHOLDER FOR TEXT>
 
 #### People in hospital with COVID-19
 
-Vestibulum eleifend turpis risus, eget gravida tortor bibendum nec. Donec sodales, magna vel consequat gravida, neque orci commodo tortor, quis efficitur velit sapien ut metus. Vivamus malesuada metus nec sapien auctor, id luctus est condimentum.
+<PLACEHOLDER FOR TEXT>
 
 ```{r}
 plots[["1c"]]
 ```
 
-Suspendisse rhoncus tortor lectus, sed convallis augue cursus in. Curabitur in risus pellentesque sem maximus tincidunt. Morbi ac eros purus.
+<PLACEHOLDER FOR TEXT>
 
 ### 2. Indirect health harms
 
 #### A&E attendance
 
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+<PLACEHOLDER FOR TEXT>
 
 ```{r}
 plots[["2a"]]
 ```
 
 #### Excess mortality
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+<PLACEHOLDER FOR TEXT>
 
 ```{r}
 plots[["2_excess"]]
 ```
 
 #### Emergency and planned admissions
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+<PLACEHOLDER FOR TEXT>
 
 ```{r}
 plots[["2_admissions"]]
@@ -126,26 +185,79 @@ plots[["2_admissions"]]
 
 #### Vulnerable children at school 
 
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+<PLACEHOLDER FOR TEXT>
 
 ```{r}
 plots[["3a"]]
 ```
 
-#### Crisis applications
-
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+<PLACEHOLDER FOR TEXT>
 
 ```{r}
+get_text(worksheet = "data_crisis_applications",
+         column = "headline") %>%
+  h4()
+
+get_text(worksheet = "data_crisis_applications",
+         column = "next_update") %>%
+  format("%d %B %Y") %>%
+  paste("Next update:", .) %>%
+  p()
+
+get_text(worksheet = "data_crisis_applications",
+         column = "summary_max_30_words") %>%
+  p()
+
 plots[["3_crisis_applications"]]
+
+get_text(worksheet = "data_crisis_applications",
+         column = "discussion_max_100_words") %>%
+  p()
+
+get_text(worksheet = "data_crisis_applications",
+         column = "source") %>%
+  paste("Source:", .) %>%
+  p()
+
+get_text(worksheet = "data_crisis_applications",
+         column = "methodology") %>%
+  paste("Methodology:", .) %>%
+  p()
 ```
 
-#### Recorded Crime
-
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+<PLACEHOLDER FOR TEXT>
 
 ```{r}
+get_text(worksheet = "data_recorded_crime",
+         column = "headline") %>%
+  h4()
+
+get_text(worksheet = "data_recorded_crime",
+         column = "next_update") %>%
+  format("%d %B %Y") %>%
+  paste("Next update:", .) %>%
+  p()
+
+get_text(worksheet = "data_recorded_crime",
+         column = "summary_max_30_words") %>%
+  p()
+
 plots[["3_crime"]]
+
+get_text(worksheet = "data_recorded_crime",
+         column = "discussion_max_100_words") %>%
+  p()
+
+get_text(worksheet = "data_recorded_crime",
+         column = "source") %>%
+  paste("Source:", .) %>%
+  p()
+
+get_text(worksheet = "data_recorded_crime",
+         column = "methodology") %>%
+  paste("Methodology:", .) %>%
+  p()
 ```
 
 ### 4. Economic harms
@@ -157,13 +269,3 @@ plots[["4a"]]
 
 #### Economic harm 2
 #### Economic harm 3
-
-## About
-Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
-
-## Contact
-### Email
-[statistics.enquiries@gov.scot](mailto:statistics.enquiries@gov.scot)
-
-### Phone
-0300 244 0 442
