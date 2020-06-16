@@ -9,7 +9,7 @@ date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, out.width = '100%')
+knitr::opts_chunk$set(echo = FALSE, out.width = '100%', results = "markup")
 library(htmltools)
 
 for (script in list.files("scripts", full.names = TRUE)) {
@@ -60,7 +60,6 @@ get_text(worksheet = "R",
     paste("Methodology:", .) %>%
   p()
 ```
-
 
 ```{r}
 
@@ -181,6 +180,38 @@ plots[["2_excess"]]
 plots[["2_admissions"]]
 ```
 
+```{r}
+get_text(worksheet = "Avoiding_GPs&Hospitals",
+         column = "headline") %>%
+  h4()
+
+get_text(worksheet = "Avoiding_GPs&Hospitals",
+         column = "next_update") %>%
+  format("%d %B %Y") %>%
+  paste("Next update:", .) %>%
+  p()
+
+get_text(worksheet = "Avoiding_GPs&Hospitals",
+         column = "summary_max_30_words") %>%
+  p()
+
+plots[["2_GP"]]
+
+get_text(worksheet = "Avoiding_GPs&Hospitals",
+         column = "discussion_max_100_words") %>%
+  p()
+
+get_text(worksheet = "Avoiding_GPs&Hospitals",
+         column = "source") %>%
+  paste("Source:", .) %>%
+  p()
+
+get_text(worksheet = "Avoiding_GPs&Hospitals",
+         column = "methodology") %>%
+  paste("Methodology:", .) %>%
+  p()
+```
+
 ### 3. Societal harms
 
 #### Vulnerable children at school 
@@ -255,6 +286,70 @@ get_text(worksheet = "data_recorded_crime",
   p()
 
 get_text(worksheet = "data_recorded_crime",
+         column = "methodology") %>%
+  paste("Methodology:", .) %>%
+  p()
+```
+
+```{r}
+get_text(worksheet = "Loneliness",
+         column = "headline") %>%
+  h4()
+
+get_text(worksheet = "Loneliness",
+         column = "next_update") %>%
+  format("%d %B %Y") %>%
+  paste("Next update:", .) %>%
+  p()
+
+get_text(worksheet = "Loneliness",
+         column = "summary_max_30_words") %>%
+  p()
+
+plots[["3_loneliness"]]
+
+get_text(worksheet = "Loneliness",
+         column = "discussion_max_100_words") %>%
+  p()
+
+get_text(worksheet = "Loneliness",
+         column = "source") %>%
+  paste("Source:", .) %>%
+  p()
+
+get_text(worksheet = "Loneliness",
+         column = "methodology") %>%
+  paste("Methodology:", .) %>%
+  p()
+```
+
+```{r}
+get_text(worksheet = "Trust_In_Government_(SG)",
+         column = "headline") %>%
+  h4()
+
+get_text(worksheet = "Trust_In_Government_(SG)",
+         column = "next_update") %>%
+  format("%d %B %Y") %>%
+  paste("Next update:", .) %>%
+  p()
+
+get_text(worksheet = "Trust_In_Government_(SG)",
+         column = "summary_max_30_words") %>%
+  p()
+
+plots[["3_trust"]]
+
+get_text(worksheet = "Trust_In_Government_(SG)",
+         column = "discussion_max_100_words") %>%
+  p()
+
+get_text(worksheet = "Trust_In_Government_(SG)",
+         column = "source") %>%
+  paste("Source:", .) %>%
+  p()
+
+get_text(worksheet = "Trust_In_Government_(SG)",
          column = "methodology") %>%
   paste("Methodology:", .) %>%
   p()
