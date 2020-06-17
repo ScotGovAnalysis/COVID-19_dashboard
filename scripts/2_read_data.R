@@ -311,6 +311,19 @@ datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>%
            " in 2018 and 2019)"
          ))
 
+datasets[["2_GP"]] <- datasets[["sg_template"]][["Avoiding_GPs&Hospitals"]] %>%
+  mutate(date = as.Date(Date),
+         percent = as.numeric(`%`),
+         text_2020 = paste0(
+           "<b>",
+           format(percent, big.mark = ","),
+           "% of people avoiding GPs & Hospitals</b>\n",
+           "(",
+           format(date, "%d %B %Y"),
+           ")"
+         )) %>%
+  select(Measure,date,percent,text_2020)
+
 # 3 Society -------------------------------------------------------------------
 ## Vulnerable children at school ----------------------------------------------
 datasets[["3a"]] <- datasets[["sitrep"]] %>%
@@ -398,6 +411,34 @@ datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
   mutate(date = as.Date(paste("2020", month, "01"), format = "%Y %B %d") %>%
            lubridate::ceiling_date(unit = "month") - 
            lubridate::days(1))
+
+# Loneliness ------------------------------------------------------------------
+datasets[["3_loneliness"]] <- datasets[["sg_template"]][["Loneliness"]] %>%
+  mutate(date = as.Date(Date),
+         percent = as.numeric(`%`),
+         text_2020 = paste0(
+           "<b>",
+           format(percent, big.mark = ","),
+           "% of people feeling lonely</b>\n",
+           "(",
+           format(date, "%d %B %Y"),
+           ")"
+         )) %>%
+  select(Measure,date,percent,text_2020)
+
+# Trust in Government----------------------------------------------------------
+datasets[["3_trust"]] <- datasets[["sg_template"]][["Trust_in_Government_(SG)"]] %>%
+  mutate(date = as.Date(Date),
+         percent = as.numeric(`%`),
+         text_2020 = paste0(
+           "<b>",
+           format(percent, big.mark = ","),
+           "% of people who trust the Scottish Government</b>\n",
+           "(",
+           format(date, "%d %B %Y"),
+           ")"
+         )) %>%
+  select(Measure,date,percent,text_2020)
 
 # 4 Economy -------------------------------------------------------------------
 datasets[["4a"]] <- datasets[["sitrep"]] %>%

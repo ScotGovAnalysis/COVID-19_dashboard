@@ -341,6 +341,31 @@ plots[["2_excess"]] <- plot_ly(
     Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
   )
 
+# Avoiding GPs and hospitals --------------------------------------------------
+plots[["2_GP"]] <- plot_ly(
+  data = datasets[["2_GP"]],
+  x = ~ week(date),
+  marker = list(size = 7),
+  name = ~ Measure,
+  hoverinfo = ~ "text"
+) %>%
+  add_trace(
+    type = "scatter",
+    y = ~ percent,
+    text = ~text_2020,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart() %>%
+  layout(showlegend = FALSE,
+         xaxis = list(title = "Week number"),
+         shapes = shapes[["2_GP"]],
+         annotations = filter(annotations,
+                              plot == "2_GP",
+                              dataset == "2_GP") %>%
+           mutate(x = week(x)) %>% # Use week numbers instead of dates
+           pmap(list))
 
 # 3 Society -------------------------------------------------------------------
 ## Vulnerable children at school ----------------------------------------------
@@ -415,6 +440,54 @@ plots[["3_crime"]] <- plot_ly(
                          dataset == "3_crime") %>%
       mutate(x = format.Date(x, "%B %Y"))
   )
+
+# Loneliness ------------------------------------------------------------------
+plots[["3_loneliness"]] <- plot_ly(
+  data = datasets[["3_loneliness"]],
+  x = ~ date,
+  marker = list(size = 7),
+  name = ~ Measure,
+  hoverinfo = ~ "text"
+) %>%
+  add_trace(
+    type = "scatter",
+    y = ~ percent,
+    text = ~text_2020,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart() %>%
+  layout(showlegend = FALSE,
+         shapes = shapes[["3_loneliness"]],
+         annotations = filter(annotations,
+                              plot == "3_loneliness",
+                              dataset == "3_loneliness") %>%
+           pmap(list))
+
+# Trust in government ---------------------------------------------------------
+plots[["3_trust"]] <- plot_ly(
+  data = datasets[["3_trust"]],
+  x = ~ date,
+  marker = list(size = 7),
+  name = ~ Measure,
+  hoverinfo = ~ "text"
+) %>%
+  add_trace(
+    type = "scatter",
+    y = ~ percent,
+    text = ~text_2020,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart() %>%
+  layout(showlegend = FALSE,
+         shapes = shapes[["3_trust"]],
+         annotations = filter(annotations,
+                              plot == "3_trust",
+                              dataset == "3_trust") %>%
+           pmap(list))
 
 # 4 Economy -------------------------------------------------------------------
 plots[["4a"]] <- plot_ly(
