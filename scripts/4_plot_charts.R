@@ -417,29 +417,16 @@ plots[["3_crisis_applications"]] <- plot_ly(
 
 ## Crime ----------------------------------------------------------------------
 plots[["3_crime"]] <- plot_ly(
-  data = datasets[["3_crime"]] %>%
-    group_by(crime_group),
-  x = ~ paste(month, year),
-  y = ~ recorded,
-  name = ~ crime_group,
+  data = datasets[["3_crime"]],
+  x = ~ recorded,
+  y = ~ crime_group,
+  name = ~ year,
+  text = ~ text,
   hoverinfo = ~ "text"
 ) %>%
-  add_trace(
-    type = "scatter",
-    mode = "markers+lines",
-    marker = list(color = col_palette["sg_grey"],
-                  size = 10),
-    line = list(color = col_palette["sg_grey"]),
-    text = ~ text
-  ) %>%
+  add_trace(type = "bar") %>%
   add_style_chart() %>%
-  layout(
-    showlegend = FALSE,
-    annotations = filter(annotations,
-                         plot == "3_crime",
-                         dataset == "3_crime") %>%
-      mutate(x = format.Date(x, "%B %Y"))
-  )
+  layout(colorway = c(col_palette["sg_grey"], col_palette["sg_blue"]))
 
 # Loneliness ------------------------------------------------------------------
 plots[["3_loneliness"]] <- plot_ly(

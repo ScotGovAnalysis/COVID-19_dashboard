@@ -383,24 +383,24 @@ datasets[["3_crisis_applications_spark"]] <-
   
 ## Crime ----------------------------------------------------------------------
 datasets[["3_crime"]] <- datasets[["sg_template"]][["data_recorded_crime"]] %>%
-  mutate(
-    text = paste0(
-      "<b>",
-      format(recorded, big.mark = ","),
-      " ",
-      stringr::str_to_lower(crime_group),
-      " recorded</b>\n",
-      "(",
-      month,
-      " ",
-      year,
-      ")"
-    ),
-    total = case_when(
-      grepl("total", crime_group, ignore.case = TRUE) ~ TRUE,
-      TRUE ~ FALSE
-    )
-  )
+  arrange(year, recorded) %>%
+  mutate(crime_group = forcats::as_factor(crime_group),
+         text = paste0(
+           "<b>",
+           format(recorded, big.mark = ","),
+           " ",
+           stringr::str_to_lower(crime_group),
+           " recorded</b>\n",
+           "(",
+           month,
+           " ",
+           year,
+           ")"
+         ),
+         total = case_when(
+           grepl("total", crime_group, ignore.case = TRUE) ~ TRUE,
+           TRUE ~ FALSE
+         ))
 
 datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
   filter(total == TRUE) %>%
