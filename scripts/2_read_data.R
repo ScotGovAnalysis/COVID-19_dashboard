@@ -419,7 +419,7 @@ datasets[["3_loneliness"]] <- datasets[["sg_template"]][["Loneliness"]] %>%
          text_2020 = paste0(
            "<b>",
            format(percent, big.mark = ","),
-           "% of people feeling lonely</b>\n",
+           "% of people felt lonely in the past week</b>\n",
            "(",
            format(date, "%d %B %Y"),
            ")"
@@ -433,7 +433,21 @@ datasets[["3_trust"]] <- datasets[["sg_template"]][["Trust_in_Government_(SG)"]]
          text_2020 = paste0(
            "<b>",
            format(percent, big.mark = ","),
-           "% of people who trust the Scottish Government</b>\n",
+           "% of people trust the</br>Scottish Government</b>\n",
+           "(",
+           format(date, "%d %B %Y"),
+           ")"
+         )) %>%
+  select(Measure,date,percent,text_2020)
+
+# Threat to Jobs --------------------------------------------------------------
+datasets[["3_job"]] <- datasets[["sg_template"]][["Threat_To_Job"]] %>%
+  mutate(date = as.Date(Date),
+         percent = as.numeric(`%`),
+         text_2020 = paste0(
+           "<b>",
+           format(percent, big.mark = ","),
+           "% of people who perceive a</br>threat to their job/business</b>\n",
            "(",
            format(date, "%d %B %Y"),
            ")"
@@ -463,3 +477,4 @@ datasets[["4a"]] <- datasets[["sitrep"]] %>%
            format(date, "%d %B %Y"),
            ")"
          ))
+
