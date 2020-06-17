@@ -356,6 +356,38 @@ get_text(worksheet = "Trust_In_Government_(SG)",
   p()
 ```
 
+```{r}
+get_text(worksheet = "Threat_To_Job",
+         column = "headline") %>%
+  h4()
+
+get_text(worksheet = "Threat_To_Job",
+         column = "next_update") %>%
+  format("%d %B %Y") %>%
+  paste("Next update:", .) %>%
+  p()
+
+get_text(worksheet = "Threat_To_Job",
+         column = "summary_max_30_words") %>%
+  p()
+
+plots[["3_job"]]
+
+get_text(worksheet = "Threat_To_Job",
+         column = "discussion_max_100_words") %>%
+  p()
+
+get_text(worksheet = "Threat_To_Job",
+         column = "source") %>%
+  paste("Source:", .) %>%
+  p()
+
+get_text(worksheet = "Threat_To_Job",
+         column = "methodology") %>%
+  paste("Methodology:", .) %>%
+  p()
+```
+
 ### 4. Economic harms
 
 #### Universal credit claims
