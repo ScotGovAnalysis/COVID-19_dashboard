@@ -311,19 +311,6 @@ datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>%
            " in 2018 and 2019)"
          ))
 
-datasets[["2_GP"]] <- datasets[["sg_template"]][["Avoiding_GPs&Hospitals"]] %>%
-  mutate(date = as.Date(Date),
-         percent = as.numeric(`%`),
-         text_2020 = paste0(
-           "<b>",
-           format(percent, big.mark = ","),
-           "% of people avoiding GPs & Hospitals</b>\n",
-           "(",
-           format(date, "%d %B %Y"),
-           ")"
-         )) %>%
-  select(Measure,date,percent,text_2020)
-
 # 3 Society -------------------------------------------------------------------
 ## Vulnerable children at school ----------------------------------------------
 datasets[["3a"]] <- datasets[["sitrep"]] %>%
@@ -383,24 +370,24 @@ datasets[["3_crisis_applications_spark"]] <-
   
 ## Crime ----------------------------------------------------------------------
 datasets[["3_crime"]] <- datasets[["sg_template"]][["data_recorded_crime"]] %>%
-  arrange(year, recorded) %>%
-  mutate(crime_group = forcats::as_factor(crime_group),
-         text = paste0(
-           "<b>",
-           format(recorded, big.mark = ","),
-           " ",
-           stringr::str_to_lower(crime_group),
-           " recorded</b>\n",
-           "(",
-           month,
-           " ",
-           year,
-           ")"
-         ),
-         total = case_when(
-           grepl("total", crime_group, ignore.case = TRUE) ~ TRUE,
-           TRUE ~ FALSE
-         ))
+  mutate(
+    text = paste0(
+      "<b>",
+      format(recorded, big.mark = ","),
+      " ",
+      stringr::str_to_lower(crime_group),
+      " recorded</b>\n",
+      "(",
+      month,
+      " ",
+      year,
+      ")"
+    ),
+    total = case_when(
+      grepl("total", crime_group, ignore.case = TRUE) ~ TRUE,
+      TRUE ~ FALSE
+    )
+  )
 
 datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
   filter(total == TRUE) %>%
@@ -411,48 +398,6 @@ datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
   mutate(date = as.Date(paste("2020", month, "01"), format = "%Y %B %d") %>%
            lubridate::ceiling_date(unit = "month") - 
            lubridate::days(1))
-
-# Loneliness ------------------------------------------------------------------
-datasets[["3_loneliness"]] <- datasets[["sg_template"]][["Loneliness"]] %>%
-  mutate(date = as.Date(Date),
-         percent = as.numeric(`%`),
-         text_2020 = paste0(
-           "<b>",
-           format(percent, big.mark = ","),
-           "% of people felt lonely in the past week</b>\n",
-           "(",
-           format(date, "%d %B %Y"),
-           ")"
-         )) %>%
-  select(Measure,date,percent,text_2020)
-
-# Trust in Government----------------------------------------------------------
-datasets[["3_trust"]] <- datasets[["sg_template"]][["Trust_in_Government_(SG)"]] %>%
-  mutate(date = as.Date(Date),
-         percent = as.numeric(`%`),
-         text_2020 = paste0(
-           "<b>",
-           format(percent, big.mark = ","),
-           "% of people trust the</br>Scottish Government</b>\n",
-           "(",
-           format(date, "%d %B %Y"),
-           ")"
-         )) %>%
-  select(Measure,date,percent,text_2020)
-
-# Threat to Jobs --------------------------------------------------------------
-datasets[["3_job"]] <- datasets[["sg_template"]][["Threat_To_Job"]] %>%
-  mutate(date = as.Date(Date),
-         percent = as.numeric(`%`),
-         text_2020 = paste0(
-           "<b>",
-           format(percent, big.mark = ","),
-           "% of people who perceive a</br>threat to their job/business</b>\n",
-           "(",
-           format(date, "%d %B %Y"),
-           ")"
-         )) %>%
-  select(Measure,date,percent,text_2020)
 
 # 4 Economy -------------------------------------------------------------------
 datasets[["4a"]] <- datasets[["sitrep"]] %>%
@@ -477,4 +422,3 @@ datasets[["4a"]] <- datasets[["sitrep"]] %>%
            format(date, "%d %B %Y"),
            ")"
          ))
-
