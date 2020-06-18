@@ -134,7 +134,7 @@ plots[["1_sparklines"]] <-
 plots[["2a_spark"]] <- datasets[["2a_recent"]] %>%
   plot_ly(x = ~ week_ending_date,
           y = ~ attendance,
-          height = spark_height * 4,
+          height = spark_height * 5,
           text = ~ text) %>%
   add_style_spark() %>%
   layout(
@@ -178,11 +178,23 @@ plots[["2_excess_spark"]] <- datasets[["2_excess_spark"]] %>%
                          dataset == "2_excess_spark")
   )
 
+plots[["2_GP_spark"]] <- datasets[["2_GP"]] %>%
+  plot_ly(x = ~ date,
+          y = ~ percent,
+          text = ~ text_2020) %>%
+  add_style_spark() %>%
+  layout(
+    annotations = filter(annotations,
+                         plot == "2_sparklines",
+                         dataset == "2_GP")
+  )
+
 ## Create subplots ------------------------------------------------------------
 plots[["2_sparklines"]] <-
   plots[c("2a_spark", "2_admissions_emergency_spark",
-          "2_admissions_planned_spark", "2_excess_spark")] %>%
-  subplot(nrows = 4,
+          "2_admissions_planned_spark", "2_excess_spark",
+          "2_GP_spark")] %>%
+  subplot(nrows = 5,
           shareX = TRUE) %>%
   layout(showlegend = FALSE) %>%
   htmlwidgets::onRender(
@@ -193,7 +205,7 @@ plots[["2_sparklines"]] <-
 # 3 Society -------------------------------------------------------------------
 ## Define sparklines ----------------------------------------------------------
 plots[["3a_spark"]] <- datasets[["3a"]] %>%
-  plot_ly(x = ~ date, y = ~ children, height = 2 * spark_height,
+  plot_ly(x = ~ date, y = ~ children, height = 5 * spark_height,
           text = ~ text) %>%
   add_style_spark() %>%
   layout(
@@ -214,9 +226,44 @@ plots[["3_crisis_applications_spark"]] <-
                          dataset == "3_crisis_applications")
   )
 
+plots[["3_loneliness_spark"]] <- datasets[["3_loneliness"]] %>%
+  plot_ly(x = ~ date,
+          y = ~ percent,
+          text = ~ text_2020) %>%
+  add_style_spark() %>%
+  layout(
+    annotations = filter(annotations,
+                         plot == "3_sparklines",
+                         dataset == "3_loneliness")
+  )
+
+plots[["3_trust_spark"]] <- datasets[["3_trust"]] %>%
+  plot_ly(x = ~ date,
+          y = ~ percent,
+          text = ~ text_2020) %>%
+  add_style_spark() %>%
+  layout(
+    annotations = filter(annotations,
+                         plot == "3_sparklines",
+                         dataset == "3_trust")
+  )
+
+plots[["3_job_spark"]] <- datasets[["3_job"]] %>%
+  plot_ly(x = ~ date,
+          y = ~ percent,
+          text = ~ text_2020) %>%
+  add_style_spark() %>%
+  layout(
+    annotations = filter(annotations,
+                         plot == "3_sparklines",
+                         dataset == "3_job")
+  )
+
 ## Create subplots ------------------------------------------------------------
 plots[["3_sparklines"]] <-
-  plots[c("3a_spark", "3_crisis_applications_spark")] %>%
+  plots[c("3a_spark", "3_crisis_applications_spark",
+          "3_loneliness_spark","3_trust_spark",
+          "3_job_spark")] %>%
   subplot(nrows = length(.),
           shareX = TRUE) %>%
   layout(showlegend = FALSE) %>%

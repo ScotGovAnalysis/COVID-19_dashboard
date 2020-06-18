@@ -93,7 +93,8 @@ plots[["1_cases"]] <- plot_ly(
         line = list(color = col_palette["sg_grey"], dash = "dot")
       )
     ),
-    annotations = filter(annotations, plot == "1_cases", dataset == "1_cases"),
+    annotations = filter(annotations, plot == "1_cases", dataset == "1_cases") %>%
+      pmap(list),
     legend = list(orientation = "h",
                   x = 0, y = 100)
   )
@@ -474,6 +475,30 @@ plots[["3_trust"]] <- plot_ly(
          annotations = filter(annotations,
                               plot == "3_trust",
                               dataset == "3_trust") %>%
+           pmap(list))
+
+# Threats to Jobs -------------------------------------------------------------
+plots[["3_job"]] <- plot_ly(
+  data = datasets[["3_job"]],
+  x = ~ date,
+  marker = list(size = 7),
+  name = ~ Measure,
+  hoverinfo = ~ "text"
+) %>%
+  add_trace(
+    type = "scatter",
+    y = ~ percent,
+    text = ~text_2020,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart() %>%
+  layout(showlegend = FALSE,
+         shapes = shapes[["3_job"]],
+         annotations = filter(annotations,
+                              plot == "3_job",
+                              dataset == "3_job") %>%
            pmap(list))
 
 # 4 Economy -------------------------------------------------------------------

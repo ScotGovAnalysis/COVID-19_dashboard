@@ -129,6 +129,17 @@ shapes <- list(
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),
+  "2_GP" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = 17,
+      x1 = 17,
+      y0 = 25,
+      y1 = 45,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
   "3a" = list(
     list(
       type = "rect",
@@ -149,6 +160,17 @@ shapes <- list(
       x1 = 2,
       y0 = 20000,
       y1 = 28971,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
+  "3_trust" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = as.Date("2020-05-21"),
+      x1 = as.Date("2020-05-21"),
+      y0 = 60,
+      y1 = 73 + 12 / 7,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),
