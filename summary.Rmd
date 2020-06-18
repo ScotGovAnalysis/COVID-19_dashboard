@@ -1,5 +1,5 @@
 ---
-title: "One page summary"
+title: "Visual summary"
 output: html_document
 date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 ---

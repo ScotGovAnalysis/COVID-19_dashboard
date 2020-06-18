@@ -7,6 +7,7 @@ library(here)
 library(sf)
 library(lubridate)
 library(plotly)
+library(markdown)
 
 # Define data paths -------------------------------------------------------
 datasets <- plots <- shapes <- list()

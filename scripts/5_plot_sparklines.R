@@ -4,7 +4,7 @@ plots[["1r_recent_spark"]] <- datasets[["1r_recent"]] %>%
   plot_ly(
     x = ~ date,
     y = ~ middle,
-    height = spark_height * 6,
+    height = spark_height * 3,
     hoverinfo = "text"
   ) %>%
   add_trace(
@@ -82,46 +82,46 @@ plots[["1_cases_spark"]] <- datasets[["1_cases"]] %>%
                               plot == "1_sparklines",
                               dataset == "1_cases"))
 
-plots[["1a_spark"]] <- datasets[["1a"]] %>%
-  plot_ly(
-    x = ~ Date,
-    y = ~ count_7day_avg,
-    text = ~ count_7day_avg_text
-  ) %>%
-  add_style_spark() %>%
-  layout(annotations = filter(annotations,
-                              plot == "1_sparklines",
-                              dataset == "1a"))
+# plots[["1a_spark"]] <- datasets[["1a"]] %>%
+#   plot_ly(
+#     x = ~ Date,
+#     y = ~ count_7day_avg,
+#     text = ~ count_7day_avg_text
+#   ) %>%
+#   add_style_spark() %>%
+#   layout(annotations = filter(annotations,
+#                               plot == "1_sparklines",
+#                               dataset == "1a"))
+# 
+# plots[["1c_icu_hdu_spark"]] <- datasets[["1c_icu_hdu"]] %>%
+#   plot_ly(x = ~ date,
+#           y = ~ covid_patients,
+#           text = ~ text) %>%
+#   add_style_spark() %>%
+#   layout(annotations = filter(annotations,
+#                               plot == "1_sparklines",
+#                               dataset == "1c_icu_hdu"))
 
-plots[["1c_icu_hdu_spark"]] <- datasets[["1c_icu_hdu"]] %>%
-  plot_ly(x = ~ date,
-          y = ~ covid_patients,
-          text = ~ text) %>%
-  add_style_spark() %>%
-  layout(annotations = filter(annotations,
-                              plot == "1_sparklines",
-                              dataset == "1c_icu_hdu"))
-
-plots[["1c_hosp_conf_spark"]] <- datasets[["1c_hosp_conf"]] %>%
-  plot_ly(x = ~ date,
-          y = ~ covid_patients,
-          text = ~ text) %>%
-  add_style_spark() %>%
-  layout(annotations = filter(annotations,
-                              plot == "1_sparklines",
-                              dataset == "1c_hosp_conf"))
+# plots[["1c_hosp_conf_spark"]] <- datasets[["1c_hosp_conf"]] %>%
+#   plot_ly(x = ~ date,
+#           y = ~ covid_patients,
+#           text = ~ text) %>%
+#   add_style_spark() %>%
+#   layout(annotations = filter(annotations,
+#                               plot == "1_sparklines",
+#                               dataset == "1c_hosp_conf"))
 
 ## Create subplots ------------------------------------------------------------
 plots[["1_sparklines"]] <-
   plots[c(
     "1r_recent_spark",
     "1_infect_spark",
-    "1_cases_spark",
-    "1a_spark",
-    "1c_icu_hdu_spark",
-    "1c_hosp_conf_spark"
+    "1_cases_spark"
+    # "1a_spark",
+    # "1c_icu_hdu_spark",
+    # "1c_hosp_conf_spark"
   )] %>%
-  subplot(nrows = 6,
+  subplot(nrows = 3,
           shareX = TRUE) %>%
   layout(showlegend = FALSE) %>%
   htmlwidgets::onRender(

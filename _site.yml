@@ -6,9 +6,9 @@ output:
 navbar:
   title: "COVID-19 in Scotland"
   left:
-  - text: "One page summary"
+  - text: "Visual summary"
     href: summary.html
-    icon: glyphicon-th-large
+    icon: glyphicon-eye-open
   - text: "Detailed analysis"
     href: detail.html
     icon: glyphicon-stats

@@ -4,6 +4,7 @@ output:
   html_document:
     toc: yes
     toc_float: yes
+    toc_depth: 4
 date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 ---
 
@@ -17,32 +18,20 @@ for (script in list.files("scripts", full.names = TRUE)) {
 }
 ```
 
-<PLACEHOLDER FOR TEXT>
-
 ## The Four harms
-
-<PLACEHOLDER FOR TEXT>
 
 ### 1. Direct health harms
 
-<PLACEHOLDER FOR TEXT>
-
 ```{r}
-
 text_before_chart("H1_R")
-
 plots[["1r"]]
-
 text_after_chart("H1_R")
 
 ```
 
 ```{r}
-
 text_before_chart("H1_infectious")
-
 plots[["1_infect"]]
-
 text_after_chart("H1_infectious")
 
 ```
@@ -50,146 +39,114 @@ text_after_chart("H1_infectious")
 
 #### Cases
 
-<PLACEHOLDER FOR TEXT>
-
 ```{r}
 plots[["1_cases"]]
 ```
 
-<PLACEHOLDER FOR TEXT>
-
-#### Deaths
-
-<PLACEHOLDER FOR TEXT>
 ```{r}
-plots[["1a"]]
-```
-<button class="btn btn-link" data-toggle="collapse" data-target="#BlockName"> Show more
-<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-</button>  
-<div id="BlockName" class="collapse">  
-
-##### Source
-
-<PLACEHOLDER FOR TEXT>
-
-##### Methodology
-
-<PLACEHOLDER FOR TEXT>
-
-##### Assumptions
-
-<PLACEHOLDER FOR TEXT>
-
-</div>
-
-<PLACEHOLDER FOR TEXT>
-
-#### People in hospital with COVID-19
-
-<PLACEHOLDER FOR TEXT>
-
-```{r}
-plots[["1c"]]
+text_before_chart("H1_deaths")
+plots[["H1_deaths"]]
+text_after_chart("H1_deaths")
 ```
 
-<PLACEHOLDER FOR TEXT>
+```{r}
+text_before_chart("H1_admissions")
+plots[["H1_admissions"]]
+text_after_chart("H1_admissions")
+```
 
 ### 2. Indirect health harms
 
-#### A&E attendance
-
-<PLACEHOLDER FOR TEXT>
-
 ```{r}
+text_before_chart("H2_A&E")
 plots[["2a"]]
+text_after_chart("H2_A&E")
 ```
 
-#### Excess mortality
-
-<PLACEHOLDER FOR TEXT>
-
 ```{r}
+text_before_chart("H2_excess")
 plots[["2_excess"]]
+text_after_chart("H2_excess")
 ```
 
-#### Emergency and planned admissions
-
-<PLACEHOLDER FOR TEXT>
-
 ```{r}
+text_before_chart("H2_emergency")
 plots[["2_admissions"]]
+text_after_chart("H2_emergency")
 ```
 
 ```{r}
 text_before_chart("H2_avoiding")
-
 plots[["2_GP"]]
-
 text_after_chart("H2_avoiding")
 ```
 
 ### 3. Societal harms
 
-#### Vulnerable children at school 
-
-
-<PLACEHOLDER FOR TEXT>
-
 ```{r}
+text_before_chart("H3_schools")
 plots[["3a"]]
+text_after_chart("H3_schools")
 ```
-
-<PLACEHOLDER FOR TEXT>
 
 ```{r}
 text_before_chart("H3_crisis")
-
 plots[["3_crisis_applications"]]
-
 text_after_chart("H3_crisis")
 ```
 
-<PLACEHOLDER FOR TEXT>
-
 ```{r}
 text_before_chart("H3_crime")
-
 plots[["3_crime"]]
-
 text_after_chart("H3_crime")
 ```
 
 ```{r}
 text_before_chart("H3_loneliness")
-
 plots[["3_loneliness"]]
-
 text_after_chart("H3_loneliness")
 ```
 
 ```{r}
 text_before_chart("H3_trust")
-
 plots[["3_trust"]]
-
 text_after_chart("H3_trust")
 ```
 
 ```{r}
 text_before_chart("H3_job")
-
 plots[["3_job"]]
-
 text_after_chart("H3_job")
+```
+
+```{r}
+text_before_chart("H3_transport")
+plots[["H3_transport"]]
+text_after_chart("H3_transport")
 ```
 
 ### 4. Economic harms
 
 ```{r}
 text_before_chart("H4_turnover")
-
 plots[["4_turnover"]]
-
 text_after_chart("H4_turnover")
+```
+
+```{r}
+text_before_chart("H4_GDP")
+plots[["4_GDP"]]
+text_after_chart("H4_GDP")
+```
+
+```{r}
+text_before_chart("H4_unemployment")
+plots[["4_unemployment"]]
+text_after_chart("H4_unemployment")
+```
+
+```{r}
+text_before_chart("H4_claimants")
+plots[["4_claimants"]]
+text_after_chart("H4_claimants")
 ```

@@ -16,6 +16,7 @@ datasets[["sitrep"]] <- read_excel(path = paths[["sitrep"]],
                                    sheet = "Data")
 
 # 1 Direct health -------------------------------------------------------------
+# R number --------------------------------------------------------------------
 # Dummy data used to mock-up a chart for the R number
 datasets[["1r"]] <- data.frame(date = as.Date(c("2020-02-19",
                                         "2020-03-11",
@@ -31,6 +32,8 @@ datasets[["1r"]] <- data.frame(date = as.Date(c("2020-02-19",
                       "on", format(date, "%d %B %Y")))
 
 
+
+
 datasets[["1r_recent"]] <- datasets[["sg_template"]][["H1_R"]] %>%
   spread(key = Variable, value = Value) %>%
   rename(low = `R lower bound`,
@@ -40,8 +43,9 @@ datasets[["1r_recent"]] <- datasets[["sg_template"]][["H1_R"]] %>%
          text = paste("<b>R estimated between", low, "and", high, "</b>\n",
                       "on", format(Date, "%d %B %Y"))) %>%
   rename(date = Date)
-# Dummy data used to mock-up a chart for the R number
 
+
+# Infectious people -----------------------------------------------------------
 datasets[["1_infect"]] <- datasets[["sg_template"]][["H1_infectious"]] %>%
   spread(key = Variable, value = Value) %>%
   rename_at(.vars = vars(starts_with("Infectious_people_")),
@@ -53,6 +57,8 @@ datasets[["1_infect"]] <- datasets[["sg_template"]][["H1_infectious"]] %>%
                        format(Date, "%d %B %Y"))) %>%
   rename(date = Date)
 
+
+# Cases -----------------------------------------------------------------------
 datasets[["1_cases"]] <- datasets[["sitrep"]] %>%
   filter(Data == "Overnight change in total confirmed cases TOTAL") %>%
   select(-c(Slide, Data)) %>%
@@ -84,30 +90,6 @@ datasets[["1_cases"]] <- datasets[["sitrep"]] %>%
     )
   )
 
-
-datasets[["1a"]] <- datasets[["nrs"]][["Figure 1 data"]] %>%
-  select(1:2) %>%
-  `names<-`(.[2,]) %>%
-  drop_na() %>%
-  filter(Date != "Date") %>%
-  mutate(Date = as.Date(as.numeric(Date), origin = "1899-12-30"),
-         Count = as.numeric(Count)) %>%
-  rename(count_cumulative = Count) %>%
-  mutate(
-    count = c(0, diff(count_cumulative)),
-    count_7day_avg = data.table::frollmean(count, 7),
-    count_7day_avg_text = case_when(
-      !is.na(count_7day_avg) ~ paste0(
-        "<b>", round(count_7day_avg, digits = 1),
-        " average deaths per day\n", "</b>",
-        "(week ending ", format(Date, "%d %B %Y"), ")"
-      )
-    ),
-    count_text = paste0("<b>", count, " deaths registered ",
-                        "with COVID-19 on death certificate</b>\n",
-                        format(Date, "%a %d %B %Y"))
-  )
-
 datasets[["1b_weeknum_lookup"]] <-
   datasets[["nrs"]][["Figure 5 data"]][2:3,] %>%
   select(-1) %>%
@@ -121,78 +103,46 @@ datasets[["1b_weeknum_lookup"]] <-
       week, start = 6, stop = length(week)
     )))
 
-datasets[["1b"]] <- datasets[["nrs"]][["Figure 7 data"]][2:8,] %>%
-  filter(
-    `Figure 7: Deaths involving COVID-19 by location of death, weeks 14 to 23, 2020` %in%
-      c("Week number",
-        "Care Home",
-        "Home / Non-institution",
-        "Hospital",
-        "Other institution")
-  ) %>%
-  `names<-`(.[1,]) %>%
-  filter(`Week number` != "Week number") %>%
-  rename(setting = `Week number`) %>%
-  gather(key = "week", value = "deaths", -setting) %>%
-  mutate(linetype = case_when(
-    setting %in% c("Hospital", "Other institution") ~ "solid",
-    TRUE ~ "dash"),
-         week = as.numeric(week)) %>%
-  left_join(datasets[["1b_weeknum_lookup"]], by = "week") %>%
-  mutate(text = paste0("<b>", deaths, " deaths in ", setting, "</b>\n",
-                      "(week ending ",
-                      format(week_ending_date, "%d %B %Y"), ")"))
-
-
-
-datasets[["1c"]] <- read_excel(path = paths[["sg"]],
-                               sheet = "Table 2 - Hospital Care",
-                               range = anchored("A4", dim = c(NA, 7))) %>%
-  `names<-`(
-    c(
-      "date",
-      "icu_hdu_conf",
-      "icu_hdu_sus",
-      "icu_hdu",
-      "hosp_conf",
-      "hosp_sus",
-      "hosp"
-    )
-  ) %>%
-  select(date, icu_hdu, hosp_conf) %>%
-  gather(key = "location", value = "covid_patients", -date) %>%
+# Weekly deaths ---------------------------------------------------------------
+datasets[["H1_deaths"]] <-
+  datasets[["sg_template"]][["H1_deaths"]] %>%
+  rename(week_num = `Week number`,
+         week_beginning = `Week beginning`,
+         count = `Deaths involving COVID-19`) %>%
   mutate(
-    location_label = if_else(
-      location == "hosp_conf",
-      "People in hospital (including ICU) with confirmed COVID-19",
-      "People in ICU with confirmed <b>or</b> suspected COVID-19"
-    ),
-    text = paste0("<b>", format(covid_patients, big.mark = ","), " ",
-                  location_label, "</b>\n",
-                  format(date, "%d %B %Y"))
+    text = paste0(
+      "<b>",
+      count,
+      " deaths registered with COVID-19 on death certificate</b>\n",
+      "(week beginning ",
+      format(week_beginning, "%d %B %Y"),
+      ")"
+    )
   )
 
-datasets[["1c_icu_hdu"]] <- datasets[["1c"]] %>%
-  filter(location == "icu_hdu") %>%
-  mutate(text = paste0(
-    "<b>",
-    covid_patients,
-      " people in ICU/HDU on ",
-    format(date, "%d %B %Y"),
-    "\n</b>",
-    "(confirmed and suspected COVID-19)"
-  ))
-
-datasets[["1c_hosp_conf"]] <- datasets[["1c"]] %>%
-  filter(location == "hosp_conf") %>%
-  mutate(text = paste0(
-    "<b>",
-    covid_patients %>% format(big.mark = ","),
-    " people in hospital on ",
-    format(date, "%d %B %Y"),
-    "\n</b>",
-    "(confirmed COVID-19 only)"
-  ))
+# New admissions to hospital with Covid-19 ------------------------------------
+datasets[["H1_admissions"]] <-
+  datasets[["sg_template"]][["H1_admissions"]] %>%
+  rename(count = `Hospital Admissions`,
+         count_7day_avg = `7-Day Moving Average`) %>%
+  mutate(
+    text_count = paste0(
+      "<b>",
+      count,
+      " new hospital admissions</b>\n",
+      "(",
+      format(Date, "%d %B %Y"),
+      ")"
+    ),
+    text_7day_avg = paste0(
+      "<b>",
+      round(count_7day_avg, 1),
+      " average new hospital admissions per day</b>\n",
+      "(",
+      format(Date, "%d %B %Y"),
+      ")"
+    )
+  )
 
 # 2 Indirect health -----------------------------------------------------------
 datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
@@ -453,6 +403,20 @@ datasets[["3_job"]] <- datasets[["sg_template"]][["H3_job"]] %>%
            ")"
          )) %>%
   select(Measure,date,percent,text_2020)
+
+# Transport -------------------------------------------------------------------
+datasets[["H3_transport"]] <- datasets[["sg_template"]][["H3_transport"]] %>%
+  drop_na() %>%
+  mutate(Date = forcats::as_factor(Date),
+         percent = scales::percent(`%`, accuracy = 1),
+         text = paste0(
+           "<b>",
+           percent,
+           " of people say they will avoid public transport more than usual</b>\n",
+           "(asked during ",
+           Date,
+           ")"
+         ))
 
 # 4 Economy -------------------------------------------------------------------
 datasets[["4a"]] <- datasets[["sitrep"]] %>%

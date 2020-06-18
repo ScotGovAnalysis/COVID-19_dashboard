@@ -1,21 +1,12 @@
 # Define functions to read text --------------------------------------------
-get_text <- function(worksheet,
-                     column,
-                     source = datasets[["sg_template"]][["TEXT"]]) {
-  source %>%
-    filter(worksheet_name == worksheet) %>%
-    pull(column)
-}
-
 text_before_chart <- function(worksheet,
                               source = datasets[["sg_template"]][["TEXT"]]) {
   text <- source %>%
     filter(worksheet_name == worksheet)
   
-  div(h4(pull(text, "HEADLINE_max_60_characters")),
-      p(paste("Next update:", pull(text, "next_update"))),
-      p(pull(text, "SUMMARY_max_30_words")),
-      p(pull(text, "TITLE_max_35_characters")))
+  div(h4(pull(text, "TITLE_max_35_characters")),
+      p(pull(text, "HEADLINE_max_60_characters")),
+      p(pull(text, "SUMMARY_max_30_words")))
   
 }
 
@@ -25,8 +16,11 @@ text_after_chart <- function(worksheet,
     filter(worksheet_name == worksheet)
   
   div(p(pull(text, "DISCUSSION_max_100_words")),
-      p(paste("Source:", pull(text, "source"))),
-      p(paste("Methodology:", pull(text, "methodology"))))
+      p(strong("Next update:"), pull(text, "next_update")),
+      paste("**Source:**", pull(text, "source")) %>%
+          markdownToHTML(text = ., fragment.only = TRUE)
+        %>% htmltools::HTML(),
+      p(strong("Methodology:"), pull(text, "methodology")))
   
 }
 
@@ -71,56 +65,56 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              align = "left") %>%
       rename(y = cases_7day_avg,
              x = date),
-    datasets[["1a"]] %>%
-      filter(Date == max(Date)) %>%
-      select(count_7day_avg, Date) %>%
-      mutate(Date = as.Date(Date),
-             text = "7 day average",
-             font = list(list(color = col_palette["sg_blue"])),
-             plot = "1a",
-             dataset = "1a",
-             showarrow = FALSE,
-             xanchor = "left",
-             xshift = 5,
-             align = "left") %>%
-      rename(y = count_7day_avg,
-             x = Date),
-    datasets[["1b"]] %>%
-      filter(week == max(week)) %>%
-      select(setting, deaths, week_ending_date) %>%
-      mutate(plot = "1b",
-             dataset = "1b",
-             font = case_when(setting %in%
-                                c("Home / Non-institution", "Hospital") ~
-                                list(list(color = col_palette["sg_blue"])),
-                              TRUE ~
-                                list(list(color = col_palette["sg_grey"]))),
-             showarrow = FALSE,
-             xanchor = "left",
-             align = "left",
-             xshift = 5) %>%
-      rename(y = deaths,
-             text = setting,
-             x = week_ending_date),
-    datasets[["1c"]] %>%
-      filter(date == as.Date("2020-05-09")) %>%
-      select(location_label, covid_patients, date) %>%
-      mutate(date = as.Date(date),
-             location_label = stringr::str_wrap(location_label, width = 30),
-             font = case_when(grepl("hospital", location_label) ~
-                                list(list(color = col_palette["sg_grey"])),
-                              TRUE ~
-                                list(list(color = col_palette["sg_blue"]))),
-             plot = "1c",
-             dataset = "1c",
-             showarrow = FALSE,
-             xanchor = "left",
-             yanchor = "bottom",
-             yshift = 5,
-             align = "left") %>%
-      rename(y = covid_patients,
-             text = location_label,
-             x = date),
+    # datasets[["1a"]] %>%
+    #   filter(Date == max(Date)) %>%
+    #   select(count_7day_avg, Date) %>%
+    #   mutate(Date = as.Date(Date),
+    #          text = "7 day average",
+    #          font = list(list(color = col_palette["sg_blue"])),
+    #          plot = "1a",
+    #          dataset = "1a",
+    #          showarrow = FALSE,
+    #          xanchor = "left",
+    #          xshift = 5,
+    #          align = "left") %>%
+    #   rename(y = count_7day_avg,
+    #          x = Date),
+    # datasets[["1b"]] %>%
+    #   filter(week == max(week)) %>%
+    #   select(setting, deaths, week_ending_date) %>%
+    #   mutate(plot = "1b",
+    #          dataset = "1b",
+    #          font = case_when(setting %in%
+    #                             c("Home / Non-institution", "Hospital") ~
+    #                             list(list(color = col_palette["sg_blue"])),
+    #                           TRUE ~
+    #                             list(list(color = col_palette["sg_grey"]))),
+    #          showarrow = FALSE,
+    #          xanchor = "left",
+    #          align = "left",
+    #          xshift = 5) %>%
+    #   rename(y = deaths,
+    #          text = setting,
+    #          x = week_ending_date),
+    # datasets[["1c"]] %>%
+    #   filter(date == as.Date("2020-05-09")) %>%
+    #   select(location_label, covid_patients, date) %>%
+    #   mutate(date = as.Date(date),
+    #          location_label = stringr::str_wrap(location_label, width = 30),
+    #          font = case_when(grepl("hospital", location_label) ~
+    #                             list(list(color = col_palette["sg_grey"])),
+    #                           TRUE ~
+    #                             list(list(color = col_palette["sg_blue"]))),
+    #          plot = "1c",
+    #          dataset = "1c",
+    #          showarrow = FALSE,
+    #          xanchor = "left",
+    #          yanchor = "bottom",
+    #          yshift = 5,
+    #          align = "left") %>%
+    #   rename(y = covid_patients,
+    #          text = location_label,
+    #          x = date),
     datasets[["2a"]] %>%
       filter(week_ending_date == max(week_ending_date)) %>%
       select(week_ending_date, attendance) %>%

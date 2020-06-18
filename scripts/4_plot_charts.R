@@ -99,121 +99,50 @@ plots[["1_cases"]] <- plot_ly(
                   x = 0, y = 100)
   )
 
-## Deaths ---------------------------------------------------------------------
-plots[["1a"]] <- plot_ly(
-  data = datasets[["1a"]],
+## Hospital admissions --------------------------------------------------------
+plots[["H1_admissions"]] <- plot_ly(
+  data = datasets[["H1_admissions"]],
   x = ~ Date,
-  y = ~ count,
   hoverinfo = "text"
 ) %>%
   add_trace(
-    name = "Deaths",
     y = ~ count,
     type = "bar",
     marker = list(color = col_palette["sg_grey"]),
-    text = ~ count_text
+    text = ~ text_count
   ) %>%
   add_trace(
-    name = "7 day average",
     y = ~ count_7day_avg,
     type = "scatter",
     mode = "markers+lines",
     marker = list(size = 7, color = col_palette["sg_blue"]),
     line = list(color = col_palette["sg_blue"]),
-    text = ~ count_7day_avg_text
+    text = ~ text_7day_avg
   ) %>%
   add_style_chart() %>%
   layout(
-    showlegend = FALSE,
-    shapes = list(
-      list(
-        type = "line",
-        layer = "below",
-        x0 = dates[["lockdown"]],
-        x1 = dates[["lockdown"]],
-        y0 = 0,
-        y1 = 160,
-        line = list(color = col_palette["sg_grey"], dash = "dot")
-      )
-    ),
-    annotations = filter(annotations, plot == "1a", dataset == "1a") %>%
-      pmap(list), #convert to list
-    legend = list(orientation = "h",
-                  x = 0, y = 100)
+    showlegend = FALSE
   )
 
-## Deaths by setting ----------------------------------------------------------
-plots[["1b"]] <- plot_ly(
-  data = datasets[["1b"]],
-  x = ~ week_ending_date,
-  y = ~ deaths,
+# Weekly deaths ---------------------------------------------------------------
+plots[["H1_deaths"]] <- plot_ly(
+  data = datasets[["H1_deaths"]],
+  x = ~ week_beginning,
+  y = ~ count,
   marker = list(size = 7),
-  name = ~ setting,
-  linetype = ~ linetype,
-  hoverinfo = "text",
-  text = ~ text
+  hoverinfo = ~ "text"
 ) %>%
   add_trace(
     type = "scatter",
-    mode = "markers+lines"
+    text = ~ text,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
   ) %>%
-  config(displayModeBar = FALSE,
-         showAxisDragHandles = FALSE) %>%
-  layout(
-    showlegend = FALSE,
-    xaxis = list(
-      linecolor = rgb(255, 255, 255, maxColorValue = 255),
-      width = 0,
-      fill = NA,
-      fixedrange = TRUE,
-      bty = "n",
-      showline = FALSE,
-      title = "",
-      showgrid = FALSE,
-      zeroline = FALSE
-    ),
-    yaxis = list(
-      fixedrange = TRUE,
-      showline = FALSE,
-      title = "",
-      showgrid = FALSE,
-      tick0 = 0,
-      zeroline = FALSE
-    ),
-    colorway = c(col_palette[c("sg_grey", "sg_blue", "sg_blue", "sg_grey")]),
-    paper_bgcolor = "rgba(0, 0, 0, 0)",
-    plot_bgcolor = "rgba(0, 0, 0, 0)",
-    margin = list(l = 0,
-                  r = 0),
-    legend = list(orientation = "h",
-                  x = 0, y = 100),
-    annotations = filter(annotations, plot == "1b", dataset == "1b") %>%
-      pmap(list) #transpose and convert to list
-  ) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-      Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
-  )
-
-## People in hospital with COVID-19 -------------------------------------------
-plots[["1c"]] <- plot_ly(
-  data = datasets[["1c"]],
-  x = ~ date,
-  y = ~ covid_patients,
-  marker = list(size = 7),
-  name = ~ location_label,
-  hoverinfo = ~ "text"
-) %>%
-  add_trace(type = "scatter",
-            mode = "markers+lines",
-            text = ~ text) %>%
   add_style_chart() %>%
-  layout(showlegend = FALSE,
-         colorway = c(col_palette),
-         annotations = filter(annotations, plot == "1c", dataset == "1c") %>%
-           pmap(list), #transpose and convert to list
-         shapes = shapes[["1c"]])
-  
+  layout(
+    showlegend = FALSE
+  )
 
 # 2 Indirect health -----------------------------------------------------------
 ## A&E attendance -------------------------------------------------------------
@@ -500,6 +429,29 @@ plots[["3_job"]] <- plot_ly(
                               plot == "3_job",
                               dataset == "3_job") %>%
            pmap(list))
+
+# Transport -------------------------------------------------------------------
+plots[["H3_transport"]] <- plot_ly(
+  data = datasets[["H3_transport"]],
+  x = ~ Date,
+  marker = list(size = 7),
+  name = ~ Measure,
+  hoverinfo = ~ "text"
+) %>%
+  add_trace(
+    type = "scatter",
+    y = ~ `%`,
+    text = ~text,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart() %>%
+  layout(
+    yaxis = list(
+      tickformat = "%"
+    )
+  )
 
 # 4 Economy -------------------------------------------------------------------
 plots[["4a"]] <- plot_ly(
