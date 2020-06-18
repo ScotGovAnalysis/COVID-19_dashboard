@@ -1,15 +1,39 @@
-# Define function to read text --------------------------------------------
+# Define functions to read text --------------------------------------------
 get_text <- function(worksheet,
                      column,
-                     source = datasets[["sg_template"]][["text - used indicators"]]) {
+                     source = datasets[["sg_template"]][["TEXT"]]) {
   source %>%
     filter(worksheet_name == worksheet) %>%
     pull(column)
 }
 
+text_before_chart <- function(worksheet,
+                              source = datasets[["sg_template"]][["TEXT"]]) {
+  text <- source %>%
+    filter(worksheet_name == worksheet)
+  
+  div(h4(pull(text, "HEADLINE_max_60_characters")),
+      p(paste("Next update:", pull(text, "next_update"))),
+      p(pull(text, "SUMMARY_max_30_words")),
+      p(pull(text, "TITLE_max_35_characters")))
+  
+}
+
+text_after_chart <- function(worksheet,
+                              source = datasets[["sg_template"]][["TEXT"]]) {
+  text <- source %>%
+    filter(worksheet_name == worksheet)
+  
+  div(p(pull(text, "DISCUSSION_max_100_words")),
+      p(paste("Source:", pull(text, "source"))),
+      p(paste("Methodology:", pull(text, "methodology"))))
+  
+}
+
+
+
 # Read annotations --------------------------------------------------------
-annotations <- read_excel(path = paths[["text"]],
-                          sheet = "annotations") %>%
+annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
   mutate(x = as.Date(x),
          text = case_when(id == 8 ~ stringr::str_wrap(text, width = 45),
                           id == 24 ~ stringr::str_wrap(text, width = 25),
@@ -177,5 +201,5 @@ annotations <- read_excel(path = paths[["text"]],
   )
 
 # Read web text -----------------------------------------------------------
-narrative <- read_excel(path = paths[["text"]],
-                        sheet = "narrative")
+narrative <- datasets[["sg_template"]][["NARRATIVE"]]
+

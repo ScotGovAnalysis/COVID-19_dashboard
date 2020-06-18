@@ -29,71 +29,21 @@ for (script in list.files("scripts", full.names = TRUE)) {
 
 ```{r}
 
-get_text(worksheet = "R",
-         column = "headline") %>%
-  h4()
-
-get_text(worksheet = "R",
-         column = "next_update") %>%
-  format("%d %B %Y") %>%
-  paste("Next update:", .) %>%
-  p()
-
-get_text(worksheet = "R",
-         column = "summary_max_30_words") %>%
-  p()
+text_before_chart("H1_R")
 
 plots[["1r"]]
 
-
-get_text(worksheet = "R",
-         column = "discussion_max_100_words") %>%
-  p()
-
-get_text(worksheet = "R",
-         column = "source") %>%
-  paste("Source:", .) %>%
-  p()
-
-get_text(worksheet = "R",
-         column = "methodology") %>%
-    paste("Methodology:", .) %>%
-  p()
+text_after_chart("H1_R")
 
 ```
 
 ```{r}
 
-get_text(worksheet = "Infectious_people",
-         column = "headline") %>%
-  h4()
-
-get_text(worksheet = "Infectious_people",
-         column = "next_update") %>%
-  format("%d %B %Y") %>%
-  paste("Next update:", .) %>%
-  p()
-
-get_text(worksheet = "Infectious_people",
-         column = "summary_max_30_words") %>%
-  p()
+text_before_chart("H1_infectious")
 
 plots[["1_infect"]]
 
-
-get_text(worksheet = "Infectious_people",
-         column = "discussion_max_100_words") %>%
-  p()
-
-get_text(worksheet = "Infectious_people",
-         column = "source") %>%
-  paste("Source:", .) %>%
-  p()
-
-get_text(worksheet = "Infectious_people",
-         column = "methodology") %>%
-  paste("Methodology:", .) %>%
-  p()
+text_after_chart("H1_infectious")
 
 ```
 
@@ -135,16 +85,6 @@ plots[["1a"]]
 
 <PLACEHOLDER FOR TEXT>
 
-#### Deaths by setting
-
-<PLACEHOLDER FOR TEXT>
-
-```{r}
-plots[["1b"]]
-```
-
-<PLACEHOLDER FOR TEXT>
-
 #### People in hospital with COVID-19
 
 <PLACEHOLDER FOR TEXT>
@@ -182,35 +122,11 @@ plots[["2_admissions"]]
 ```
 
 ```{r}
-get_text(worksheet = "Avoiding_GPs&Hospitals",
-         column = "headline") %>%
-  h4()
-
-get_text(worksheet = "Avoiding_GPs&Hospitals",
-         column = "next_update") %>%
-  format("%d %B %Y") %>%
-  paste("Next update:", .) %>%
-  p()
-
-get_text(worksheet = "Avoiding_GPs&Hospitals",
-         column = "summary_max_30_words") %>%
-  p()
+text_before_chart("H2_avoiding")
 
 plots[["2_GP"]]
 
-get_text(worksheet = "Avoiding_GPs&Hospitals",
-         column = "discussion_max_100_words") %>%
-  p()
-
-get_text(worksheet = "Avoiding_GPs&Hospitals",
-         column = "source") %>%
-  paste("Source:", .) %>%
-  p()
-
-get_text(worksheet = "Avoiding_GPs&Hospitals",
-         column = "methodology") %>%
-  paste("Methodology:", .) %>%
-  p()
+text_after_chart("H2_avoiding")
 ```
 
 ### 3. Societal harms
@@ -227,173 +143,53 @@ plots[["3a"]]
 <PLACEHOLDER FOR TEXT>
 
 ```{r}
-get_text(worksheet = "data_crisis_applications",
-         column = "headline") %>%
-  h4()
-
-get_text(worksheet = "data_crisis_applications",
-         column = "next_update") %>%
-  format("%d %B %Y") %>%
-  paste("Next update:", .) %>%
-  p()
-
-get_text(worksheet = "data_crisis_applications",
-         column = "summary_max_30_words") %>%
-  p()
+text_before_chart("H3_crisis")
 
 plots[["3_crisis_applications"]]
 
-get_text(worksheet = "data_crisis_applications",
-         column = "discussion_max_100_words") %>%
-  p()
-
-get_text(worksheet = "data_crisis_applications",
-         column = "source") %>%
-  paste("Source:", .) %>%
-  p()
-
-get_text(worksheet = "data_crisis_applications",
-         column = "methodology") %>%
-  paste("Methodology:", .) %>%
-  p()
+text_after_chart("H3_crisis")
 ```
 
 <PLACEHOLDER FOR TEXT>
 
 ```{r}
-get_text(worksheet = "data_recorded_crime",
-         column = "headline") %>%
-  h4()
-
-get_text(worksheet = "data_recorded_crime",
-         column = "next_update") %>%
-  format("%d %B %Y") %>%
-  paste("Next update:", .) %>%
-  p()
-
-get_text(worksheet = "data_recorded_crime",
-         column = "summary_max_30_words") %>%
-  p()
+text_before_chart("H3_crime")
 
 plots[["3_crime"]]
 
-get_text(worksheet = "data_recorded_crime",
-         column = "discussion_max_100_words") %>%
-  p()
-
-get_text(worksheet = "data_recorded_crime",
-         column = "source") %>%
-  paste("Source:", .) %>%
-  p()
-
-get_text(worksheet = "data_recorded_crime",
-         column = "methodology") %>%
-  paste("Methodology:", .) %>%
-  p()
+text_after_chart("H3_crime")
 ```
 
 ```{r}
-get_text(worksheet = "Loneliness",
-         column = "headline") %>%
-  h4()
-
-get_text(worksheet = "Loneliness",
-         column = "next_update") %>%
-  format("%d %B %Y") %>%
-  paste("Next update:", .) %>%
-  p()
-
-get_text(worksheet = "Loneliness",
-         column = "summary_max_30_words") %>%
-  p()
+text_before_chart("H3_loneliness")
 
 plots[["3_loneliness"]]
 
-get_text(worksheet = "Loneliness",
-         column = "discussion_max_100_words") %>%
-  p()
-
-get_text(worksheet = "Loneliness",
-         column = "source") %>%
-  paste("Source:", .) %>%
-  p()
-
-get_text(worksheet = "Loneliness",
-         column = "methodology") %>%
-  paste("Methodology:", .) %>%
-  p()
+text_after_chart("H3_loneliness")
 ```
 
 ```{r}
-get_text(worksheet = "Trust_In_Government_(SG)",
-         column = "headline") %>%
-  h4()
-
-get_text(worksheet = "Trust_In_Government_(SG)",
-         column = "next_update") %>%
-  format("%d %B %Y") %>%
-  paste("Next update:", .) %>%
-  p()
-
-get_text(worksheet = "Trust_In_Government_(SG)",
-         column = "summary_max_30_words") %>%
-  p()
+text_before_chart("H3_trust")
 
 plots[["3_trust"]]
 
-get_text(worksheet = "Trust_In_Government_(SG)",
-         column = "discussion_max_100_words") %>%
-  p()
-
-get_text(worksheet = "Trust_In_Government_(SG)",
-         column = "source") %>%
-  paste("Source:", .) %>%
-  p()
-
-get_text(worksheet = "Trust_In_Government_(SG)",
-         column = "methodology") %>%
-  paste("Methodology:", .) %>%
-  p()
+text_after_chart("H3_trust")
 ```
 
 ```{r}
-get_text(worksheet = "Threat_To_Job",
-         column = "headline") %>%
-  h4()
-
-get_text(worksheet = "Threat_To_Job",
-         column = "next_update") %>%
-  format("%d %B %Y") %>%
-  paste("Next update:", .) %>%
-  p()
-
-get_text(worksheet = "Threat_To_Job",
-         column = "summary_max_30_words") %>%
-  p()
+text_before_chart("H3_job")
 
 plots[["3_job"]]
 
-get_text(worksheet = "Threat_To_Job",
-         column = "discussion_max_100_words") %>%
-  p()
-
-get_text(worksheet = "Threat_To_Job",
-         column = "source") %>%
-  paste("Source:", .) %>%
-  p()
-
-get_text(worksheet = "Threat_To_Job",
-         column = "methodology") %>%
-  paste("Methodology:", .) %>%
-  p()
+text_after_chart("H3_job")
 ```
 
 ### 4. Economic harms
 
-#### Universal credit claims
 ```{r}
-plots[["4a"]]
-```
+text_before_chart("H4_turnover")
 
-#### Economic harm 2
-#### Economic harm 3
+plots[["4_turnover"]]
+
+text_after_chart("H4_turnover")
+```

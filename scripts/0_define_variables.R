@@ -25,8 +25,7 @@ paths <- list(
   phs = data_path("^202[0-9]-[0-9][0-9]-[0-9][0-9]-ed-weekly-nhsscotland-data.csv$"),
   phs_admissions = here::here("data/data_extract.csv"),
   pop_est = here::here("data/mid-year-pop-est-19-info.xlsx"),
-  sitrep = here::here("data/Dashboard - Time series.xlsx"),
-  text = here::here("data/text.xlsx")
+  sitrep = here::here("data/Dashboard - Time series.xlsx")
 )
 
 # Define plotting variables -----------------------------------------------

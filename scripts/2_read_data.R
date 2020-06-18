@@ -31,7 +31,7 @@ datasets[["1r"]] <- data.frame(date = as.Date(c("2020-02-19",
                       "on", format(date, "%d %B %Y")))
 
 
-datasets[["1r_recent"]] <- datasets[["sg_template"]][["R"]] %>%
+datasets[["1r_recent"]] <- datasets[["sg_template"]][["H1_R"]] %>%
   spread(key = Variable, value = Value) %>%
   rename(low = `R lower bound`,
          high = `R upper bound`) %>%
@@ -42,7 +42,7 @@ datasets[["1r_recent"]] <- datasets[["sg_template"]][["R"]] %>%
   rename(date = Date)
 # Dummy data used to mock-up a chart for the R number
 
-datasets[["1_infect"]] <- datasets[["sg_template"]][["Infectious_people"]] %>%
+datasets[["1_infect"]] <- datasets[["sg_template"]][["H1_infectious"]] %>%
   spread(key = Variable, value = Value) %>%
   rename_at(.vars = vars(starts_with("Infectious_people_")),
             ~stringr::str_remove(., "Infectious_people_")) %>%
@@ -311,7 +311,7 @@ datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>%
            " in 2018 and 2019)"
          ))
 
-datasets[["2_GP"]] <- datasets[["sg_template"]][["Avoiding_GPs&Hospitals"]] %>%
+datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
   mutate(date = as.Date(Date),
          percent = as.numeric(`%`),
          text_2020 = paste0(
@@ -345,7 +345,7 @@ datasets[["3a"]] <- datasets[["sitrep"]] %>%
 
 
 datasets[["3_crisis_applications"]] <-
-  datasets[["sg_template"]][["data_crisis_applications"]] %>%
+  datasets[["sg_template"]][["H3_crisis"]] %>%
   mutate(month_ending_date = as.Date(month_ending_date),
          text = paste0(
            "<b>",
@@ -382,7 +382,7 @@ datasets[["3_crisis_applications_spark"]] <-
   filter(month > "Feb")
   
 ## Crime ----------------------------------------------------------------------
-datasets[["3_crime"]] <- datasets[["sg_template"]][["data_recorded_crime"]] %>%
+datasets[["3_crime"]] <- datasets[["sg_template"]][["H3_crime"]] %>%
   arrange(year, recorded) %>%
   mutate(crime_group = forcats::as_factor(crime_group),
          text = paste0(
@@ -413,7 +413,7 @@ datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
            lubridate::days(1))
 
 # Loneliness ------------------------------------------------------------------
-datasets[["3_loneliness"]] <- datasets[["sg_template"]][["Loneliness"]] %>%
+datasets[["3_loneliness"]] <- datasets[["sg_template"]][["H3_loneliness"]] %>%
   mutate(date = as.Date(Date),
          percent = as.numeric(`%`),
          text_2020 = paste0(
@@ -427,7 +427,7 @@ datasets[["3_loneliness"]] <- datasets[["sg_template"]][["Loneliness"]] %>%
   select(Measure,date,percent,text_2020)
 
 # Trust in Government----------------------------------------------------------
-datasets[["3_trust"]] <- datasets[["sg_template"]][["Trust_in_Government_(SG)"]] %>%
+datasets[["3_trust"]] <- datasets[["sg_template"]][["H3_trust"]] %>%
   mutate(date = as.Date(Date),
          percent = as.numeric(`%`),
          text_2020 = paste0(
@@ -441,7 +441,7 @@ datasets[["3_trust"]] <- datasets[["sg_template"]][["Trust_in_Government_(SG)"]]
   select(Measure,date,percent,text_2020)
 
 # Threat to Jobs --------------------------------------------------------------
-datasets[["3_job"]] <- datasets[["sg_template"]][["Threat_To_Job"]] %>%
+datasets[["3_job"]] <- datasets[["sg_template"]][["H3_job"]] %>%
   mutate(date = as.Date(Date),
          percent = as.numeric(`%`),
          text_2020 = paste0(
@@ -478,3 +478,69 @@ datasets[["4a"]] <- datasets[["sitrep"]] %>%
            ")"
          ))
 
+# Turnover --------------------------------------------------------------------
+datasets[["4_turnover"]] <- datasets[["sg_template"]][["H4_turnover"]] %>%
+  rename(industry = `Monthly Business Turnover Index.`) %>%
+  gather(key = "month", value = turnover, -industry) %>%
+  mutate(month = forcats::as_factor(month)) %>%
+  mutate(text = paste0(
+    "<b>",
+    round(turnover, digits = 1),
+    "% of firms in ",
+    industry,
+    " reported increasing turnover</b>\n",
+    "in real terms compared to 12 months ago\n",
+    "(",
+    month,
+    " 2020)"
+  ),
+  month_short = substr(month, 1, 3) %>% forcats::as_factor()) %>%
+  group_by(industry)
+
+# Unemployment ----------------------------------------------------------------
+datasets[["4_unemployment"]] <- datasets[["sg_template"]][["H4_unemployment"]] %>%
+  mutate(quarter = forcats::as_factor(quarter),
+         year_quarter = paste(year, quarter) %>% forcats::as_factor(),
+         text = paste0(
+           "<b>",
+           scales::percent(rate),
+           " of people unemployed</b>\n",
+           "(quarter ",
+           quarter,
+           " ",
+           year,
+           ")"
+         ))
+
+# Claimant counts -------------------------------------------------------------
+datasets[["4_claimants"]] <- datasets[["sg_template"]][["H4_claimants"]] %>%
+  rename(count = `Number of claimant counts (LHS)`,
+         change = `% change in claimant counts (RHS)`) %>%
+  mutate(count = count * 1000,
+         date = lubridate::as_date(paste0(year, month, "01")),
+         text = paste0(
+           "<b>",
+           format(count, big.mark = ","),
+           " claimant counts</b>\n",
+           "(",
+           stringr::str_to_sentence(month),
+           " ",
+           year,
+           ")"
+         ))
+
+# GDP ----------------------------------------------------------------
+datasets[["4_GDP"]] <- datasets[["sg_template"]][["H4_GDP"]] %>%
+  mutate(
+    date = lubridate::as_date(paste0(year, month, "01")),
+    text = paste0(
+      "<b>Scotland's GDP was ",
+      round(gdp, 1),
+      "</b>\n",
+      "(",
+      month,
+      " ",
+      year,
+      ")"
+    )
+  )

@@ -527,3 +527,90 @@ plots[["4a"]] <- plot_ly(
     annotations = filter(annotations, plot == "4a", dataset == "4a") %>%
       pmap(list) #transpose and convert to list
   )
+
+# Turnover ----------------------------------------------------------------
+p <- ggplot(
+  data = datasets[["4_turnover"]] %>%
+    ungroup(),
+  mapping = aes(x = month_short,
+                y = turnover,
+                group = industry)
+) +
+  geom_ribbon(mapping = aes(ymin = 50,
+                            ymax = turnover),
+              fill = col_palette["sg_light_blue"]) +
+  geom_line(colour = col_palette["sg_blue"]) +
+  geom_point(colour = col_palette["sg_blue"]) +
+  facet_wrap( ~ industry, ncol = 5) +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    strip.background = element_rect(fill = "white"),
+    panel.background = element_blank()
+  )
+
+
+plots[["4_turnover"]] <- ggplotly(p) %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
+
+# Unemployment ----------------------------------------------------------------
+plots[["4_unemployment"]] <- plot_ly(
+  data = datasets[["4_unemployment"]],
+  x = ~ year_quarter,
+  y = ~ rate,
+  marker = list(size = 7),
+  hoverinfo = ~ "text",
+  text = ~text
+) %>%
+  add_trace(
+    type = "scatter",
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart() %>%
+  layout(
+    yaxis = list(
+      tickformat = "%"
+    )
+  )
+
+# Claimant counts -------------------------------------------------------------
+plots[["4_claimants"]] <- plot_ly(
+  data = datasets[["4_claimants"]],
+  x = ~ date,
+  y = ~ count,
+  marker = list(size = 7),
+  hoverinfo = ~ "text",
+  text = ~text
+) %>%
+  add_trace(
+    type = "scatter",
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart()
+
+# GDP ----------------------------------------------------------------
+plots[["4_GDP"]] <- plot_ly(
+  data = datasets[["4_GDP"]],
+  x = ~ date,
+  y = ~ gdp,
+  marker = list(size = 7),
+  hoverinfo = ~ "text",
+  text = ~text
+) %>%
+  add_trace(
+    type = "scatter",
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart()
+
