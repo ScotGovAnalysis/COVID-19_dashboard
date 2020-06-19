@@ -6,6 +6,26 @@ datasets[["sg_template"]] <- paths[["sg_template"]] %>%
   set_names() %>%
   map(read_excel, path = paths[["sg_template"]])
 
+datasets[["sg_template"]][["TEXT"]] <-
+  datasets[["sg_template"]][["TEXT"]] %>%
+  mutate(
+    spark_text = case_when(
+      worksheet_name %in% c("H3_job", "H3_trust") ~ paste0(
+        "<b>",
+        TITLE_max_35_characters,
+        ":</b>\n",
+        HEADLINE_max_60_characters %>%
+          stringr::str_wrap(width = 35)
+      ),
+      TRUE ~ paste0(
+        "<b>",
+        TITLE_max_35_characters,
+        ":</b> ",
+        HEADLINE_max_60_characters
+      ) %>% stringr::str_wrap(width = 35)
+    )
+  )
+
 datasets[["nrs"]] <- paths[["nrs"]] %>%
   excel_sheets() %>%
   stringr::str_subset(pattern = "Table|data") %>%
@@ -292,8 +312,6 @@ datasets[["3a"]] <- datasets[["sitrep"]] %>%
          ))
 
 ## Crisis applications --------------------------------------------------------
-
-
 datasets[["3_crisis_applications"]] <-
   datasets[["sg_template"]][["H3_crisis"]] %>%
   mutate(month_ending_date = as.Date(month_ending_date),
@@ -465,6 +483,7 @@ datasets[["4_turnover"]] <- datasets[["sg_template"]][["H4_turnover"]] %>%
 datasets[["4_unemployment"]] <- datasets[["sg_template"]][["H4_unemployment"]] %>%
   mutate(quarter = forcats::as_factor(quarter),
          year_quarter = paste(year, quarter) %>% forcats::as_factor(),
+         date = as.Date(paste(year,  substr(quarter, 7, 9), "01"), format = "%Y %b %d"),
          text = paste0(
            "<b>",
            scales::percent(rate),
@@ -475,6 +494,9 @@ datasets[["4_unemployment"]] <- datasets[["sg_template"]][["H4_unemployment"]] %
            year,
            ")"
          ))
+
+datasets[["4_unemployment_spark"]] <- datasets[["4_unemployment"]] %>%
+  filter(date >= as.Date("2020-01-01"))
 
 # Claimant counts -------------------------------------------------------------
 datasets[["4_claimants"]] <- datasets[["sg_template"]][["H4_claimants"]] %>%

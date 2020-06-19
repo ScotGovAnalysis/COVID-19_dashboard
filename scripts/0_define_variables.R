@@ -43,7 +43,8 @@ dates <- c(
   WHO_declares_pandemic = "2020-03-11",
   start_sparklines = "2020-03-07"
 )
-spark_height <- 80
+spark_height <- 80 * 1.2 # Temporarily increasing this until we reduce the word
+                         # count of some headlines
 
 
 # Create shapes -----------------------------------------------------------

@@ -4,7 +4,7 @@ plots[["1r_recent_spark"]] <- datasets[["1r_recent"]] %>%
   plot_ly(
     x = ~ date,
     y = ~ middle,
-    height = spark_height * 3,
+    height = spark_height * 5,
     hoverinfo = "text"
   ) %>%
   add_trace(
@@ -53,9 +53,8 @@ plots[["1r_recent_spark"]] <- datasets[["1r_recent"]] %>%
         line = list(color = col_palette["sg_grey"], dash = "dot")
       )
     ),
-    annotations = filter(annotations,
-                         plot == "1_sparklines",
-                         dataset == "1r")
+    annotations = filter(spark_labels,
+                         harm_group == "H1")
   ) %>%
   htmlwidgets::onRender(
     "function(el, x) {
@@ -66,10 +65,7 @@ plots[["1_infect_spark"]] <-  datasets[["1_infect"]] %>%
   plot_ly(x = ~ date,
           y = ~ midpoint,
           text = ~ text) %>%
-  add_style_spark() %>%
-  layout(annotations = filter(annotations,
-                              plot == "1_sparklines",
-                              dataset == "1_infect"))
+  add_style_spark()
 
 plots[["1_cases_spark"]] <- datasets[["1_cases"]] %>%
   plot_ly(
@@ -77,51 +73,34 @@ plots[["1_cases_spark"]] <- datasets[["1_cases"]] %>%
     y = ~ cases_7day_avg,
     text = ~ cases_7day_avg_text
   ) %>%
-  add_style_spark() %>%
-  layout(annotations = filter(annotations,
-                              plot == "1_sparklines",
-                              dataset == "1_cases"))
+  add_style_spark()
 
-# plots[["1a_spark"]] <- datasets[["1a"]] %>%
-#   plot_ly(
-#     x = ~ Date,
-#     y = ~ count_7day_avg,
-#     text = ~ count_7day_avg_text
-#   ) %>%
-#   add_style_spark() %>%
-#   layout(annotations = filter(annotations,
-#                               plot == "1_sparklines",
-#                               dataset == "1a"))
-# 
-# plots[["1c_icu_hdu_spark"]] <- datasets[["1c_icu_hdu"]] %>%
-#   plot_ly(x = ~ date,
-#           y = ~ covid_patients,
-#           text = ~ text) %>%
-#   add_style_spark() %>%
-#   layout(annotations = filter(annotations,
-#                               plot == "1_sparklines",
-#                               dataset == "1c_icu_hdu"))
+plots[["1_deaths_spark"]] <- datasets[["H1_deaths"]] %>%
+  plot_ly(
+    x = ~ week_beginning,
+    y = ~ count,
+    text = ~ text
+  ) %>%
+  add_style_spark()
 
-# plots[["1c_hosp_conf_spark"]] <- datasets[["1c_hosp_conf"]] %>%
-#   plot_ly(x = ~ date,
-#           y = ~ covid_patients,
-#           text = ~ text) %>%
-#   add_style_spark() %>%
-#   layout(annotations = filter(annotations,
-#                               plot == "1_sparklines",
-#                               dataset == "1c_hosp_conf"))
+plots[["1_admissions_spark"]] <- datasets[["H1_admissions"]] %>%
+  plot_ly(
+    x = ~ Date,
+    y = ~ count_7day_avg,
+    text = ~ text_7day_avg
+  ) %>%
+  add_style_spark()
 
 ## Create subplots ------------------------------------------------------------
 plots[["1_sparklines"]] <-
   plots[c(
     "1r_recent_spark",
     "1_infect_spark",
-    "1_cases_spark"
-    # "1a_spark",
-    # "1c_icu_hdu_spark",
-    # "1c_hosp_conf_spark"
+    "1_cases_spark",
+    "1_deaths_spark",
+    "1_admissions_spark"
   )] %>%
-  subplot(nrows = 3,
+  subplot(nrows = length(.),
           shareX = TRUE) %>%
   layout(showlegend = FALSE) %>%
   htmlwidgets::onRender(
@@ -138,9 +117,8 @@ plots[["2a_spark"]] <- datasets[["2a_recent"]] %>%
           text = ~ text) %>%
   add_style_spark() %>%
   layout(
-    annotations = filter(annotations,
-                         plot == "2_sparklines",
-                         dataset == "2a_recent")
+    annotations = filter(spark_labels,
+                         harm_group == "H2")
   )
 
 plots[["2_admissions_emergency_spark"]] <-  datasets[["2_admissions"]] %>%
@@ -148,53 +126,33 @@ plots[["2_admissions_emergency_spark"]] <-  datasets[["2_admissions"]] %>%
   plot_ly(x = ~ Week_ending,
           y = ~ variation,
           text = ~ text_variation) %>%
-  add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "2_sparklines",
-                         dataset == "2_admissions_emergency")
-  )
+  add_style_spark()
 
 plots[["2_admissions_planned_spark"]] <- datasets[["2_admissions"]] %>%
   filter(Admission_type == "Planned") %>%
   plot_ly(x = ~ Week_ending,
           y = ~ variation,
           text = ~ text_variation) %>%
-  add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "2_sparklines",
-                         dataset == "2_admissions_planned")
-  )
+  add_style_spark()
 
 plots[["2_excess_spark"]] <- datasets[["2_excess_spark"]] %>%
   plot_ly(x = ~ date,
           y = ~ excess_deaths,
           text = ~ text) %>%
-  add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "2_sparklines",
-                         dataset == "2_excess_spark")
-  )
+  add_style_spark()
 
 plots[["2_GP_spark"]] <- datasets[["2_GP"]] %>%
   plot_ly(x = ~ date,
           y = ~ percent,
           text = ~ text_2020) %>%
-  add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "2_sparklines",
-                         dataset == "2_GP")
-  )
+  add_style_spark()
 
 ## Create subplots ------------------------------------------------------------
 plots[["2_sparklines"]] <-
   plots[c("2a_spark", "2_admissions_emergency_spark",
           "2_admissions_planned_spark", "2_excess_spark",
           "2_GP_spark")] %>%
-  subplot(nrows = 5,
+  subplot(nrows = length(.),
           shareX = TRUE) %>%
   layout(showlegend = FALSE) %>%
   htmlwidgets::onRender(
@@ -205,68 +163,54 @@ plots[["2_sparklines"]] <-
 # 3 Society -------------------------------------------------------------------
 ## Define sparklines ----------------------------------------------------------
 plots[["3a_spark"]] <- datasets[["3a"]] %>%
-  plot_ly(x = ~ date, y = ~ children, height = 5 * spark_height,
+  plot_ly(x = ~ date, y = ~ children, height = 6 * spark_height,
           text = ~ text) %>%
-  add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "3_sparklines",
-                         dataset == "3a")
-  )
+  add_style_spark()
 
 plots[["3_crisis_applications_spark"]] <-
   datasets[["3_crisis_applications_spark"]] %>%
   plot_ly(x = ~ month_ending_date,
           y = ~ variation,
           text = ~ text) %>%
-  add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "3_sparklines",
-                         dataset == "3_crisis_applications")
-  )
+  add_style_spark()
 
 plots[["3_loneliness_spark"]] <- datasets[["3_loneliness"]] %>%
   plot_ly(x = ~ date,
           y = ~ percent,
           text = ~ text_2020) %>%
-  add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "3_sparklines",
-                         dataset == "3_loneliness")
-  )
+  add_style_spark()
 
 plots[["3_trust_spark"]] <- datasets[["3_trust"]] %>%
   plot_ly(x = ~ date,
           y = ~ percent,
           text = ~ text_2020) %>%
-  add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "3_sparklines",
-                         dataset == "3_trust")
-  )
+  add_style_spark()
 
 plots[["3_job_spark"]] <- datasets[["3_job"]] %>%
   plot_ly(x = ~ date,
           y = ~ percent,
           text = ~ text_2020) %>%
+  add_style_spark()
+
+plots[["3_transport_spark"]] <- datasets[["H3_transport"]] %>%
+  plot_ly(x = ~ Date_start,
+          y = ~ `%`,
+          text = ~ text) %>%
   add_style_spark() %>%
   layout(
-    annotations = filter(annotations,
-                         plot == "3_sparklines",
-                         dataset == "3_job")
+    yaxis = list(range = c(0, max(datasets[["H3_transport"]][["%"]]) * 1.05))
   )
 
 ## Create subplots ------------------------------------------------------------
 plots[["3_sparklines"]] <-
   plots[c("3a_spark", "3_crisis_applications_spark",
           "3_loneliness_spark","3_trust_spark",
-          "3_job_spark")] %>%
+          "3_job_spark", "3_transport_spark")] %>%
   subplot(nrows = length(.),
           shareX = TRUE) %>%
-  layout(showlegend = FALSE) %>%
+  layout(showlegend = FALSE,
+         annotations = filter(spark_labels,
+                              harm_group == "H3")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
@@ -274,22 +218,40 @@ plots[["3_sparklines"]] <-
 
 # 4 Economy -------------------------------------------------------------------
 ## Define sparklines ----------------------------------------------------------
-plots[["4a_spark"]] <- datasets[["4a"]] %>%
-  plot_ly(x = ~ date, y = ~ claims_7day_avg, height = 1 * spark_height,
-          text = ~ claims_7day_avg_text) %>%
+plots[["4_GDP_spark"]] <- datasets[["4_GDP"]] %>%
+  plot_ly(
+    x = ~ date,
+    y = ~ gdp,
+    text = ~ text,
+    height = 3 * spark_height
+  ) %>%
+  add_style_spark()
+
+plots[["4_claimants_spark"]] <- datasets[["4_claimants"]] %>%
+  plot_ly(x = ~ date,
+          y = ~ count,
+          text = ~ text) %>%
+  add_style_spark()
+
+plots[["4_unemployment_spark"]] <-
+  datasets[["4_unemployment_spark"]] %>%
+  plot_ly(x = ~ date,
+          y = ~ rate,
+          text = ~ text) %>%
   add_style_spark() %>%
-  layout(
-    annotations = filter(annotations,
-                         plot == "4_sparklines",
-                         dataset == "4a")
-  )
+  layout(yaxis = list(range = c(0, max(datasets[["4_unemployment_spark"]][["rate"]]) * 1.05)))
 
 ## Create subplots ------------------------------------------------------------
-plots[["4_sparklines"]] <- list(
-  plots[[c("4a_spark")]]) %>%
+plots[["4_sparklines"]] <- plots[c(
+  "4_GDP_spark",
+  "4_claimants_spark",
+  "4_unemployment_spark"
+  )] %>%
   subplot(nrows = length(.),
           shareX = TRUE) %>%
-  layout(showlegend = FALSE) %>%
+  layout(showlegend = FALSE,
+         annotations = filter(spark_labels,
+                              harm_group == "H4")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
