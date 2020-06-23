@@ -35,7 +35,7 @@ plots[["1_infect"]] <- plot_ly(
   y = ~ midpoint
 ) %>%
   add_ribbons(
-    ymin = ~ lowbound,
+    ymin = ~ lowerbound,
     ymax = ~ upperbound,
     line = list(color = "transparent"),
     fillcolor = col_palette["sg_light_blue"]
@@ -147,37 +147,35 @@ plots[["H1_deaths"]] <- plot_ly(
 # 2 Indirect health -----------------------------------------------------------
 ## A&E attendance -------------------------------------------------------------
 plots[["2a"]] <- plot_ly(
-  x = ~ lubridate::week(week_ending_date),
+  x = ~ week_ending_date_2020,
   y = ~ attendance,
   hoverinfo = ~ "text"
 ) %>%
   add_trace(data = datasets[["2a"]] %>%
-              group_by(year = year(week_ending_date)) %>%
+              group_by(year) %>%
               filter(year != 2020),
             type = "scatter",
             mode = "lines",
             text = ~ text) %>%
   add_trace(data = datasets[["2a"]] %>%
-              filter(year(week_ending_date) == 2020),
+              filter(year == 2020),
             type = "scatter",
             mode = "markers+lines",
             marker = list(size = 7),
             text = ~ text) %>%
   add_style_chart() %>%
   layout(
-    xaxis = list(title = "Week number"),
     showlegend = FALSE,
     colorway = c(col_palette),
     shapes = shapes[["2a"]],
     annotations = filter(annotations, plot == "2a", dataset == "2a") %>%
-      mutate(x = week(x)) %>% # Use week numbers instead of dates
       pmap(list) #transpose and convert to list
   )
 
 ## Emergency and planned admissions -------------------------------------------
 plots[["2_admissions"]] <- plot_ly(
   data = datasets[["2_admissions"]],
-  x = ~ week,
+  x = ~ Week_ending,
   marker = list(size = 7),
   name = ~ Admission_type,
   hoverinfo = ~ "text"
@@ -200,17 +198,15 @@ plots[["2_admissions"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(showlegend = FALSE,
-         xaxis = list(title = "Week number"),
          annotations = filter(annotations,
                               plot == "2_admissions",
                               dataset == "2_admissions") %>%
-           mutate(x = week(x)) %>% # Use week numbers instead of dates
            pmap(list))
 
 ## Excess deaths --------------------------------------------------------------
 plots[["2_excess"]] <- plot_ly(
   data = datasets[["2_excess"]],
-  x = ~ week,
+  x = ~ date,
   y = ~ count,
   hoverinfo = ~ "text"
 ) %>%
@@ -241,8 +237,8 @@ plots[["2_excess"]] <- plot_ly(
       fill = NA,
       fixedrange = TRUE,
       bty = "n",
+      title = "",
       showline = FALSE,
-      title = "Week number",
       showgrid = FALSE,
       zeroline = FALSE
     ),
@@ -252,13 +248,13 @@ plots[["2_excess"]] <- plot_ly(
       title = "",
       showgrid = FALSE,
       tick0 = 0,
-      zeroline = FALSE
+      zeroline = FALSE,
+      tickformat = ","
     ),
     shapes = shapes[["2_excess"]],
     annotations = filter(annotations,
                          plot == "2_excess",
                          dataset == "2_excess") %>%
-      mutate(x = lubridate::week(x)) %>%
       pmap(list),
     colorway = c(col_palette[c("sg_blue", "sg_grey", "sg_blue")]),
     paper_bgcolor = "rgba(0, 0, 0, 0)",
@@ -274,7 +270,7 @@ plots[["2_excess"]] <- plot_ly(
 # Avoiding GPs and hospitals --------------------------------------------------
 plots[["2_GP"]] <- plot_ly(
   data = datasets[["2_GP"]],
-  x = ~ week(date),
+  x = ~ date,
   marker = list(size = 7),
   name = ~ Measure,
   hoverinfo = ~ "text"
@@ -289,12 +285,10 @@ plots[["2_GP"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(showlegend = FALSE,
-         xaxis = list(title = "Week number"),
          shapes = shapes[["2_GP"]],
          annotations = filter(annotations,
                               plot == "2_GP",
                               dataset == "2_GP") %>%
-           mutate(x = week(x)) %>% # Use week numbers instead of dates
            pmap(list))
 
 # 3 Society -------------------------------------------------------------------

@@ -104,8 +104,8 @@ shapes <- list(
     list(
       type = "line",
       layer = "below",
-      x0 = 13,
-      x1 = 13,
+      x0 = "2020-03-29",
+      x1 = "2020-03-29",
       y0 = 3000,
       y1 = 11059,
       line = list(color = col_palette["sg_grey"], dash = "dot")
@@ -113,8 +113,8 @@ shapes <- list(
     list(
       type = "line",
       layer = "below",
-      x0 = 17,
-      x1 = 17,
+      x0 = "2020-04-26",
+      x1 = "2020-04-26",
       y0 = 3000,
       y1 = 15056,
       line = list(color = col_palette["sg_grey"], dash = "dot")
@@ -124,8 +124,8 @@ shapes <- list(
     list(
       type = "line",
       layer = "below",
-      x0 = 17,
-      x1 = 17,
+      x0 = "2020-04-20",
+      x1 = "2020-04-20",
       y0 = 0,
       y1 = 659,
       line = list(color = col_palette["sg_grey"], dash = "dot")
@@ -135,8 +135,8 @@ shapes <- list(
     list(
       type = "line",
       layer = "below",
-      x0 = 17,
-      x1 = 17,
+      x0 = "2020-04-24",
+      x1 = "2020-04-24",
       y0 = 25,
       y1 = 45,
       line = list(color = col_palette["sg_grey"], dash = "dot")

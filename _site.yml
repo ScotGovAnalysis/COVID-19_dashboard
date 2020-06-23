@@ -1,7 +1,8 @@
 output:
   html_document:
     includes:
-      before_body: prefix.html
+      in_header: in_header.html
+      before_body: before_body.html
 
 navbar:
   title: "COVID-19 in Scotland"

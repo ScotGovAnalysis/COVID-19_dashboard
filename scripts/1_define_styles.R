@@ -1,7 +1,10 @@
-add_style_spark <- function(p) {
+add_style_spark <- function(p,
+                            mode = "lines",
+                            marker = NULL) {
   p %>% add_trace(
     type = "scatter",
-    mode = "lines",
+    mode = mode,
+    marker = marker,
     line = list(color = "black"),
     fill = "tozeroy",
     fillcolor = col_palette["sg_light_blue"],

@@ -240,9 +240,12 @@ plots[["4_turnover_spark"]] <- datasets[["4_turnover"]] %>%
     x = ~ date,
     y = ~ turnover,
     text = ~ text,
-    height = 4 * spark_height
+    height = 4 * spark_height,
+    color = "black"
   ) %>%
-  add_style_spark()
+  add_style_spark(mode = "lines+markers",
+                  marker = list(color = "white",
+                                size = 5))
 
 plots[["4_GDP_spark"]] <- datasets[["4_GDP"]] %>%
   plot_ly(
@@ -250,20 +253,26 @@ plots[["4_GDP_spark"]] <- datasets[["4_GDP"]] %>%
     y = ~ gdp,
     text = ~ text
   ) %>%
-  add_style_spark()
+  add_style_spark(mode = "lines+markers",
+                  marker = list(color = "white",
+                                size = 5))
 
 plots[["4_claimants_spark"]] <- datasets[["4_claimants"]] %>%
   plot_ly(x = ~ date,
           y = ~ count,
           text = ~ text) %>%
-  add_style_spark()
+  add_style_spark(mode = "lines+markers",
+                  marker = list(color = "white",
+                                size = 5))
 
 plots[["4_unemployment_spark"]] <-
   datasets[["4_unemployment"]] %>%
   plot_ly(x = ~ date,
           y = ~ rate,
           text = ~ text) %>%
-  add_style_spark() %>%
+  add_style_spark(mode = "lines+markers",
+                  marker = list(color = "white",
+                                size = 5)) %>%
   layout(yaxis = list(range = c(0, max(datasets[["4_unemployment_spark"]][["rate"]]) * 1.05)))
 
 ## Create subplots ------------------------------------------------------------

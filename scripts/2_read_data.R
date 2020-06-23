@@ -15,14 +15,20 @@ datasets[["sg_template"]][["TEXT"]] <-
         TITLE_max_35_characters,
         ":</b>\n",
         HEADLINE_max_60_characters %>%
-          stringr::str_wrap(width = 35)
+          stringr::str_wrap(width = 32)
       ),
+      worksheet_name %in% c("H4_claimants") ~ paste0(
+        "<b>",
+        TITLE_max_35_characters,
+        ":</b> ",
+        HEADLINE_max_60_characters
+      ) %>% stringr::str_wrap(width = 45),
       TRUE ~ paste0(
         "<b>",
         TITLE_max_35_characters,
         ":</b> ",
         HEADLINE_max_60_characters
-      ) %>% stringr::str_wrap(width = 35)
+      ) %>% stringr::str_wrap(width = 32)
     )
   )
 
@@ -71,7 +77,7 @@ datasets[["1_infect"]] <- datasets[["sg_template"]][["H1_infectious"]] %>%
   rename_at(.vars = vars(starts_with("Infectious_people_")),
             ~stringr::str_remove(., "Infectious_people_")) %>%
   mutate(Date = as.Date(Date),
-         text = paste0("<b>Between ", format(lowbound, big.mark = ","), " and ",
+         text = paste0("<b>Between ", format(lowerbound, big.mark = ","), " and ",
                        format(upperbound, big.mark = ","),
                        " infectious people</b>\non ",
                        format(Date, "%d %B %Y"))) %>%
@@ -165,6 +171,7 @@ datasets[["H1_admissions"]] <-
   )
 
 # 2 Indirect health -----------------------------------------------------------
+# A&E attendances -------------------------------------------------------------
 datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
   select(week_ending_date, attendance) %>%
   mutate(week_ending_date = as.Date(week_ending_date, format = "%Y-%m-%d")) %>%
@@ -178,9 +185,24 @@ datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
     ")"
   ))
 
+datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
+  select(week_ending_date, attendance) %>%
+  mutate(week_ending_date = as.Date(week_ending_date, format = "%Y-%m-%d"),
+         week_ending_date_2020 = `year<-`(week_ending_date, 2020),
+         year = lubridate::year(week_ending_date)) %>%
+  mutate(text = paste0(
+    "<b>",
+    attendance %>% format(big.mark = ","),
+    " A&E attendances</b>\n",
+    "(week ending ",
+    format(week_ending_date, "%d %B %Y"),
+    ")"
+  ))
+
 datasets[["2a_recent"]] <- datasets[["2a"]] %>%
   filter(week_ending_date > as.Date("2020-01-01"))
 
+# Excess deaths ---------------------------------------------------------------
 datasets[["2_excess"]] <- datasets[["nrs"]][["Figure 5 data"]] %>%
   filter(
     `Figure 5: Deaths by week of registration, Scotland, 2020` %in%
@@ -245,7 +267,7 @@ datasets[["2_excess_spark"]] <- datasets[["2_excess"]] %>%
   rename(all_2020 = `Total deaths 2020`,
          avg_2015_19 = `Average for previous 5 years`)
 
-
+# Emergency and planned admissions --------------------------------------------
 datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>%
   select(-c(Area_name, Area_type, Category, Specialty)) %>%
   rename(variation = Variation....) %>%
@@ -281,6 +303,7 @@ datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>%
            " in 2018 and 2019)"
          ))
 
+# People avoiding GPs or hospitals --------------------------------------------
 datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
   mutate(date = as.Date(Date),
          percent = as.numeric(`%`),
