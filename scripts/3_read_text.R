@@ -1,24 +1,12 @@
 # Define functions to read text --------------------------------------------
-create_html <- function(md) {
-  htmltools::HTML(
-    markdown::markdownToHTML(
-      text = md, fragment.only = TRUE
-      )
-    )
-}
-
 text_before_chart <- function(worksheet,
                               source = datasets[["sg_template"]][["TEXT"]]) {
   text <- source %>%
     filter(worksheet_name == worksheet)
   
-  paste(
-    sep = "\r\n\r\n",
-    paste("###", pull(text, "TITLE_max_35_characters")),
-    pull(text, "HEADLINE_max_60_characters"),
-    pull(text, "SUMMARY_max_30_words")
-  ) %>%
-    create_html()
+  div(h4(pull(text, "TITLE_max_35_characters")),
+      p(pull(text, "HEADLINE_max_60_characters")),
+      p(pull(text, "SUMMARY_max_30_words")))
   
 }
 
@@ -27,19 +15,18 @@ text_after_chart <- function(worksheet,
   text <- source %>%
     filter(worksheet_name == worksheet)
   
-  paste(
-    sep = "\r\n\r\n",
-    pull(text, "DISCUSSION_max_100_words"),
-    paste("**Source:**", pull(text, "source")),
-    paste("**Methodology:**", pull(text, "methodology"), "<br><br><br><br><br><br>")
-  ) %>%
-    create_html()
+  div(p(pull(text, "DISCUSSION_max_100_words")),
+      p(strong("Next update:"), pull(text, "next_update")),
+      paste("**Source:**", pull(text, "source")) %>%
+          markdownToHTML(text = ., fragment.only = TRUE)
+        %>% htmltools::HTML(),
+      p(strong("Methodology:"), pull(text, "methodology")))
   
 }
 
 spark_labels <- datasets[["sg_template"]][["TEXT"]] %>%
   select(position, worksheet_name, spark_text) %>%
-  filter(!(worksheet_name %in% c("H3_crime"))) %>%
+  filter(!(worksheet_name %in% c("H3_crime", "H4_turnover"))) %>%
   separate(
     col = worksheet_name,
     into = c("harm_group", "harm_id"),
@@ -78,7 +65,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
   bind_rows(
     datasets[["1_infect"]] %>%
       filter(date == max(date)) %>%
-      select(date, lowbound, midpoint, upperbound) %>%
+      select(date, lowerbound, midpoint, upperbound) %>%
       gather(key = "estimate", value = "value", -date) %>%
       mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
              plot = "1_infect",
@@ -215,6 +202,23 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              x = as.Date("2020-04-01")) %>%
       rename(y = recorded,
              text = crime_group),
+    datasets[["3_school"]] %>%
+      filter(date == max(date)) %>%
+      select(count, date, Measure) %>%
+      mutate(text = case_when(grepl("All", Measure, ignore.case = TRUE) ~ "All CYP attending",
+                              grepl("Key", Measure, ignore.case = TRUE) ~ "Key worker CYP",
+                              grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "Vulnerable CYP"),
+             font = c(list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_blue"])),
+                      list(list(color = col_palette["sg_blue"]))),
+             plot = "3_school",
+             dataset = "3_school",
+             showarrow = FALSE,
+             xanchor = "left",
+             xshift = 5,
+             align = "left") %>%
+      rename(y = count,
+             x = date),
     datasets[["4a"]] %>%
       filter(date == max(date)) %>%
       select(claims_7day_avg, date) %>%
