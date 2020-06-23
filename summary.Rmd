@@ -14,6 +14,13 @@ for (script in list.files("scripts", full.names = TRUE)) {
 ```
 
 ```{r}
+narrative %>% 
+  filter(harm == 0, section == "Summary") %>% 
+  pull("text") %>%
+  create_html()
+```
+
+```{r}
 div(class = "row fluid-row",
     div(class = "col-md-6", div(
       class = "panel panel-default",

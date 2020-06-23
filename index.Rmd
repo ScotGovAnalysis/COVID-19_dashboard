@@ -1,5 +1,6 @@
 ---
 title: "COVID-19 in Scotland"
+subtitle: "[Latest guidance](https://www.gov.scot/coronavirus-covid-19/) from Scottish Government"
 output: html_document
 date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 ---
@@ -16,10 +17,15 @@ for (script in list.files("scripts", full.names = TRUE)) {
 
 
 ```{r}
-narrative %>% 
-  filter(harm == 0, section == "Introduction") %>% 
-  pull("text") %>% 
-  p()
+narrative %>%
+  filter(harm == 0, section == "Home") %>%
+  pull("text") %>%
+  create_html()
+  
+  narrative %>%
+  filter(harm == 0, section == "Introduction") %>%
+  pull("text") %>%
+  create_html()
 ```
 
 ***
@@ -42,30 +48,30 @@ div(class = "row fluid-row text-center",
 ```{r}
 narrative %>% 
   filter(harm == 1, section == "Definition") %>% 
-  pull("text") %>% 
-  p()
+  pull("text") %>%
+  create_html()
 ```
 
 ### Health harms not directly related to COVID-19
 ```{r}
 narrative %>% 
   filter(harm == 2, section == "Definition") %>% 
-  pull("text") %>% 
-  p()
+  pull("text") %>%
+  create_html()
 ```
 
 ### Societal impacts
 ```{r}
 narrative %>% 
   filter(harm == 3, section == "Definition") %>% 
-  pull("text") %>% 
-  p()
+  pull("text") %>%
+  create_html()
 ```
 
 ### Economic impacts
 ```{r}
 narrative %>% 
   filter(harm == 4, section == "Definition") %>% 
-  pull("text") %>% 
-  p()
+  pull("text") %>%
+  create_html()
 ```

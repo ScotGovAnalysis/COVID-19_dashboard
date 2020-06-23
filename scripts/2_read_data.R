@@ -179,7 +179,7 @@ datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
   ))
 
 datasets[["2a_recent"]] <- datasets[["2a"]] %>%
-  filter(week_ending_date > as.Date("2020-03-01"))
+  filter(week_ending_date > as.Date("2020-01-01"))
 
 datasets[["2_excess"]] <- datasets[["nrs"]][["Figure 5 data"]] %>%
   filter(
@@ -346,8 +346,7 @@ datasets[["3_crisis_applications_spark"]] <-
       ")",
       "\nthan average of previous 2 years."
     )
-  ) %>%
-  filter(month > "Feb")
+  )
   
 ## Crime ----------------------------------------------------------------------
 datasets[["3_crime"]] <- datasets[["sg_template"]][["H3_crime"]] %>%
@@ -464,7 +463,8 @@ datasets[["4a"]] <- datasets[["sitrep"]] %>%
 datasets[["4_turnover"]] <- datasets[["sg_template"]][["H4_turnover"]] %>%
   rename(industry = `Monthly Business Turnover Index.`) %>%
   gather(key = "month", value = turnover, -industry) %>%
-  mutate(month = forcats::as_factor(month)) %>%
+  mutate(month = forcats::as_factor(month),
+         date = as.Date(paste("2020", month, "01"), format = "%Y %B %d")) %>%
   mutate(text = paste0(
     "<b>",
     round(turnover, digits = 1),

@@ -350,13 +350,13 @@ plots[["3_crime"]] <- plot_ly(
   data = datasets[["3_crime"]],
   x = ~ recorded,
   y = ~ crime_group,
-  name = ~ year,
+  name = ~ forcats::as_factor(year) %>% forcats::fct_rev(),
   text = ~ text,
   hoverinfo = ~ "text"
 ) %>%
   add_trace(type = "bar") %>%
   add_style_chart() %>%
-  layout(colorway = c(col_palette["sg_grey"], col_palette["sg_blue"]))
+  layout(colorway = c(col_palette["sg_blue"], col_palette["sg_grey"]))
 
 # Loneliness ------------------------------------------------------------------
 plots[["3_loneliness"]] <- plot_ly(

@@ -25,9 +25,11 @@ add_style_spark <- function(p) {
         title = "",
         showgrid = FALSE,
         showticklabels = FALSE,
-        range = c(dates[["start_sparklines"]], as.character(Sys.Date()))
+        # range = c(dates[["start_sparklines"]], as.character(Sys.Date()))
+        range = c("2019-08-01", as.character(Sys.Date()))
       ),
-      margin = list(l = 210,
+      margin = list(l = 0,
+                    # l = 210,
                     r = 0,
                     t = 0,
                     b = 0)

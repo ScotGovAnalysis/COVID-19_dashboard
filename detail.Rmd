@@ -20,7 +20,20 @@ for (script in list.files("scripts", full.names = TRUE)) {
 
 ## The Four harms
 
-### 1. Direct health harms
+```{r}
+narrative %>% 
+  filter(harm == 0, section == "Detail") %>% 
+  pull("text") %>%
+  create_html()
+
+br()
+br()
+br()
+br()
+
+```
+
+## 1. Direct health harms
 
 ```{r}
 text_before_chart("H1_R")
@@ -37,7 +50,7 @@ text_after_chart("H1_infectious")
 ```
 
 
-#### Cases
+### Cases
 
 ```{r}
 plots[["1_cases"]]
@@ -55,7 +68,7 @@ plots[["H1_admissions"]]
 text_after_chart("H1_admissions")
 ```
 
-### 2. Indirect health harms
+## 2. Indirect health harms
 
 ```{r}
 text_before_chart("H2_A&E")
@@ -70,9 +83,9 @@ text_after_chart("H2_excess")
 ```
 
 ```{r}
-text_before_chart("H2_emergency")
+text_before_chart("H2_admissions")
 plots[["2_admissions"]]
-text_after_chart("H2_emergency")
+text_after_chart("H2_admissions")
 ```
 
 ```{r}
@@ -81,7 +94,7 @@ plots[["2_GP"]]
 text_after_chart("H2_avoiding")
 ```
 
-### 3. Societal harms
+## 3. Societal harms
 
 ```{r}
 text_before_chart("H3_schools")
@@ -125,7 +138,7 @@ plots[["H3_transport"]]
 text_after_chart("H3_transport")
 ```
 
-### 4. Economic harms
+## 4. Economic harms
 
 ```{r}
 text_before_chart("H4_turnover")

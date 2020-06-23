@@ -1,12 +1,24 @@
 # Define functions to read text --------------------------------------------
+create_html <- function(md) {
+  htmltools::HTML(
+    markdown::markdownToHTML(
+      text = md, fragment.only = TRUE
+      )
+    )
+}
+
 text_before_chart <- function(worksheet,
                               source = datasets[["sg_template"]][["TEXT"]]) {
   text <- source %>%
     filter(worksheet_name == worksheet)
   
-  div(h4(pull(text, "TITLE_max_35_characters")),
-      p(pull(text, "HEADLINE_max_60_characters")),
-      p(pull(text, "SUMMARY_max_30_words")))
+  paste(
+    sep = "\r\n\r\n",
+    paste("###", pull(text, "TITLE_max_35_characters")),
+    pull(text, "HEADLINE_max_60_characters"),
+    pull(text, "SUMMARY_max_30_words")
+  ) %>%
+    create_html()
   
 }
 
@@ -15,18 +27,19 @@ text_after_chart <- function(worksheet,
   text <- source %>%
     filter(worksheet_name == worksheet)
   
-  div(p(pull(text, "DISCUSSION_max_100_words")),
-      p(strong("Next update:"), pull(text, "next_update")),
-      paste("**Source:**", pull(text, "source")) %>%
-          markdownToHTML(text = ., fragment.only = TRUE)
-        %>% htmltools::HTML(),
-      p(strong("Methodology:"), pull(text, "methodology")))
+  paste(
+    sep = "\r\n\r\n",
+    pull(text, "DISCUSSION_max_100_words"),
+    paste("**Source:**", pull(text, "source")),
+    paste("**Methodology:**", pull(text, "methodology"), "<br><br><br><br><br><br>")
+  ) %>%
+    create_html()
   
 }
 
 spark_labels <- datasets[["sg_template"]][["TEXT"]] %>%
   select(position, worksheet_name, spark_text) %>%
-  filter(!(worksheet_name %in% c("H3_crime", "H4_turnover"))) %>%
+  filter(!(worksheet_name %in% c("H3_crime"))) %>%
   separate(
     col = worksheet_name,
     into = c("harm_group", "harm_id"),
