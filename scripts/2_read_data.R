@@ -71,7 +71,7 @@ datasets[["1_infect"]] <- datasets[["sg_template"]][["H1_infectious"]] %>%
   rename_at(.vars = vars(starts_with("Infectious_people_")),
             ~stringr::str_remove(., "Infectious_people_")) %>%
   mutate(Date = as.Date(Date),
-         text = paste0("<b>Between ", format(lowerbound, big.mark = ","), " and ",
+         text = paste0("<b>Between ", format(lowbound, big.mark = ","), " and ",
                        format(upperbound, big.mark = ","),
                        " infectious people</b>\non ",
                        format(Date, "%d %B %Y"))) %>%
@@ -179,7 +179,7 @@ datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
   ))
 
 datasets[["2a_recent"]] <- datasets[["2a"]] %>%
-  filter(week_ending_date > as.Date("2020-03-01"))
+  filter(week_ending_date > as.Date("2020-01-01"))
 
 datasets[["2_excess"]] <- datasets[["nrs"]][["Figure 5 data"]] %>%
   filter(
@@ -296,7 +296,6 @@ datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
 
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
-
 datasets[["3_school"]] <- datasets[["sg_template"]][["H3_schools"]] %>%
   mutate(date = as.Date(Date)) %>%
   full_join(tibble(date = seq(from = min(.$date), to = max(.$date), by = 1)), by = "date") %>% #add breaks for weekends
@@ -305,17 +304,17 @@ datasets[["3_school"]] <- datasets[["sg_template"]][["H3_schools"]] %>%
   mutate(CYP_label = case_when(grepl("All", Measure, ignore.case = TRUE) ~ "total children &\nyoung people attending",
                                grepl("Key", Measure, ignore.case = TRUE) ~ "key worker children &\nyoung people attending",
                                grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "vulnerable children &\nyoung people attending"
-         ),
-         text = paste0(
-           "<b>",
-           format(count, big.mark = ","),
-           " ",
-           CYP_label,
-           "</b>\n",
-           "(",
-           format(date, "%A %d %B %Y"),
-           ")"
-         )) %>%
+  ),
+  text = paste0(
+    "<b>",
+    format(count, big.mark = ","),
+    " ",
+    CYP_label,
+    "</b>\n",
+    "(",
+    format(date, "%A %d %B %Y"),
+    ")"
+  )) %>%
   select(Measure,date,count,text)
 
 ## Crisis applications --------------------------------------------------------
@@ -353,8 +352,7 @@ datasets[["3_crisis_applications_spark"]] <-
       ")",
       "\nthan average of previous 2 years."
     )
-  ) %>%
-  filter(month > "Feb")
+  )
   
 ## Crime ----------------------------------------------------------------------
 datasets[["3_crime"]] <- datasets[["sg_template"]][["H3_crime"]] %>%
@@ -471,7 +469,8 @@ datasets[["4a"]] <- datasets[["sitrep"]] %>%
 datasets[["4_turnover"]] <- datasets[["sg_template"]][["H4_turnover"]] %>%
   rename(industry = `Monthly Business Turnover Index.`) %>%
   gather(key = "month", value = turnover, -industry) %>%
-  mutate(month = forcats::as_factor(month)) %>%
+  mutate(month = forcats::as_factor(month),
+         date = as.Date(paste("2020", month, "01"), format = "%Y %B %d")) %>%
   mutate(text = paste0(
     "<b>",
     round(turnover, digits = 1),

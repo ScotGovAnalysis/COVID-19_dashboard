@@ -35,7 +35,7 @@ plots[["1_infect"]] <- plot_ly(
   y = ~ midpoint
 ) %>%
   add_ribbons(
-    ymin = ~ lowerbound,
+    ymin = ~ lowbound,
     ymax = ~ upperbound,
     line = list(color = "transparent"),
     fillcolor = col_palette["sg_light_blue"]
@@ -298,7 +298,7 @@ plots[["2_GP"]] <- plot_ly(
            pmap(list))
 
 # 3 Society -------------------------------------------------------------------
-## Children at school ----------------------------------------------
+## Children at school ---------------------------------------------------------
 plots[["3_school"]] <- plot_ly(
   data = datasets[["3_school"]],
   x = ~ date,
@@ -319,7 +319,6 @@ plots[["3_school"]] <- plot_ly(
     annotations = filter(annotations, plot == "3_school", dataset == "3_school") %>%
       pmap(list)
   )
-
 
 ## Crisis applications --------------------------------------------------------
 plots[["3_crisis_applications"]] <- plot_ly(
@@ -356,13 +355,13 @@ plots[["3_crime"]] <- plot_ly(
   data = datasets[["3_crime"]],
   x = ~ recorded,
   y = ~ crime_group,
-  name = ~ year,
+  name = ~ forcats::as_factor(year) %>% forcats::fct_rev(),
   text = ~ text,
   hoverinfo = ~ "text"
 ) %>%
   add_trace(type = "bar") %>%
   add_style_chart() %>%
-  layout(colorway = c(col_palette["sg_grey"], col_palette["sg_blue"]))
+  layout(colorway = c(col_palette["sg_blue"], col_palette["sg_grey"]))
 
 # Loneliness ------------------------------------------------------------------
 plots[["3_loneliness"]] <- plot_ly(
