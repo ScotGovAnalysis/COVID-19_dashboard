@@ -4,149 +4,156 @@ output:
   html_document:
     toc: yes
     toc_float: yes
-    toc_depth: 4
-date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
+date: 'Last updated: `r format.Date(Sys.Date(), "%d %b %Y")`'
 ---
+
+<script>
+  $(document).ready(function(){
+    $head = $('#header');
+    $head.prepend('<a href=\"https://www.gov.scot\"><img src=\"images/scotgovlogo.svg\" style=\"float: right; height: 38px;\"  alt=\"Scottish Government logo\"/></a>')
+  });
+</script>
 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, out.width = '100%')
 library(htmltools)
 
-for (script in list.files("scripts", full.names = TRUE)) {
-  source(script)
-}
+source("scripts/0_set_up.R")
+source("scripts/1_read_data.R")
+source("scripts/2_plot_charts.R")
+source("scripts/3_plot_sparklines.R")
 ```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean hendrerit lectus quis odio luctus, non suscipit turpis rutrum. Etiam dictum sollicitudin nisl nec consequat. Sed placerat bibendum diam, a finibus nulla eleifend non. Integer rhoncus lacus eu ante ullamcorper commodo.
 
 ## The Four harms
 
+Vivamus auctor mauris eu nisl vehicula, vel sagittis neque rhoncus. Praesent bibendum nisi nec enim sodales consectetur. Sed convallis eros laoreet metus tincidunt suscipit.
+
 ### 1. Direct health harms
 
+Vestibulum in erat molestie, hendrerit dolor vel, porttitor est. Aliquam at velit non nunc volutpat scelerisque sed at elit. Morbi consequat, dolor vitae blandit sollicitudin, augue justo congue arcu, at rhoncus nisl elit ut quam. Phasellus volutpat ut mauris sit amet laoreet. Ut mi purus, sagittis sed ante in, gravida blandit metus.
+
+#### Estimated R value
+
+Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
 ```{r}
-text_before_chart("H1_R")
 plots[["1r"]]
-text_after_chart("H1_R")
-
 ```
 
+Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
+
+#### Estimated number of infectious people
+
+Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
 ```{r}
-text_before_chart("H1_infectious")
 plots[["1_infect"]]
-text_after_chart("H1_infectious")
-
 ```
 
+Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
 
 #### Cases
 
+Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
 ```{r}
 plots[["1_cases"]]
 ```
 
-```{r}
-text_before_chart("H1_deaths")
-plots[["H1_deaths"]]
-text_after_chart("H1_deaths")
-```
+Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
+
+#### Deaths
+
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
 
 ```{r}
-text_before_chart("H1_admissions")
-plots[["H1_admissions"]]
-text_after_chart("H1_admissions")
+plots[["1a"]]
 ```
+<button class="btn btn-link" data-toggle="collapse" data-target="#BlockName"> Show more
+<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+</button>  
+<div id="BlockName" class="collapse">  
+
+##### Source
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+##### Methodology
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+##### Assumptions
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
+</div>
+
+Vestibulum placerat, purus non consequat mattis, mauris velit posuere velit, vel facilisis nulla lacus vel libero.
+
+#### Deaths by setting
+
+Aliquam ante tellus, cursus sed neque eu, sagittis mattis metus. Praesent dapibus, diam id vestibulum pharetra, felis mauris imperdiet libero, vitae molestie enim libero eget orci.
+```{r}
+plots[["1b"]]
+```
+
+Vestibulum in suscipit lorem, et hendrerit purus. Fusce eros ligula, viverra sit amet ipsum lobortis, mollis dapibus felis.
+
+#### People in hospital with COVID-19
+
+Vestibulum eleifend turpis risus, eget gravida tortor bibendum nec. Donec sodales, magna vel consequat gravida, neque orci commodo tortor, quis efficitur velit sapien ut metus. Vivamus malesuada metus nec sapien auctor, id luctus est condimentum.
+
+```{r}
+plots[["1c"]]
+```
+
+Suspendisse rhoncus tortor lectus, sed convallis augue cursus in. Curabitur in risus pellentesque sem maximus tincidunt. Morbi ac eros purus.
 
 ### 2. Indirect health harms
 
+#### A&E attendance
+
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
 ```{r}
-text_before_chart("H2_A&E")
 plots[["2a"]]
-text_after_chart("H2_A&E")
 ```
 
+#### Excess mortality
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
 ```{r}
-text_before_chart("H2_excess")
 plots[["2_excess"]]
-text_after_chart("H2_excess")
 ```
 
-```{r}
-text_before_chart("H2_emergency")
-plots[["2_admissions"]]
-text_after_chart("H2_emergency")
-```
-
-```{r}
-text_before_chart("H2_avoiding")
-plots[["2_GP"]]
-text_after_chart("H2_avoiding")
-```
+#### Indirect health harm 3
 
 ### 3. Societal harms
 
+#### Vulnerable children at school 
+
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
+
 ```{r}
-text_before_chart("H3_schools")
 plots[["3_school"]]
-text_after_chart("H3_schools")
 ```
 
-```{r}
-text_before_chart("H3_crisis")
-plots[["3_crisis_applications"]]
-text_after_chart("H3_crisis")
-```
-
-```{r}
-text_before_chart("H3_crime")
-plots[["3_crime"]]
-text_after_chart("H3_crime")
-```
-
-```{r}
-text_before_chart("H3_loneliness")
-plots[["3_loneliness"]]
-text_after_chart("H3_loneliness")
-```
-
-```{r}
-text_before_chart("H3_trust")
-plots[["3_trust"]]
-text_after_chart("H3_trust")
-```
-
-```{r}
-text_before_chart("H3_job")
-plots[["3_job"]]
-text_after_chart("H3_job")
-```
-
-```{r}
-text_before_chart("H3_transport")
-plots[["H3_transport"]]
-text_after_chart("H3_transport")
-```
+#### Societal harm 2
+#### Societal harm 3
 
 ### 4. Economic harms
 
+#### Universal credit claims
 ```{r}
-text_before_chart("H4_turnover")
-plots[["4_turnover"]]
-text_after_chart("H4_turnover")
+plots[["4a"]]
 ```
 
-```{r}
-text_before_chart("H4_GDP")
-plots[["4_GDP"]]
-text_after_chart("H4_GDP")
-```
+#### Economic harm 2
+#### Economic harm 3
 
-```{r}
-text_before_chart("H4_unemployment")
-plots[["4_unemployment"]]
-text_after_chart("H4_unemployment")
-```
+## About
+Cras nunc magna, rhoncus aliquam mauris non, condimentum aliquam magna. Curabitur tempor, mi quis cursus lacinia, mauris nisl gravida augue, lacinia volutpat sem lacus id felis.
 
-```{r}
-text_before_chart("H4_claimants")
-plots[["4_claimants"]]
-text_after_chart("H4_claimants")
-```
+## Contact
+### Email
+[statistics.enquiries@gov.scot](mailto:statistics.enquiries@gov.scot)
+
+### Phone
+0300 244 0 442
