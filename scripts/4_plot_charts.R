@@ -305,8 +305,7 @@ plots[["3_school"]] <- plot_ly(
   y = ~ count,
   name = ~ Measure,
   marker = list(size = 7),
-  hoverinfo = ~ "text"#,
-  #color = col_palette["sg_blue"]
+  hoverinfo = ~ "text"
 ) %>%
   add_style_chart() %>%
   add_trace(type = "scatter",
