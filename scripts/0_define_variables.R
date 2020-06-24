@@ -41,8 +41,9 @@ hoverlabel_spark <- list(
 dates <- c(
   lockdown = "2020-03-26",
   WHO_declares_pandemic = "2020-03-11",
-  # start_sparklines = "2020-03-07"
-  start_sparklines = "2020-01-01"
+  start_sparklines = "2020-03-07",
+  start_sparklines_economy = "2016-01-01"
+  # start_sparklines = "2020-01-01"
 )
 spark_height <- 80 * 1.2 # Temporarily increasing this until we reduce the word
                          # count of some headlines
@@ -54,8 +55,8 @@ shapes <- list(
     list(
       type = "line",
       layer = "below",
-      x0 = "2020-02-19",
-      x1 = "2020-05-27",
+      x0 = "2020-03-26",
+      x1 = "2020-06-19",
       y0 = 1,
       y1 = 1,
       line = list(color = "black", dash = "dot")
@@ -65,8 +66,8 @@ shapes <- list(
       layer = "below",
       x0 = "2020-03-26",
       x1 = "2020-03-26",
-      y0 = 1,
-      y1 = 7,
+      y0 = 0.1,
+      y1 = 1,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),

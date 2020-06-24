@@ -107,8 +107,7 @@ plots[["1_sparklines"]] <-
                   xref = "paper",
                   yref = "paper",
                   y = seq(from = 9/10, by = -1/5, length.out = 5),
-                  yanchor = "middle") %>%
-           select(-xshift)) %>%
+                  yanchor = "middle")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
@@ -163,8 +162,7 @@ plots[["2_sparklines"]] <-
                   xref = "paper",
                   yref = "paper",
                   y = seq(from = 9/10, by = -1/5, length.out = 5),
-                  yanchor = "middle") %>%
-           select(-xshift)) %>%
+                  yanchor = "middle")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
@@ -226,8 +224,7 @@ plots[["3_sparklines"]] <-
                   xref = "paper",
                   yref = "paper",
                   y = seq(from = 11/12, by = -1/6, length.out = 6),
-                  yanchor = "middle") %>%
-           select(-xshift)) %>%
+                  yanchor = "middle")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
@@ -244,9 +241,8 @@ plots[["4_turnover_spark"]] <- datasets[["4_turnover"]] %>%
     height = 4 * spark_height,
     color = "black"
   ) %>%
-  add_style_spark(mode = "lines+markers",
-                  marker = list(color = "white",
-                                size = 5))
+  add_style_spark(range = c(dates[["start_sparklines_economy"]],
+                            as.character(Sys.Date())))
 
 plots[["4_GDP_spark"]] <- datasets[["4_GDP"]] %>%
   plot_ly(
@@ -254,27 +250,23 @@ plots[["4_GDP_spark"]] <- datasets[["4_GDP"]] %>%
     y = ~ gdp,
     text = ~ text
   ) %>%
-  add_style_spark(mode = "lines+markers",
-                  marker = list(color = "white",
-                                size = 5))
+  add_style_spark(range = c(dates[["start_sparklines_economy"]],
+                            as.character(Sys.Date())))
 
 plots[["4_claimants_spark"]] <- datasets[["4_claimants"]] %>%
   plot_ly(x = ~ date,
           y = ~ count,
           text = ~ text) %>%
-  add_style_spark(mode = "lines+markers",
-                  marker = list(color = "white",
-                                size = 5))
+  add_style_spark(range = c(dates[["start_sparklines_economy"]],
+                            as.character(Sys.Date())))
 
 plots[["4_unemployment_spark"]] <-
   datasets[["4_unemployment"]] %>%
   plot_ly(x = ~ date,
           y = ~ rate,
           text = ~ text) %>%
-  add_style_spark(mode = "lines+markers",
-                  marker = list(color = "white",
-                                size = 5)) %>%
-  layout(yaxis = list(range = c(0, max(datasets[["4_unemployment_spark"]][["rate"]]) * 1.05)))
+  add_style_spark(range = c(dates[["start_sparklines_economy"]],
+                            as.character(Sys.Date())))
 
 ## Create subplots ------------------------------------------------------------
 plots[["4_sparklines"]] <- plots[c(
@@ -292,8 +284,7 @@ plots[["4_sparklines"]] <- plots[c(
                   xref = "paper",
                   yref = "paper",
                   y = c(7/8, 5/8, 0.32, 0.1),
-                  yanchor = "middle") %>%
-           select(-xshift)) %>%
+                  yanchor = "middle")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"

@@ -17,12 +17,6 @@ datasets[["sg_template"]][["TEXT"]] <-
         HEADLINE_max_60_characters %>%
           stringr::str_wrap(width = 32)
       ),
-      worksheet_name %in% c("H4_claimants") ~ paste0(
-        "<b>",
-        TITLE_max_35_characters,
-        ":</b> ",
-        HEADLINE_max_60_characters
-      ) %>% stringr::str_wrap(width = 45),
       TRUE ~ paste0(
         "<b>",
         TITLE_max_35_characters,
@@ -549,7 +543,7 @@ datasets[["4_GDP"]] <- datasets[["sg_template"]][["H4_GDP"]] %>%
   mutate(
     date = lubridate::as_date(paste0(year, month, "01")),
     text = paste0(
-      "<b>Scotland's GDP was ",
+      "<b>Scottish GDP (2016=100) ",
       round(gdp, 1),
       "</b>\n",
       "(",

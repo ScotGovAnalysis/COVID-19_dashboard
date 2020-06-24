@@ -1,6 +1,5 @@
 ---
 title: "COVID-19 in Scotland"
-subtitle: "[Latest guidance](https://www.gov.scot/coronavirus-covid-19/) from Scottish Government"
 output: html_document
 date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 ---
@@ -15,13 +14,14 @@ for (script in list.files("scripts", full.names = TRUE)) {
 }
 ```
 
+Information and advice about the latest COVID-19 situation in Scotland is available here: https://www.gov.scot/coronavirus-covid-19/
 
 ```{r}
 narrative %>%
   filter(harm == 0, section == "Home") %>%
   pull("text") %>%
   create_html()
-  
+
   narrative %>%
   filter(harm == 0, section == "Introduction") %>%
   pull("text") %>%

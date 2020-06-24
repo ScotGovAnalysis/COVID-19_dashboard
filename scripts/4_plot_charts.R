@@ -1,7 +1,7 @@
 # 1 Direct health -------------------------------------------------------------
 ## R value --------------------------------------------------------------------
 plots[["1r"]] <- plot_ly(
-  data = datasets[["1r"]],
+  data = datasets[["1r_recent"]],
   x = ~ date,
   hoverinfo = "text",
   y = ~ middle
@@ -19,9 +19,9 @@ plots[["1r"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(
-    title = "Note: this chart shows dummy data",
     xaxis = list(showspikes = TRUE,
                  spikemode = "across"),
+    yaxis = list(tickformat = ".1g"),
     shapes = shapes[["1r"]],
     annotations = filter(annotations, plot == "1r", dataset == "1r") %>%
       pmap(list)

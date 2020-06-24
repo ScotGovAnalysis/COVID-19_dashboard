@@ -1,10 +1,9 @@
 add_style_spark <- function(p,
-                            mode = "lines",
-                            marker = NULL) {
+                            range = c(dates[["start_sparklines"]],
+                                      as.character(Sys.Date()))) {
   p %>% add_trace(
     type = "scatter",
-    mode = mode,
-    marker = marker,
+    mode = "lines",
     line = list(color = "black"),
     fill = "tozeroy",
     fillcolor = col_palette["sg_light_blue"],
@@ -28,11 +27,9 @@ add_style_spark <- function(p,
         title = "",
         showgrid = FALSE,
         showticklabels = FALSE,
-        # range = c(dates[["start_sparklines"]], as.character(Sys.Date()))
-        range = c("2019-08-01", as.character(Sys.Date()))
+        range = range
       ),
-      margin = list(l = 0,
-                    # l = 210,
+      margin = list(l = 210,
                     r = 0,
                     t = 0,
                     b = 0)
