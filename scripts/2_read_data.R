@@ -318,21 +318,27 @@ datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
   select(Measure,date,percent,text_2020)
 
 # 3 Society -------------------------------------------------------------------
-## Vulnerable children at school ----------------------------------------------
-datasets[["3a"]] <- datasets[["sitrep"]] %>%
-  filter(Data == "Children vulnerable attending") %>%
-  select(-c(Slide, Data)) %>%
-  gather(key = "date", value = "children") %>%
-  mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
-         children = as.numeric(children),
-         text = paste0(
-           "<b>",
-            format(children, big.mark = ","),
-           " vulnerable children at school</b>\n",
-           "(",
-           format(date, "%d %B %Y"),
-           ")"
-         ))
+## Children at school ---------------------------------------------------------
+datasets[["3_school"]] <- datasets[["sg_template"]][["H3_schools"]] %>%
+  mutate(date = as.Date(Date)) %>%
+  full_join(tibble(date = seq(from = min(.$date), to = max(.$date), by = 1)), by = "date") %>% #add breaks for weekends
+  arrange(date) %>%
+  gather("Measure","count",All_CYP_attending,Key_worker_CYP,Vulnerable_CYP) %>%
+  mutate(CYP_label = case_when(grepl("All", Measure, ignore.case = TRUE) ~ "total children &\nyoung people attending",
+                               grepl("Key", Measure, ignore.case = TRUE) ~ "key worker children &\nyoung people attending",
+                               grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "vulnerable children &\nyoung people attending"
+  ),
+  text = paste0(
+    "<b>",
+    format(count, big.mark = ","),
+    " ",
+    CYP_label,
+    "</b>\n",
+    "(",
+    format(date, "%A %d %B %Y"),
+    ")"
+  )) %>%
+  select(Measure,date,count,text)
 
 ## Crisis applications --------------------------------------------------------
 datasets[["3_crisis_applications"]] <-

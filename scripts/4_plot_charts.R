@@ -292,11 +292,12 @@ plots[["2_GP"]] <- plot_ly(
            pmap(list))
 
 # 3 Society -------------------------------------------------------------------
-## Vulnerable children at school ----------------------------------------------
-plots[["3a"]] <- plot_ly(
-  data = datasets[["3a"]],
+## Children at school ---------------------------------------------------------
+plots[["3_school"]] <- plot_ly(
+  data = datasets[["3_school"]],
   x = ~ date,
-  y = ~ children,
+  y = ~ count,
+  name = ~ Measure,
   marker = list(size = 7),
   hoverinfo = ~ "text"
 ) %>%
@@ -305,8 +306,11 @@ plots[["3a"]] <- plot_ly(
             mode = "markers+lines",
             text = ~ text) %>%
   layout(
-    shapes = shapes[["3a"]],
-    annotations = filter(annotations, plot == "3a", dataset == "3a")
+    showlegend = FALSE,
+    colorway = c(col_palette["sg_grey"], col_palette["sg_blue"], col_palette["sg_blue"]),
+    shapes = shapes[["3_school"]],
+    annotations = filter(annotations, plot == "3_school", dataset == "3_school") %>%
+      pmap(list)
   )
 
 ## Crisis applications --------------------------------------------------------

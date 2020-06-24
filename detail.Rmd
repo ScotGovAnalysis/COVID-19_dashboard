@@ -98,7 +98,7 @@ text_after_chart("H2_avoiding")
 
 ```{r}
 text_before_chart("H3_schools")
-plots[["3a"]]
+plots[["3_school"]]
 text_after_chart("H3_schools")
 ```
 

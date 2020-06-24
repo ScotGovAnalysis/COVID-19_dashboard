@@ -172,8 +172,9 @@ plots[["2_sparklines"]] <-
 
 # 3 Society -------------------------------------------------------------------
 ## Define sparklines ----------------------------------------------------------
-plots[["3a_spark"]] <- datasets[["3a"]] %>%
-  plot_ly(x = ~ date, y = ~ children, height = 6 * spark_height,
+plots[["3_school_spark"]] <- datasets[["3_school"]] %>%
+  filter(grepl("All", Measure, ignore.case = TRUE)) %>%
+  plot_ly(x = ~ date, y = ~ count, height = 6 * spark_height,
           text = ~ text) %>%
   add_style_spark()
 
@@ -213,7 +214,7 @@ plots[["3_transport_spark"]] <- datasets[["H3_transport"]] %>%
 
 ## Create subplots ------------------------------------------------------------
 plots[["3_sparklines"]] <-
-  plots[c("3a_spark", "3_crisis_applications_spark",
+  plots[c("3_school_spark", "3_crisis_applications_spark",
           "3_loneliness_spark","3_trust_spark",
           "3_job_spark", "3_transport_spark")] %>%
   subplot(nrows = length(.),

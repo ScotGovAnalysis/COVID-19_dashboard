@@ -164,6 +164,23 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              x = as.Date("2020-04-01")) %>%
       rename(y = recorded,
              text = crime_group),
+    datasets[["3_school"]] %>%
+      filter(date == max(date)) %>%
+      select(count, date, Measure) %>%
+      mutate(text = case_when(grepl("All", Measure, ignore.case = TRUE) ~ "All CYP attending",
+                              grepl("Key", Measure, ignore.case = TRUE) ~ "Key worker CYP",
+                              grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "Vulnerable CYP"),
+             font = c(list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_blue"])),
+                      list(list(color = col_palette["sg_blue"]))),
+             plot = "3_school",
+             dataset = "3_school",
+             showarrow = FALSE,
+             xanchor = "left",
+             xshift = 5,
+             align = "left") %>%
+      rename(y = count,
+             x = date),
     datasets[["4a"]] %>%
       filter(date == max(date)) %>%
       select(claims_7day_avg, date) %>%
