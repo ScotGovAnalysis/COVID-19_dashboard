@@ -93,7 +93,9 @@ plots[["1_cases"]] <- plot_ly(
         line = list(color = col_palette["sg_grey"], dash = "dot")
       )
     ),
-    annotations = filter(annotations, plot == "1_cases", dataset == "1_cases") %>%
+    annotations = filter(annotations,
+                         plot == "1_cases",
+                         dataset == "1_cases") %>%
       pmap(list),
     legend = list(orientation = "h",
                   x = 0, y = 100)
@@ -307,9 +309,11 @@ plots[["3_school"]] <- plot_ly(
             text = ~ text) %>%
   layout(
     showlegend = FALSE,
-    colorway = c(col_palette["sg_grey"], col_palette["sg_blue"], col_palette["sg_blue"]),
+    colorway = col_palette[c("sg_grey", "sg_blue", "sg_blue")],
     shapes = shapes[["3_school"]],
-    annotations = filter(annotations, plot == "3_school", dataset == "3_school") %>%
+    annotations = filter(annotations,
+                         plot == "3_school",
+                         dataset == "3_school") %>%
       pmap(list)
   )
 
@@ -563,4 +567,3 @@ plots[["4_GDP"]] <- plot_ly(
     marker = list(color = col_palette["sg_blue"])
   ) %>%
   add_style_chart()
-

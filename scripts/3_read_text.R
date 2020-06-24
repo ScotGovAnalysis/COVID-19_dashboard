@@ -11,7 +11,7 @@ text_before_chart <- function(worksheet,
                               source = datasets[["sg_template"]][["TEXT"]]) {
   text <- source %>%
     filter(worksheet_name == worksheet)
-  
+
   paste(
     sep = "\r\n\r\n",
     paste("###", pull(text, "TITLE_max_35_characters")),
@@ -19,22 +19,22 @@ text_before_chart <- function(worksheet,
     pull(text, "SUMMARY_max_30_words")
   ) %>%
     create_html()
-  
 }
 
 text_after_chart <- function(worksheet,
                               source = datasets[["sg_template"]][["TEXT"]]) {
   text <- source %>%
     filter(worksheet_name == worksheet)
-  
+
   paste(
     sep = "\r\n\r\n",
     pull(text, "DISCUSSION_max_100_words"),
     paste("**Source:**", pull(text, "source")),
-    paste("**Methodology:**", pull(text, "methodology"), "<br><br><br><br><br><br>")
+    paste("**Methodology:**",
+          pull(text, "methodology"),
+          "<br><br><br><br><br><br>")
   ) %>%
     create_html()
-  
 }
 
 spark_labels <- datasets[["sg_template"]][["TEXT"]] %>%
@@ -167,18 +167,22 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
     datasets[["3_school"]] %>%
       filter(date == max(date)) %>%
       select(count, date, Measure) %>%
-      mutate(text = case_when(grepl("All", Measure, ignore.case = TRUE) ~ "All CYP attending",
-                              grepl("Key", Measure, ignore.case = TRUE) ~ "Key worker CYP",
-                              grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "Vulnerable CYP"),
-             font = c(list(list(color = col_palette["sg_grey"])),
-                      list(list(color = col_palette["sg_blue"])),
-                      list(list(color = col_palette["sg_blue"]))),
-             plot = "3_school",
-             dataset = "3_school",
-             showarrow = FALSE,
-             xanchor = "left",
-             xshift = 5,
-             align = "left") %>%
+      mutate(
+        text = case_when(
+          grepl("All", Measure, ignore.case = TRUE) ~ "All CYP attending",
+          grepl("Key", Measure, ignore.case = TRUE) ~ "Key worker CYP",
+          grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "Vulnerable CYP"
+        ),
+        font = c(list(list(color = col_palette["sg_grey"])),
+                 list(list(color = col_palette["sg_blue"])),
+                 list(list(color = col_palette["sg_blue"]))),
+        plot = "3_school",
+        dataset = "3_school",
+        showarrow = FALSE,
+        xanchor = "left",
+        xshift = 5,
+        align = "left"
+      ) %>%
       rename(y = count,
              x = date),
     datasets[["4a"]] %>%
@@ -199,4 +203,3 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
 
 # Read web text -----------------------------------------------------------
 narrative <- datasets[["sg_template"]][["NARRATIVE"]]
-

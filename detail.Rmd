@@ -49,11 +49,10 @@ text_after_chart("H1_infectious")
 
 ```
 
-
-### Cases
-
 ```{r}
+text_before_chart("H1_cases")
 plots[["1_cases"]]
+text_after_chart("H1_cases")
 ```
 
 ```{r}

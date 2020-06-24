@@ -106,7 +106,7 @@ plots[["1_sparklines"]] <-
            mutate(x = 0,
                   xref = "paper",
                   yref = "paper",
-                  y = seq(from = 9/10, by = -1/5, length.out = 5),
+                  y = seq(from = 9 / 10, by = -1 / 5, length.out = 5),
                   yanchor = "middle")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
@@ -161,7 +161,7 @@ plots[["2_sparklines"]] <-
            mutate(x = 0,
                   xref = "paper",
                   yref = "paper",
-                  y = seq(from = 9/10, by = -1/5, length.out = 5),
+                  y = seq(from = 9 / 10, by = -1 / 5, length.out = 5),
                   yanchor = "middle")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
@@ -213,7 +213,7 @@ plots[["3_transport_spark"]] <- datasets[["H3_transport"]] %>%
 ## Create subplots ------------------------------------------------------------
 plots[["3_sparklines"]] <-
   plots[c("3_school_spark", "3_crisis_applications_spark",
-          "3_loneliness_spark","3_trust_spark",
+          "3_loneliness_spark", "3_trust_spark",
           "3_job_spark", "3_transport_spark")] %>%
   subplot(nrows = length(.),
           shareX = TRUE) %>%
@@ -223,7 +223,7 @@ plots[["3_sparklines"]] <-
            mutate(x = 0,
                   xref = "paper",
                   yref = "paper",
-                  y = seq(from = 11/12, by = -1/6, length.out = 6),
+                  y = seq(from = 11 / 12, by = -1 / 6, length.out = 6),
                   yanchor = "middle")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
@@ -283,7 +283,7 @@ plots[["4_sparklines"]] <- plots[c(
            mutate(x = 0,
                   xref = "paper",
                   yref = "paper",
-                  y = c(7/8, 5/8, 0.32, 0.1),
+                  y = c(7 / 8, 5 / 8, 0.32, 0.1),
                   yanchor = "middle")) %>%
   htmlwidgets::onRender(
     "function(el, x) {
