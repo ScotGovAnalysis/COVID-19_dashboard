@@ -40,28 +40,18 @@ text_before_chart("H1_R")
 plots[["1r"]]
 text_after_chart("H1_R")
 
-```
-
-```{r}
 text_before_chart("H1_infectious")
 plots[["1_infect"]]
 text_after_chart("H1_infectious")
 
-```
-
-```{r}
 text_before_chart("H1_cases")
 plots[["1_cases"]]
 text_after_chart("H1_cases")
-```
 
-```{r}
 text_before_chart("H1_deaths")
 plots[["H1_deaths"]]
 text_after_chart("H1_deaths")
-```
 
-```{r}
 text_before_chart("H1_admissions")
 plots[["H1_admissions"]]
 text_after_chart("H1_admissions")
@@ -73,21 +63,15 @@ text_after_chart("H1_admissions")
 text_before_chart("H2_A&E")
 plots[["2a"]]
 text_after_chart("H2_A&E")
-```
 
-```{r}
 text_before_chart("H2_excess")
 plots[["2_excess"]]
 text_after_chart("H2_excess")
-```
 
-```{r}
 text_before_chart("H2_admissions")
 plots[["2_admissions"]]
 text_after_chart("H2_admissions")
-```
 
-```{r}
 text_before_chart("H2_avoiding")
 plots[["2_GP"]]
 text_after_chart("H2_avoiding")
@@ -99,39 +83,27 @@ text_after_chart("H2_avoiding")
 text_before_chart("H3_schools")
 plots[["3_school"]]
 text_after_chart("H3_schools")
-```
 
-```{r}
 text_before_chart("H3_crisis")
 plots[["3_crisis_applications"]]
 text_after_chart("H3_crisis")
-```
 
-```{r}
 text_before_chart("H3_crime")
 plots[["3_crime"]]
 text_after_chart("H3_crime")
-```
 
-```{r}
 text_before_chart("H3_loneliness")
 plots[["3_loneliness"]]
 text_after_chart("H3_loneliness")
-```
 
-```{r}
 text_before_chart("H3_trust")
 plots[["3_trust"]]
 text_after_chart("H3_trust")
-```
 
-```{r}
 text_before_chart("H3_job")
 plots[["3_job"]]
 text_after_chart("H3_job")
-```
 
-```{r}
 text_before_chart("H3_transport")
 plots[["H3_transport"]]
 text_after_chart("H3_transport")
@@ -143,21 +115,15 @@ text_after_chart("H3_transport")
 text_before_chart("H4_turnover")
 plots[["4_turnover"]]
 text_after_chart("H4_turnover")
-```
 
-```{r}
 text_before_chart("H4_GDP")
 plots[["4_GDP"]]
 text_after_chart("H4_GDP")
-```
 
-```{r}
 text_before_chart("H4_unemployment")
 plots[["4_unemployment"]]
 text_after_chart("H4_unemployment")
-```
 
-```{r}
 text_before_chart("H4_claimants")
 plots[["4_claimants"]]
 text_after_chart("H4_claimants")

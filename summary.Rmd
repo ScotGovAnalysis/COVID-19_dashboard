@@ -6,7 +6,6 @@ date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-library(htmltools)
 
 for (script in list.files("scripts", full.names = TRUE)) {
   source(script)
@@ -21,32 +20,6 @@ narrative %>%
 ```
 
 ```{r}
-div(class = "row fluid-row",
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          h3(class = "panel-title", a("Direct health impacts", href = "detail.html#1_direct_health_harms"))),
-      div(class = "panel-body", plots[["1_sparklines"]])
-    )),
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          h3(class = "panel-title", a("Health harms not directly related to COVID-19", href = "detail.html#2_indirect_health_harms"))),
-      div(class = "panel-body", plots[["2_sparklines"]])
-    )))
-
-
-div(class = "row fluid-row",
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          h3(class = "panel-title", a("Societal impacts", href = "detail.html#3_societal_harms"))),
-      div(class = "panel-body", plots[["3_sparklines"]])
-    )),
-    div(class = "col-md-6", div(
-      class = "panel panel-default",
-      div(class = "panel-heading",
-          h3(class = "panel-title", a("Economic impacts", href = "detail.html#4_economic_harms"))),
-      div(class = "panel-body", plots[["4_sparklines"]])
-    )))
+harm_panels_1_2_spark
+harm_panels_3_4_spark
 ```
