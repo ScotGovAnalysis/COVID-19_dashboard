@@ -1,5 +1,6 @@
 # Load libraries ----------------------------------------------------------
 library(readxl)
+library(openxlsx)
 library(dplyr)
 library(tidyr)
 library(purrr)
@@ -8,7 +9,7 @@ library(sf)
 library(lubridate)
 library(plotly)
 library(markdown)
-library(openxlsx)
+
 
 # Define data paths -------------------------------------------------------
 datasets <- plots <- shapes <- list()
