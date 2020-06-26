@@ -68,8 +68,8 @@ plots[["1_infect_spark"]] <-  datasets[["1_infect"]] %>%
 plots[["1_cases_spark"]] <- datasets[["1_cases"]] %>%
   plot_ly(
     x = ~ date,
-    y = ~ cases_7day_avg,
-    text = ~ cases_7day_avg_text
+    y = ~ count_7day_avg,
+    text = ~ count_7day_avg_text
   ) %>%
   add_style_spark()
 
@@ -122,14 +122,14 @@ plots[["2a_spark"]] <- datasets[["2a_recent"]] %>%
           text = ~ text) %>%
   add_style_spark()
 
-plots[["2_admissions_emergency_spark"]] <-  datasets[["2_admissions"]] %>%
+plots[["2_admissions_emergency_spark"]] <- datasets[["H2_admissions"]] %>%
   filter(Admission_type == "Emergency") %>%
   plot_ly(x = ~ Week_ending,
           y = ~ variation,
           text = ~ text_variation) %>%
   add_style_spark()
 
-plots[["2_admissions_planned_spark"]] <- datasets[["2_admissions"]] %>%
+plots[["2_admissions_planned_spark"]] <- datasets[["H2_admissions"]] %>%
   filter(Admission_type == "Planned") %>%
   plot_ly(x = ~ Week_ending,
           y = ~ variation,

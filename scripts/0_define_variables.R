@@ -56,7 +56,7 @@ shapes <- list(
       type = "line",
       layer = "below",
       x0 = "2020-03-26",
-      x1 = "2020-06-19",
+      x1 = "2020-06-24",
       y0 = 1,
       y1 = 1,
       line = list(color = "black", dash = "dot")

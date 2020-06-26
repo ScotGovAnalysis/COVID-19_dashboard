@@ -1,7 +1,6 @@
 ---
 title: "COVID-19 in Scotland"
 output: html_document
-date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 ---
 
 ```{r setup, include=FALSE}
@@ -11,6 +10,8 @@ for (script in list.files("scripts", full.names = TRUE)) {
   source(script)
 }
 ```
+
+Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`**
 
 ```{r}
 # See script 6_create_html.R for how these variables are built

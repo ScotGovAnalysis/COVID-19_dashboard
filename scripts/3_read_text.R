@@ -91,7 +91,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              x = date),
     datasets[["1_cases"]] %>%
       filter(date == max(date)) %>%
-      select(cases_7day_avg, date) %>%
+      select(count_7day_avg, date) %>%
       mutate(text = "7 day average",
              font = list(list(color = col_palette["sg_blue"])),
              plot = "1_cases",
@@ -100,7 +100,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              xanchor = "left",
              xshift = 5,
              align = "left") %>%
-      rename(y = cases_7day_avg,
+      rename(y = count_7day_avg,
              x = date),
     datasets[["2a"]] %>%
       filter(week_ending_date == max(week_ending_date)) %>%
@@ -117,7 +117,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              x = week_ending_date),
     datasets[["2_excess"]] %>%
       filter(date == max(date)) %>%
-      select(date, measure, count, week) %>%
+      select(date, measure, count) %>%
       mutate(plot = "2_excess",
              dataset = "2_excess",
              showarrow = FALSE,
@@ -126,11 +126,13 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                       list(list(color = col_palette["sg_blue"]))),
              xanchor = "left",
              xshift = 8,
-             align = "left") %>%
+             align = "left",
+             measure = stringr::str_replace_all(measure, "_", " ") %>%
+               stringr::str_to_sentence()) %>%
       rename(y = count,
              x = date,
              text = measure),
-    datasets[["2_admissions"]] %>%
+    datasets[["H2_admissions"]] %>%
       filter(Week_ending == max(Week_ending)) %>%
       select(Week_ending, Count, Average_2018_2019, Admission_type) %>%
       gather(key = measure, value = count, -Week_ending, -Admission_type) %>%

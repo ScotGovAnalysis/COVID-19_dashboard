@@ -10,7 +10,7 @@ datasets[["sg_template"]][["TEXT"]] <-
   datasets[["sg_template"]][["TEXT"]] %>%
   mutate(
     spark_text = case_when(
-      worksheet_name %in% c("H3_job", "H3_trust") ~ paste0(
+      worksheet_name %in% c("H3_job", "H3_trust", "H2_emergency") ~ paste0(
         "<b>",
         TITLE_max_35_characters,
         ":</b>\n",
@@ -117,6 +117,32 @@ datasets[["1_cases"]] <- datasets[["sitrep"]] %>%
     )
   )
 
+datasets[["1_cases"]] <-
+  datasets[["sg_template"]][["H1_cases"]] %>%
+  mutate(
+    date = as.Date(date),
+    count_text = case_when(
+      !is.na(count) ~ paste0(
+        "<b>",
+        format(count, big.mark = ","),
+        " cases</b>\n",
+        "(",
+        format(date, "%d %B %Y"),
+        ")"
+      )
+    ),
+    count_7day_avg_text = case_when(
+      !is.na(count_7day_avg) ~ paste0(
+        "<b>",
+        format(round(count_7day_avg, digits = 1), big.mark = ","),
+        " average cases per day</b>\n",
+        "(week ending ",
+        format(date, "%d %B %Y"),
+        ")"
+      )
+    )
+  )
+
 datasets[["1b_weeknum_lookup"]] <-
   datasets[["nrs"]][["Figure 5 data"]][2:3, ] %>%
   select(-1) %>%
@@ -173,60 +199,34 @@ datasets[["H1_admissions"]] <-
 
 # 2 Indirect health -----------------------------------------------------------
 # A&E attendances -------------------------------------------------------------
-datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
-  select(week_ending_date, attendance) %>%
-  mutate(week_ending_date = as.Date(week_ending_date, format = "%Y-%m-%d")) %>%
-  # filter(week_ending_date > as.Date('2018-12-31')) %>%
-  mutate(text = paste0(
-    "<b>",
-    attendance %>% format(big.mark = ","),
-    " A&E attendances</b>\n",
-    "(week ending ",
-    format(week_ending_date, "%d %B %Y"),
-    ")"
-  ))
-
-datasets[["2a"]] <- read.csv(paths[["phs"]]) %>%
-  select(week_ending_date, attendance) %>%
-  mutate(week_ending_date = as.Date(week_ending_date, format = "%Y-%m-%d"),
+datasets[["2a"]] <-
+  datasets[["sg_template"]][["H2_A&E"]] %>%
+  mutate(week_ending_date = as.Date(week_ending_date),
          week_ending_date_2020 = `year<-`(week_ending_date, 2020),
-         year = lubridate::year(week_ending_date)) %>%
-  mutate(text = paste0(
-    "<b>",
-    attendance %>% format(big.mark = ","),
-    " A&E attendances</b>\n",
-    "(week ending ",
-    format(week_ending_date, "%d %B %Y"),
-    ")"
-  ))
+         year = lubridate::year(week_ending_date),
+         text = paste0(
+           "<b>",
+           attendance %>% format(big.mark = ","),
+           " A&E attendances</b>\n",
+           "(week ending ",
+           format(week_ending_date, "%d %B %Y"),
+           ")"
+         ))
 
 datasets[["2a_recent"]] <- datasets[["2a"]] %>%
   filter(week_ending_date > as.Date("2020-01-01"))
 
 # Excess deaths ---------------------------------------------------------------
-datasets[["2_excess"]] <- datasets[["nrs"]][["Figure 5 data"]] %>%
-  filter(
-    `Figure 5: Deaths by week of registration, Scotland, 2020` %in%
-      c("Week number",
-        "Total deaths 2020",
-        "Average for previous 5 years",
-        "COVID-19 deaths 2020")
-  ) %>%
-  `names<-`(.[1, ]) %>%
-  filter(`Week number` != "Week number") %>%
-  rename(measure = `Week number`) %>%
-  gather(key = "week", value = "count", -measure) %>%
-  mutate(week = stringr::str_remove(week, pattern = "Week "),
-         week = as.integer(week),
-         count = as.numeric(count)) %>%
-  left_join(datasets[["1b_weeknum_lookup"]], by = "week") %>%
-  rename(date = week_ending_date) %>%
+datasets[["2_excess"]] <-
+  datasets[["sg_template"]][["H2_excess"]] %>%
+  mutate(date = as.Date(date)) %>%
+  gather(key = "measure", value = "count", -week_number, -date) %>%
   mutate(linetype = case_when(
-    measure == "Average for previous 5 years" ~ "solid",
+    measure == "average_previous_5_years" ~ "solid",
     TRUE ~ "dot")) %>%
   filter(date > as.Date("2020-03-11")) %>%
   mutate(text = case_when(
-    measure == "Total deaths 2020" ~ paste0(
+    measure == "total_deaths" ~ paste0(
       "<b>",
       count %>% as.integer() %>% format(big.mark = ","),
       " deaths</b>\n",
@@ -234,7 +234,7 @@ datasets[["2_excess"]] <- datasets[["nrs"]][["Figure 5 data"]] %>%
       format(date, "%d %B %Y"),
       ")"
     ),
-    measure == "Average for previous 5 years" ~ paste0(
+    measure == "average_previous_5_years" ~ paste0(
       "<b>",
       count %>% format(big.mark = ","),
       " average deaths this week in 2015-19</b>\n",
@@ -242,7 +242,7 @@ datasets[["2_excess"]] <- datasets[["nrs"]][["Figure 5 data"]] %>%
       format(date, "%d %B %Y"),
       ")"
     ),
-    measure == "COVID-19 deaths 2020" ~ paste0(
+    measure == "COVID-19_deaths" ~ paste0(
       "<b>",
       count %>% as.integer() %>% format(big.mark = ","),
       " COVID-19 deaths</b>\n",
@@ -253,27 +253,25 @@ datasets[["2_excess"]] <- datasets[["nrs"]][["Figure 5 data"]] %>%
   ))
 
 datasets[["2_excess_spark"]] <- datasets[["2_excess"]] %>%
-  filter(measure != "COVID-19 deaths 2020") %>%
+  filter(measure != "COVID-19_deaths") %>%
   select(-c(linetype, text)) %>%
   spread(key = measure, value = count) %>%
-  mutate(excess_deaths = `Total deaths 2020` - `Average for previous 5 years`,
+  mutate(excess_deaths = total_deaths - average_previous_5_years,
          text = paste0(
            "<b>",
-           excess_deaths,
+           round(excess_deaths, digits = 1),
            " excess deaths</b>\n",
            "(week ending ",
            format(date, "%d %B %Y"),
            ")"
          )) %>%
-  rename(all_2020 = `Total deaths 2020`,
-         avg_2015_19 = `Average for previous 5 years`)
+  rename(all_2020 = total_deaths,
+         avg_2015_19 = average_previous_5_years)
 
 # Emergency and planned admissions --------------------------------------------
-datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>%
-  select(-c(Area_name, Area_type, Category, Specialty)) %>%
-  rename(variation = Variation....) %>%
-  mutate(Week_ending = as.Date(Week_ending, format = "%d-%b-%y"),
-         week = lubridate::week(Week_ending),
+datasets[["H2_admissions"]] <-
+  datasets[["sg_template"]][["H2_admissions"]] %>%
+  mutate(Week_ending = as.Date(Week_ending),
          text_variation = paste0(
            "<b>",
            -variation,
@@ -299,9 +297,7 @@ datasets[["2_admissions"]] <- read.csv(paths[["phs_admissions"]]) %>%
            " ",
            stringr::str_to_lower(Admission_type),
            " admissions</b>\n",
-           "(average for week ",
-           week,
-           " in 2018 and 2019)"
+           "(average for the same weeks in 2018 and 2019"
          ))
 
 # People avoiding GPs or hospitals --------------------------------------------

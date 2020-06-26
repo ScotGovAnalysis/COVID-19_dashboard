@@ -1,0 +1,31 @@
+---
+title: "Accessibility"
+output: html_document
+---
+
+Last updated: **25 June 2020**
+
+This website is run by the Scottish Government.
+
+We want it to be accessible and usable for as many people as possible.
+
+## Feedback
+[Contact us](contact.html) if you:
+
+* Cannot access any part of this site or want to report an accessibility problem.
+* Need information on this website in a different format. Such as accessible PDF, large print, easy read, audio recording or braille. We'll consider your request and get back to you as soon as we can.
+
+### Enforcement
+The Equality and Human Rights Commission enforces the [accessibility regulations](http://www.legislation.gov.uk/uksi/2018/952/regulation/4/made) (the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018).
+
+If you're not happy with how we respond to your feedback, [contact the Equality Advisory and Support Service](https://www.equalityadvisoryservice.com/). They are an independent advice service. They will advise you on what to do next.
+
+## Compliance
+These web pages were reviewed by an internal accessibility expert in June 2020.
+
+### Current issues we are working to fix
+* Graphics in the visual summary do not have alt text
+* Graphics in the visual summary are not arranged well for screen readers
+* Some charts in the detailed analysis contain text that is difficult for people using screen readers to access
+* Some of the links in the page navigation are not available to keyboard users
+* Some text does not appear in high contrast mode - mostly annotations and tooltips within charts

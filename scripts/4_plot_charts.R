@@ -56,28 +56,27 @@ plots[["1_infect"]] <- plot_ly(
     shapes = shapes[["1_infect"]]
   )
 
-## Number of cases ------------------------------------------------------------
+## Cases ------------------------------------------------------------
 plots[["1_cases"]] <- plot_ly(
   data = datasets[["1_cases"]],
   x = ~ date,
-  y = ~ cases,
   hoverinfo = "text"
 ) %>%
   add_trace(
     name = "Cases",
-    y = ~ cases,
+    y = ~ count,
     type = "bar",
     marker = list(color = col_palette["sg_grey"]),
-    text = ~ cases_text
+    text = ~ count_text
   ) %>%
   add_trace(
     name = "7 day average",
-    y = ~ cases_7day_avg,
+    y = ~ count_7day_avg,
     type = "scatter",
     mode = "markers+lines",
     marker = list(size = 7, color = col_palette["sg_blue"]),
     line = list(color = col_palette["sg_blue"]),
-    text = ~ cases_7day_avg_text
+    text = ~ count_7day_avg_text
   ) %>%
   add_style_chart() %>%
   layout(
@@ -175,8 +174,8 @@ plots[["2a"]] <- plot_ly(
   )
 
 ## Emergency and planned admissions -------------------------------------------
-plots[["2_admissions"]] <- plot_ly(
-  data = datasets[["2_admissions"]],
+plots[["H2_admissions"]] <- plot_ly(
+  data = datasets[["H2_admissions"]],
   x = ~ Week_ending,
   marker = list(size = 7),
   name = ~ Admission_type,
@@ -216,6 +215,7 @@ plots[["2_excess"]] <- plot_ly(
     data = datasets[["2_excess_spark"]],
     ymin = ~ avg_2015_19,
     ymax = ~ all_2020,
+    text = ~text,
     line = list(color = "transparent"),
     fillcolor = col_palette["sg_light_blue"],
     fill = "tonext"

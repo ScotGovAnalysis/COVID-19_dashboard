@@ -5,7 +5,6 @@ output:
     toc: yes
     toc_float: yes
     toc_depth: 4
-date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 ---
 
 
@@ -17,6 +16,8 @@ for (script in list.files("scripts", full.names = TRUE)) {
   source(script)
 }
 ```
+
+Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`**
 
 ## The Four harms
 
@@ -69,7 +70,7 @@ plots[["2_excess"]]
 text_after_chart("H2_excess")
 
 text_before_chart("H2_admissions")
-plots[["2_admissions"]]
+plots[["H2_admissions"]]
 text_after_chart("H2_admissions")
 
 text_before_chart("H2_avoiding")

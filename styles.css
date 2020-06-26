@@ -1,7 +1,17 @@
 #navbar a {
-  color: black !important;
+  color: #333333 !important; /*Greater contrast for accessibility*/
 }
 
 .navbar-header a {
-  color: black !important;
+  color: #333333 !important;
+}
+
+p,
+.container-fluid > ul,
+.section > ul,
+#TOC,
+#navbar,
+.panel-title {
+  font-size: large; /*Larger font for accessibility*/
+  line-height: 1.8;
 }

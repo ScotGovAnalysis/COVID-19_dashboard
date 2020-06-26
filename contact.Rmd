@@ -1,0 +1,10 @@
+---
+title: "Contact"
+output: html_document
+---
+
+Last updated: **25 June 2020**
+
+* Email: modellingcoronavirus@gov.scot
+* Phone: 0300 244 4000 (Scottish Government central enquiry unit)
+* Scottish Government [general enquiries](https://www.gov.scot/about/contact-information/)

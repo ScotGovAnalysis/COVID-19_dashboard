@@ -18,3 +18,9 @@ navbar:
   - text: "About"
     href: about.html
     icon: glyphicon-info-sign
+  - text: "Contact"
+    href: contact.html
+    icon: glyphicon-comment
+  - text: "Accessibility"
+    href: accessibility.html
+    icon: glyphicon-user

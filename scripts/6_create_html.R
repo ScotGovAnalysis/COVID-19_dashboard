@@ -7,24 +7,22 @@ nav_buttons <-
   div(class = "row fluid-row text-center",
       div(
         class = "col-md-6",
-        a(
-          href = "summary.html",
-          img(src = "images/navigation_summary.svg",
-              style = "width: 90%;",
-              alt = "The four harms of Covid-19: direct health, indirect health, 
-              society, economy")
+        img(
+          src = "images/navigation_summary.svg",
+          style = "width: 90%;",
+          alt = "The four harms of Covid-19: direct health, indirect health,
+          society, economy"
         ),
         a(href = "summary.html", h3("Visual summary")),
         p("Click on here to see an overview of the four harms")
-      ),
+        ),
       div(
         class = "col-md-6",
-        a(
-          href = "detail.html",
-          img(src = "images/navigation_detail.svg",
-              style = "width: 90%;",
-              alt = "A rough sketch of a chart and text")
-        ),
+        img(src = "images/navigation_detail.svg",
+            style = "width: 90%;",
+            alt = ""),
+        # alt text left intentionally empty as the image is
+        # purely decorative
         a(href = "detail.html", h3("Detailed analysis")),
         p("Click on here to explore the four harms")
       ))
