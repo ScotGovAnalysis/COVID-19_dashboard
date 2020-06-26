@@ -1,3 +1,5 @@
+include: ["images", "download", "images/*", "download/*"]
+exclude: "*"
 output:
   html_document:
     css: styles.css
@@ -14,6 +16,9 @@ navbar:
   - text: "Detailed analysis"
     href: detail.html
     icon: glyphicon-stats
+  - text: "Data"
+    href: data.html
+    icon: glyphicon-download-alt
   right: 
   - text: "About"
     href: about.html
