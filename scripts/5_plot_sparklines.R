@@ -143,9 +143,22 @@ plots[["2_excess_spark"]] <- datasets[["2_excess_spark"]] %>%
   add_style_spark()
 
 plots[["2_GP_spark"]] <- datasets[["2_GP"]] %>%
-  plot_ly(x = ~ date,
+  filter(sentiment %in% c("tend to agree",
+                          "strongly agree")) %>%
+  group_by(date_start) %>%
+  summarise(percent = sum(percent)) %>%
+  mutate(text = paste0(
+    "<b>",
+    round(percent, digits = 1),
+    "% of people say they would avoid GPs or hospital</b>\n",
+    " for immediate non-COVID-19 health concerns\n",
+    "(",
+    format(date_start, "%d %B %Y"),
+    ")"
+  )) %>%
+  plot_ly(x = ~ date_start,
           y = ~ percent,
-          text = ~ text_2020) %>%
+          text = ~ text) %>%
   add_style_spark()
 
 ## Create subplots ------------------------------------------------------------
@@ -184,19 +197,19 @@ plots[["3_crisis_applications_spark"]] <-
   add_style_spark()
 
 plots[["3_loneliness_spark"]] <- datasets[["3_loneliness"]] %>%
-  plot_ly(x = ~ date,
+  plot_ly(x = ~ date_start,
           y = ~ percent,
           text = ~ text_2020) %>%
   add_style_spark()
 
 plots[["3_trust_spark"]] <- datasets[["3_trust"]] %>%
-  plot_ly(x = ~ date,
+  plot_ly(x = ~ date_start,
           y = ~ percent,
           text = ~ text_2020) %>%
   add_style_spark()
 
 plots[["3_job_spark"]] <- datasets[["3_job"]] %>%
-  plot_ly(x = ~ date,
+  plot_ly(x = ~ date_start,
           y = ~ percent,
           text = ~ text_2020) %>%
   add_style_spark()

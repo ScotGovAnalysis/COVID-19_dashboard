@@ -1,5 +1,5 @@
-include: ["images", "download", "images/*", "download/*"]
-exclude: "*"
+exclude: ["scripts", "data"]
+
 output:
   html_document:
     css: styles.css

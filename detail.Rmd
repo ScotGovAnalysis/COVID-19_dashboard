@@ -19,8 +19,6 @@ for (script in list.files("scripts", full.names = TRUE)) {
 
 Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`**
 
-## The Four harms
-
 ```{r}
 narrative %>% 
   filter(harm == 0, section == "Detail") %>% 
@@ -34,7 +32,7 @@ br()
 
 ```
 
-## 1. Direct health harms
+## 1. Direct health impacts
 
 ```{r}
 text_before_chart("H1_R")
@@ -58,7 +56,7 @@ plots[["H1_admissions"]]
 text_after_chart("H1_admissions")
 ```
 
-## 2. Indirect health harms
+## 2. Indirect health impacts
 
 ```{r}
 text_before_chart("H2_A&E")
@@ -78,7 +76,7 @@ plots[["2_GP"]]
 text_after_chart("H2_avoiding")
 ```
 
-## 3. Societal harms
+## 3. Societal impacts
 
 ```{r}
 text_before_chart("H3_schools")
@@ -110,7 +108,7 @@ plots[["H3_transport"]]
 text_after_chart("H3_transport")
 ```
 
-## 4. Economic harms
+## 4. Economic impacts
 
 ```{r}
 text_before_chart("H4_turnover")

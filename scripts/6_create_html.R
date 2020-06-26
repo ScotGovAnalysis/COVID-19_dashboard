@@ -51,7 +51,7 @@ harm_panels_1_2 <-
         div(class = "panel-heading",
             h3(
               class = "panel-title",
-              a("Health harms not directly related to COVID-19",
+              a("Health impacts not directly related to COVID-19",
                 href = "detail.html#2_indirect_health_harms")
             )),
         div(
@@ -115,7 +115,7 @@ harm_panels_1_2_spark <-
         div(class = "panel-heading",
             h3(
               class = "panel-title",
-              a("Health harms not directly related to COVID-19",
+              a("Health impacts not directly related to COVID-19",
                 href = "detail.html#2_indirect_health_harms")
             )),
         div(class = "panel-body", plots[["2_sparklines"]])

@@ -270,28 +270,48 @@ plots[["2_excess"]] <- plot_ly(
   )
 
 # Avoiding GPs and hospitals --------------------------------------------------
-plots[["2_GP"]] <- plot_ly(
-  data = datasets[["2_GP"]],
-  x = ~ date,
-  marker = list(size = 7),
-  name = ~ Measure,
-  hoverinfo = ~ "text"
-) %>%
-  add_trace(
-    type = "scatter",
-    y = ~ percent,
-    text = ~text_2020,
-    mode = "markers+lines",
-    line = list(color = col_palette["sg_blue"]),
-    marker = list(color = col_palette["sg_blue"])
+plots[["2_GP"]] <-
+  plot_ly(
+    data = datasets[["2_GP"]],
+    x = ~ date,
+    y = ~ rate,
+    name = ~ sentiment,
+    marker = list(line = list(color = "white",
+                              width = 3)),
+    hoverinfo = ~ "text"
   ) %>%
+  add_trace(type = "bar",
+            text = ~text_2020) %>%
   add_style_chart() %>%
-  layout(showlegend = FALSE,
-         shapes = shapes[["2_GP"]],
-         annotations = filter(annotations,
-                              plot == "2_GP",
-                              dataset == "2_GP") %>%
-           pmap(list))
+  layout(
+    showlegend = FALSE,
+    barmode = "stack",
+    yaxis = list(tickformat = "%"),
+    colorway = col_palette[c("sg_blue",
+                             "sg_grey",
+                             "sg_light_blue",
+                             "sg_grey",
+                             "sg_blue")],
+    annotations = datasets[["2_GP"]] %>%
+      filter(date_start == max(date_start)) %>%
+      mutate(rate_cum = cumsum(rate) - rate / 2) %>% # Position annotations in the middle of each bar
+      select(date, sentiment, rate_cum) %>%
+      mutate(text = stringr::str_to_sentence(sentiment) %>%
+               stringr::str_wrap(width = 15),
+             font = c(list(list(color = col_palette["sg_blue"])),
+                      list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_blue"]))),
+             plot = "2_GP",
+             dataset = "2_GP",
+             showarrow = FALSE,
+             xanchor = "left",
+             xshift = 30,
+             align = "left") %>%
+      rename(y = rate_cum,
+             x = date) %>%
+      pmap(list))
 
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------

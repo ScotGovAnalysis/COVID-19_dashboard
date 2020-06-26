@@ -274,8 +274,8 @@ datasets[["H2_admissions"]] <-
   mutate(Week_ending = as.Date(Week_ending),
          text_variation = paste0(
            "<b>",
-           -variation,
-           "% fewer admissions</b>\n",
+           scales::percent(-variation_rate, accuracy = 0.1),
+           " fewer admissions</b>\n",
            "than the same weeks in 2018 and 2019\n",
            "(week ending ",
            format(Week_ending, "%d %B %Y"),
@@ -301,18 +301,35 @@ datasets[["H2_admissions"]] <-
          ))
 
 # People avoiding GPs or hospitals --------------------------------------------
+# datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
+#   mutate(date = as.Date(Date),
+#          percent = as.numeric(`%`),
+#          text_2020 = paste0(
+#            "<b>",
+#            format(percent, big.mark = ","),
+#            "% of people avoiding GPs & Hospitals</b>\n",
+#            "(",
+#            format(date, "%d %B %Y"),
+#            ")"
+#          )) %>%
+#   select(Measure, date, percent, text_2020)
+
 datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
-  mutate(date = as.Date(Date),
-         percent = as.numeric(`%`),
+  mutate(date = forcats::as_factor(Date),
+         date_start = as.Date(date_start),
+         sentiment = forcats::as_factor(sentiment) %>% forcats::fct_rev(),
+         rate = percent / 100,
          text_2020 = paste0(
            "<b>",
-           format(percent, big.mark = ","),
-           "% of people avoiding GPs & Hospitals</b>\n",
+           round(percent, digits = 0),
+           "% of people ",
+           sentiment,
+           "</b>\n",
            "(",
-           format(date, "%d %B %Y"),
+           date,
            ")"
          )) %>%
-  select(Measure, date, percent, text_2020)
+  arrange(sentiment)
 
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
@@ -391,6 +408,7 @@ datasets[["3_crisis_applications_spark"]] <-
   
 ## Crime ----------------------------------------------------------------------
 datasets[["3_crime"]] <- datasets[["sg_template"]][["H3_crime"]] %>%
+  filter(month == "May") %>%
   arrange(year, recorded) %>%
   mutate(crime_group = forcats::as_factor(crime_group),
          text = paste0(
@@ -421,46 +439,85 @@ datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
            lubridate::days(1))
 
 # Loneliness ------------------------------------------------------------------
+# datasets[["3_loneliness"]] <- datasets[["sg_template"]][["H3_loneliness"]] %>%
+#   mutate(date = as.Date(Date),
+#          percent = as.numeric(`%`),
+#          text_2020 = paste0(
+#            "<b>",
+#            format(percent, big.mark = ","),
+#            "% of people felt lonely in the past week</b>\n",
+#            "(",
+#            format(date, "%d %B %Y"),
+#            ")"
+#          )) %>%
+#   select(Measure, date, percent, text_2020)
+
 datasets[["3_loneliness"]] <- datasets[["sg_template"]][["H3_loneliness"]] %>%
-  mutate(date = as.Date(Date),
+  mutate(date = forcats::as_factor(Date),
+         date_start = as.Date(date_start),
          percent = as.numeric(`%`),
          text_2020 = paste0(
            "<b>",
            format(percent, big.mark = ","),
            "% of people felt lonely in the past week</b>\n",
            "(",
-           format(date, "%d %B %Y"),
+           date,
            ")"
-         )) %>%
-  select(Measure, date, percent, text_2020)
+         ))
 
 # Trust in Government----------------------------------------------------------
+# datasets[["3_trust"]] <- datasets[["sg_template"]][["H3_trust"]] %>%
+#   mutate(date = as.Date(Date),
+#          percent = as.numeric(`%`),
+#          text_2020 = paste0(
+#            "<b>",
+#            format(percent, big.mark = ","),
+#            "% of people trusted the</br>Scottish Government</b>\n",
+#            "(",
+#            format(date, "%d %B %Y"),
+#            ")"
+#          )) %>%
+#   select(Measure, date, percent, text_2020)
+
 datasets[["3_trust"]] <- datasets[["sg_template"]][["H3_trust"]] %>%
-  mutate(date = as.Date(Date),
+  mutate(date = forcats::as_factor(Date),
+         date_start = as.Date(date_start),
          percent = as.numeric(`%`),
          text_2020 = paste0(
            "<b>",
            format(percent, big.mark = ","),
            "% of people trusted the</br>Scottish Government</b>\n",
            "(",
-           format(date, "%d %B %Y"),
+           date,
            ")"
-         )) %>%
-  select(Measure, date, percent, text_2020)
+         ))
 
 # Threat to Jobs --------------------------------------------------------------
+# datasets[["3_job"]] <- datasets[["sg_template"]][["H3_job"]] %>%
+#   mutate(date = as.Date(Date),
+#          percent = as.numeric(`%`),
+#          text_2020 = paste0(
+#            "<b>",
+#            format(percent, big.mark = ","),
+#            "% of people perceived a</br>threat to their job/business</b>\n",
+#            "(",
+#            format(date, "%d %B %Y"),
+#            ")"
+#          )) %>%
+#   select(Measure, date, percent, text_2020)
+
 datasets[["3_job"]] <- datasets[["sg_template"]][["H3_job"]] %>%
-  mutate(date = as.Date(Date),
+  mutate(date = forcats::as_factor(Date),
+         date_start = as.Date(date_start),
          percent = as.numeric(`%`),
          text_2020 = paste0(
            "<b>",
            format(percent, big.mark = ","),
            "% of people perceived a</br>threat to their job/business</b>\n",
            "(",
-           format(date, "%d %B %Y"),
+           date,
            ")"
-         )) %>%
-  select(Measure, date, percent, text_2020)
+         ))
 
 # Transport -------------------------------------------------------------------
 datasets[["H3_transport"]] <-

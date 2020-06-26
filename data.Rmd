@@ -1,13 +1,8 @@
 ---
 title: "Data"
 output: html_document
-date: 'Last updated: `r format.Date(Sys.Date(), "%d %B %Y")`'
 ---
 
-Data used in this dashboard is available from: -
-  
-* [NRS deaths](https://www.nrscotland.gov.uk/covid19stats)
-* [SG daily trends](https://www.gov.scot/publications/trends-in-number-of-people-in-hospital-with-confirmed-or-suspected-covid-19/)
-* [PHS A&E attendances](https://beta.isdscotland.org/find-publications-and-data/health-services/hospital-care/nhs-performs-weekly-update-of-emergency-department-activity-and-waiting-time-statistics/)
-* [PHS planned and emergency admissions](https://scotland.shinyapps.io/phs-covid-wider-impact/)
-* [Other government data](download/Scottish Government COVID-19 data (`r format(Sys.Date(), "%d-%m-%Y")`).xlsx)
+Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`**
+
+[Download the data](download/Scottish Government COVID-19 data (`r format(Sys.Date(), "%d-%m-%Y")`).xlsx) for these charts (Excel spreadsheet about 100KB).
