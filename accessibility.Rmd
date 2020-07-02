@@ -32,11 +32,8 @@ This website is partially compliant with the regulations, due to the non-complia
 
 The content listed below is not-compliant with the regulations:
 
-* Graphics in the visual summary do not have alt text
-* Graphics in the visual summary are not arranged well for screen readers
 * Some charts in the detailed analysis contain text that is difficult for people using screen readers to access
-* Some of the links in the page navigation are not available to keyboard users
-* Some text does not appear in high contrast mode - mostly annotations and tooltips within charts
+* Some text does not appear in high contrast mode - mostly chart tooltips and annotations within charts
 
 ### Preparation of statement
 This statement was prepared on 25 June 2020.

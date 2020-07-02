@@ -1,6 +1,8 @@
 ---
 title: "Visual summary"
-output: html_document
+output:
+  html_document:
+    self_contained: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +13,8 @@ for (script in list.files("scripts", full.names = TRUE)) {
 }
 ```
 
-Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`**
+<!-- Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`** -->
+Last updated: **29 June 2020**
 
 ```{r}
 narrative %>% 
@@ -20,7 +23,7 @@ narrative %>%
   create_html()
 ```
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 harm_panels_1_2_spark
 harm_panels_3_4_spark
 ```

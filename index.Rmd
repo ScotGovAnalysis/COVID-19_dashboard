@@ -11,7 +11,8 @@ for (script in list.files("scripts", full.names = TRUE)) {
 }
 ```
 
-Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`**
+<!-- Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`** -->
+Last updated: **29 June 2020**
 
 ```{r}
 # See script 6_create_html.R for how these variables are built

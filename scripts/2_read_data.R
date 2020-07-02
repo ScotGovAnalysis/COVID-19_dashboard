@@ -6,25 +6,35 @@ datasets[["sg_template"]] <- paths[["sg_template"]] %>%
   set_names() %>%
   map(read_excel, path = paths[["sg_template"]])
 
+# datasets[["sg_template"]][["TEXT"]] <-
+#   datasets[["sg_template"]][["TEXT"]] %>%
+#   group_by(worksheet_name) %>%
+#   mutate(
+#     spark_text = case_when(
+#       worksheet_name %in% c("H3_job", "H3_trust", "H2_emergency") ~ paste0(
+#         "<b>",
+#         TITLE_max_35_characters,
+#         ":</b>\n",
+#         HEADLINE_max_60_characters %>%
+#           stringr::str_wrap(width = 32)
+#       ),
+#       TRUE ~ paste0(
+#         "<b>",
+#         TITLE_max_35_characters,
+#         ":</b> ",
+#         HEADLINE_max_60_characters
+#       ) %>% stringr::str_wrap(width = 32)
+#     )
+#   )
+
 datasets[["sg_template"]][["TEXT"]] <-
   datasets[["sg_template"]][["TEXT"]] %>%
   mutate(
-    spark_text = case_when(
-      worksheet_name %in% c("H3_job", "H3_trust", "H2_emergency") ~ paste0(
-        "<b>",
-        TITLE_max_35_characters,
-        ":</b>\n",
-        HEADLINE_max_60_characters %>%
-          stringr::str_wrap(width = 32)
-      ),
-      TRUE ~ paste0(
-        "<b>",
-        TITLE_max_35_characters,
-        ":</b> ",
-        HEADLINE_max_60_characters
-      ) %>% stringr::str_wrap(width = 32)
+    spark_text = paste0("<H3 style = 'margin:0; font-size:18px;'>",
+                        TITLE_max_35_characters,
+                        "</H3>",
+                        HEADLINE_max_60_characters)
     )
-  )
 
 datasets[["nrs"]] <- paths[["nrs"]] %>%
   excel_sheets() %>%

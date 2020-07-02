@@ -3,6 +3,7 @@ title: "Data"
 output: html_document
 ---
 
-Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`**
+<!-- Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`** -->
+Last updated: **29 June 2020**
 
 [Download the data](download/Scottish Government COVID-19 data (`r format(Sys.Date(), "%d-%m-%Y")`).xlsx) for these charts (Excel spreadsheet about 100KB).

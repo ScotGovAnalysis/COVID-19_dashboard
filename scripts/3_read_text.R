@@ -40,28 +40,29 @@ text_after_chart <- function(worksheet,
 spark_labels <- datasets[["sg_template"]][["TEXT"]] %>%
   select(position, worksheet_name, spark_text) %>%
   filter(!(worksheet_name %in% c("H3_crime"))) %>%
-  separate(
-    col = worksheet_name,
-    into = c("harm_group", "harm_id"),
-    sep = "_"
-  ) %>%
-  arrange(harm_group, position) %>%
-  group_by(harm_group) %>%
-  mutate(
-    x = dates[["start_sparklines"]],
-    y = case_when(harm_id == "R" ~ 1,
-                  TRUE ~ 0),
-    yref = paste0("y", row_number()),
-    xshift = -210,
-    xanchor = "left",
-    yanchor = case_when(
-      harm_id %in% c("R", "emergency", "planned") ~ "top",
-      TRUE ~ "bottom"
-    ),
-    align = "left",
-    showarrow = FALSE
-  ) %>%
-  rename(text = spark_text)
+  arrange(position)
+# %>%
+#   separate(
+#     col = worksheet_name,
+#     into = c("harm_group", "harm_id"),
+#     sep = "_"
+#   ) %>%
+#   arrange(harm_group, position) %>%
+#   group_by(harm_group) %>%
+#   mutate(
+#     x = dates[["start_sparklines"]],
+#     y = case_when(harm_id == "R" ~ 1,
+#                   TRUE ~ 0),
+#     yref = paste0("y", row_number()),
+#     xshift = -210,
+#     xanchor = "left",
+#     yanchor = case_when(
+#       harm_id %in% c("R", "emergency", "planned") ~ "top",
+#       TRUE ~ "bottom"
+#     ),
+#     align = "left",
+#     showarrow = FALSE
+#   )
 
 # Read annotations --------------------------------------------------------
 annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%

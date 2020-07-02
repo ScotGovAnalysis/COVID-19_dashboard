@@ -1,9 +1,54 @@
-<!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170460937-2"></script>
+<script
+src="https://cc.cdn.civiccomputing.com/9/cookieControl-9.x.min.js"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+var config = {
+  apiKey: '656c3d1a2890f5fe7532487e81142e5fcf671ef3',
+  product: 'COMMUNITY',
+  initialState: "OPEN",
+  optionalCookies: [
+    {
+      name: 'analytics',
+      label: 'Analytics',
+      description: 'Analytical cookies help us to improve our website by collecting and reporting information on its usage.',
+      cookies: [
+        '_ga',
+        '_gid',
+        '_gat',
+        '__utma',
+        '__utmt',
+        '__utmb',
+        '__utmc',
+        '__utmz',
+        '__utmv'
+        ],
+        recommendedState: true,
+        onAccept : function(){
+          
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'UA-170460937-2', { 'anonymize_ip':true });
+          
+          },
+        onRevoke: function(){
+          
+          window['ga-disable-UA-170460937-2'] = true;
+          
+        }
+      },{
+        name: 'preferences',
+        label: 'Preferences',
+        description: '',
+        cookies: [],
+        onAccept : function(){},
+        onRevoke: function(){}
+       }
+   ],
 
-  gtag('config', 'UA-170460937-2');
+   position: 'RIGHT',
+   theme: 'DARK'
+};
+
+CookieControl.load( config );
 </script>

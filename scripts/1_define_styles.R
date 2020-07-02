@@ -29,7 +29,7 @@ add_style_spark <- function(p,
         showticklabels = FALSE,
         range = range
       ),
-      margin = list(l = 210,
+      margin = list(l = 0, #210,
                     r = 0,
                     t = 0,
                     b = 0)
