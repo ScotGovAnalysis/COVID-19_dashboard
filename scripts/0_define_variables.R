@@ -57,8 +57,11 @@ shapes <- list(
     list(
       type = "line",
       layer = "below",
-      x0 = "2020-03-26",
-      x1 = "2020-06-24",
+      xref = "paper",
+      # x0 = "2020-03-26",
+      # x1 = "2020-06-24",
+      x0 = 0,
+      x1 = 1,
       y0 = 1,
       y1 = 1,
       line = list(color = "black", dash = "dot")
@@ -152,8 +155,10 @@ shapes <- list(
       fillcolor = col_palette[["sg_light_blue"]],
       x0 = as.Date("2020-04-06"),
       x1 = as.Date("2020-04-20"),
+      yref = "paper",
       y0 = 0,
-      y1 = 15000,
+      y1 = 1,
+      # y1 = 15000,
       line = list(width = 0)
     ),
     list(

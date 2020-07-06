@@ -78,7 +78,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                           TRUE ~ text)) %>%
   bind_rows(
     datasets[["1_infect"]] %>%
-      filter(date == max(date)) %>%
+      filter(date == min(date)) %>%
       select(date, lowerbound, midpoint, upperbound) %>%
       gather(key = "estimate", value = "value", -date) %>%
       mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
@@ -86,7 +86,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              dataset = "1_infect",
              showarrow = FALSE,
              xanchor = "left",
-             xshift = 10,
+             xshift = -90,
              align = "left") %>%
       rename(y = value,
              x = date),
@@ -119,13 +119,15 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
     datasets[["2_excess"]] %>%
       filter(date == max(date)) %>%
       select(date, measure, count) %>%
+      arrange(measure) %>%
       mutate(plot = "2_excess",
              dataset = "2_excess",
              showarrow = FALSE,
-             font = c(list(list(color = col_palette["sg_blue"])),
-                      list(list(color = col_palette["sg_grey"])),
+             font = c(list(list(color = col_palette["sg_grey"])),
+                      list(list(color = col_palette["sg_blue"])),
                       list(list(color = col_palette["sg_blue"]))),
              xanchor = "left",
+             yanchor = c("bottom", NA, "top"),
              xshift = 8,
              align = "left",
              measure = stringr::str_replace_all(measure, "_", " ") %>%
@@ -187,20 +189,6 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
         align = "left"
       ) %>%
       rename(y = count,
-             x = date),
-    datasets[["4a"]] %>%
-      filter(date == max(date)) %>%
-      select(claims_7day_avg, date) %>%
-      mutate(date = as.Date(date),
-             text = "7 day average",
-             plot = "4a",
-             font = list(list(color = col_palette["sg_blue"])),
-             dataset = "4a",
-             showarrow = FALSE,
-             xanchor = "left",
-             xshift = 5,
-             align = "left") %>%
-      rename(y = claims_7day_avg,
              x = date)
   )
 

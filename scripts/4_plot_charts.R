@@ -476,33 +476,7 @@ plots[["H3_transport"]] <- plot_ly(
   )
 
 # 4 Economy -------------------------------------------------------------------
-plots[["4a"]] <- plot_ly(
-  data = datasets[["4a"]],
-  x = ~ date,
-  marker = list(size = 7),
-  hoverinfo = ~ "text"
-) %>%
-  add_style_chart() %>%
-  add_trace(name = "Universal Credit Claims",
-            type = "bar",
-            y = ~ claims,
-            text = ~ claims_text
-            ) %>%
-  add_trace(name = "7 day average",
-            type = "scatter",
-            mode = "markers+lines",
-            y = ~ claims_7day_avg,
-            text = ~ claims_7day_avg_text
-            ) %>%
-  layout(
-    showlegend = FALSE,
-    colorway = c(col_palette),
-    shapes = shapes[["4a"]],
-    annotations = filter(annotations, plot == "4a", dataset == "4a") %>%
-      pmap(list) #transpose and convert to list
-  )
-
-# Turnover ----------------------------------------------------------------
+# Turnover --------------------------------------------------------------------
 p <- ggplot(
   data = datasets[["4_turnover"]] %>%
     ungroup(),

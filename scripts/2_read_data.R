@@ -6,27 +6,6 @@ datasets[["sg_template"]] <- paths[["sg_template"]] %>%
   set_names() %>%
   map(read_excel, path = paths[["sg_template"]])
 
-# datasets[["sg_template"]][["TEXT"]] <-
-#   datasets[["sg_template"]][["TEXT"]] %>%
-#   group_by(worksheet_name) %>%
-#   mutate(
-#     spark_text = case_when(
-#       worksheet_name %in% c("H3_job", "H3_trust", "H2_emergency") ~ paste0(
-#         "<b>",
-#         TITLE_max_35_characters,
-#         ":</b>\n",
-#         HEADLINE_max_60_characters %>%
-#           stringr::str_wrap(width = 32)
-#       ),
-#       TRUE ~ paste0(
-#         "<b>",
-#         TITLE_max_35_characters,
-#         ":</b> ",
-#         HEADLINE_max_60_characters
-#       ) %>% stringr::str_wrap(width = 32)
-#     )
-#   )
-
 datasets[["sg_template"]][["TEXT"]] <-
   datasets[["sg_template"]][["TEXT"]] %>%
   mutate(
@@ -47,23 +26,6 @@ datasets[["sitrep"]] <- read_excel(path = paths[["sitrep"]],
 
 # 1 Direct health -------------------------------------------------------------
 # R number --------------------------------------------------------------------
-# Dummy data used to mock-up a chart for the R number
-datasets[["1r"]] <- data.frame(date = as.Date(c("2020-02-19",
-                                        "2020-03-11",
-                                        "2020-03-16",
-                                        "2020-03-18",
-                                        "2020-03-23",
-                                        "2020-05-20",
-                                        "2020-05-27")),
-                               high = c(6.8, 6.5, 3.1, 3, 1, 0.9, 0.9),
-                               low = c(4.1, 4, 1.9, 1.8, 0.7, 0.7, 0.7)) %>%
-  mutate(middle = (high + low) / 2,
-         text = paste("<b>R estimated between", low, "and", high, "</b>\n",
-                      "on", format(date, "%d %B %Y")))
-
-
-
-
 datasets[["1r_recent"]] <- datasets[["sg_template"]][["H1_R"]] %>%
   spread(key = Variable, value = Value) %>%
   rename(low = `R lower bound`,
@@ -71,7 +33,9 @@ datasets[["1r_recent"]] <- datasets[["sg_template"]][["H1_R"]] %>%
   mutate(Date = as.Date(Date),
          middle = (high + low) / 2,
          text = paste("<b>R estimated between", low, "and", high, "</b>\n",
-                      "on", format(Date, "%d %B %Y"))) %>%
+                      "on", format(Date, "%d %B %Y")),
+         text_short = paste("<b>", low, "to", high, "</b>\n",
+                            format(Date, "%d %B %Y"))) %>%
   rename(date = Date)
 
 
@@ -90,43 +54,15 @@ datasets[["1_infect"]] <-
       format(upperbound, big.mark = ","),
       " infectious people</b>\non ",
       format(Date, "%d %B %Y")
-    )
+    ),
+    text_short = paste0("<b>", format(lowerbound, big.mark = ","), " to ",
+                       format(upperbound, big.mark = ","), "</b>\n",
+                       format(Date, "%d %B %Y"))
   ) %>%
   rename(date = Date)
 
 
 # Cases -----------------------------------------------------------------------
-datasets[["1_cases"]] <- datasets[["sitrep"]] %>%
-  filter(Data == "Overnight change in total confirmed cases TOTAL") %>%
-  select(-c(Slide, Data)) %>%
-  gather(key = "date", value = "cases") %>%
-  drop_na(cases) %>%
-  mutate(
-    date = as.Date(as.numeric(date), origin = "1899-12-30"),
-    cases = as.numeric(cases),
-    cases_7day_avg = data.table::frollmean(cases, 7),
-    cases_text = case_when(
-      !is.na(cases) ~ paste0(
-        "<b>",
-        format(cases, big.mark = ","),
-        " cases</b>\n",
-        "(",
-        format(date, "%d %B %Y"),
-        ")"
-      )
-    ),
-    cases_7day_avg_text = case_when(
-      !is.na(cases_7day_avg) ~ paste0(
-        "<b>",
-        format(round(cases_7day_avg, digits = 1), big.mark = ","),
-        " average cases per day</b>\n",
-        "(week ending ",
-        format(date, "%d %B %Y"),
-        ")"
-      )
-    )
-  )
-
 datasets[["1_cases"]] <-
   datasets[["sg_template"]][["H1_cases"]] %>%
   mutate(
@@ -149,6 +85,16 @@ datasets[["1_cases"]] <-
         "(week ending ",
         format(date, "%d %B %Y"),
         ")"
+      )
+    ),
+    count_7day_avg_text_short = case_when(
+      !is.na(count_7day_avg) ~ paste0(
+        "<b>",
+        format(round(count_7day_avg, digits = 1), big.mark = ","),
+        "</b>\n",
+        "7 day average", "\n",
+        "w/e ",
+        format(date, "%d %B %Y")
       )
     )
   )
@@ -180,6 +126,13 @@ datasets[["H1_deaths"]] <-
       "(week beginning ",
       format(week_beginning, "%d %B %Y"),
       ")"
+    ),
+    text_short = paste0(
+      "<b>",
+      count,
+      "</b>\n",
+      "w/b ",
+      format(week_beginning, "%d %B %Y")
     )
   )
 
@@ -204,6 +157,14 @@ datasets[["H1_admissions"]] <-
       "(",
       format(Date, "%d %B %Y"),
       ")"
+    ),
+    text_7day_avg_short = paste0(
+      "<b>",
+      round(count_7day_avg, 1),
+      "</b>\n",
+      "7 day average", "\n",
+      "w/e ",
+      format(Date, "%d %B %Y")
     )
   )
 
@@ -221,6 +182,13 @@ datasets[["2a"]] <-
            "(week ending ",
            format(week_ending_date, "%d %B %Y"),
            ")"
+         ),
+         text_short = paste0(
+           "<b>",
+           attendance %>% format(big.mark = ","),
+           "</b>\n",
+           "w/e ",
+           format(week_ending_date, "%d %B %Y")
          ))
 
 datasets[["2a_recent"]] <- datasets[["2a"]] %>%
@@ -274,6 +242,14 @@ datasets[["2_excess_spark"]] <- datasets[["2_excess"]] %>%
            "(week ending ",
            format(date, "%d %B %Y"),
            ")"
+         ),
+         text_short = paste0(
+           "<b>",
+           round(excess_deaths, digits = 1),
+           "</b>\n",
+           "7 day average", "\n",
+           "w/e ",
+           format(date, "%d %B %Y")
          )) %>%
   rename(all_2020 = total_deaths,
          avg_2015_19 = average_previous_5_years)
@@ -283,6 +259,14 @@ datasets[["H2_admissions"]] <-
   datasets[["sg_template"]][["H2_admissions"]] %>%
   mutate(Week_ending = as.Date(Week_ending),
          text_variation = paste0(
+           "<b>",
+           scales::percent(-variation_rate, accuracy = 0.1),
+           " fewer</b>\n",
+           "than 2018/19\n",
+           "w/e ",
+           format(Week_ending, "%d %B %Y")
+         ),
+         text_variation_short = paste0(
            "<b>",
            scales::percent(-variation_rate, accuracy = 0.1),
            " fewer admissions</b>\n",
@@ -310,24 +294,16 @@ datasets[["H2_admissions"]] <-
            "(average for the same weeks in 2018 and 2019"
          ))
 
-# People avoiding GPs or hospitals --------------------------------------------
-# datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
-#   mutate(date = as.Date(Date),
-#          percent = as.numeric(`%`),
-#          text_2020 = paste0(
-#            "<b>",
-#            format(percent, big.mark = ","),
-#            "% of people avoiding GPs & Hospitals</b>\n",
-#            "(",
-#            format(date, "%d %B %Y"),
-#            ")"
-#          )) %>%
-#   select(Measure, date, percent, text_2020)
 
+# Avoiding ----------------------------------------------------------------
 datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
   mutate(date = forcats::as_factor(Date),
          date_start = as.Date(date_start),
-         sentiment = forcats::as_factor(sentiment) %>% forcats::fct_rev(),
+         sentiment = factor(sentiment, levels = c("strongly disagree",
+                                                  "tend to disagree",
+                                                  "neither agree or disagree",
+                                                  "tend to agree",
+                                                  "strongly agree")),
          rate = percent / 100,
          text_2020 = paste0(
            "<b>",
@@ -375,9 +351,16 @@ datasets[["3_school"]] <-
       "(",
       format(date, "%A %d %B %Y"),
       ")"
+    ),
+    text_short = paste0(
+      "<b>",
+      format(count, big.mark = ","),
+      " attending",
+      "</b>\n",
+      format(date, "%a %d %B %Y")
     )
   ) %>%
-  select(Measure, date, count, text)
+  select(Measure, date, count, text, text_short)
 
 ## Crisis applications --------------------------------------------------------
 datasets[["3_crisis_applications"]] <-
@@ -413,6 +396,15 @@ datasets[["3_crisis_applications_spark"]] <-
       format(month_ending_date, "%d %B %Y"),
       ")",
       "\nthan average of previous 2 years."
+    ),
+    text_short = paste0(
+      "<b>",
+      format(round(variation), big.mark = ","),
+      " more</b> \n",
+      "than 2018/19 \n",
+      "(",
+      format(month_ending_date, "%B"),
+      ")"
     )
   )
   
@@ -449,19 +441,6 @@ datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
            lubridate::days(1))
 
 # Loneliness ------------------------------------------------------------------
-# datasets[["3_loneliness"]] <- datasets[["sg_template"]][["H3_loneliness"]] %>%
-#   mutate(date = as.Date(Date),
-#          percent = as.numeric(`%`),
-#          text_2020 = paste0(
-#            "<b>",
-#            format(percent, big.mark = ","),
-#            "% of people felt lonely in the past week</b>\n",
-#            "(",
-#            format(date, "%d %B %Y"),
-#            ")"
-#          )) %>%
-#   select(Measure, date, percent, text_2020)
-
 datasets[["3_loneliness"]] <- datasets[["sg_template"]][["H3_loneliness"]] %>%
   mutate(date = forcats::as_factor(Date),
          date_start = as.Date(date_start),
@@ -473,22 +452,15 @@ datasets[["3_loneliness"]] <- datasets[["sg_template"]][["H3_loneliness"]] %>%
            "(",
            date,
            ")"
+         ),
+         text_2020_short = paste0(
+           "<b>",
+           format(percent, big.mark = ","),
+           "%</b>\n",
+           date
          ))
 
 # Trust in Government----------------------------------------------------------
-# datasets[["3_trust"]] <- datasets[["sg_template"]][["H3_trust"]] %>%
-#   mutate(date = as.Date(Date),
-#          percent = as.numeric(`%`),
-#          text_2020 = paste0(
-#            "<b>",
-#            format(percent, big.mark = ","),
-#            "% of people trusted the</br>Scottish Government</b>\n",
-#            "(",
-#            format(date, "%d %B %Y"),
-#            ")"
-#          )) %>%
-#   select(Measure, date, percent, text_2020)
-
 datasets[["3_trust"]] <- datasets[["sg_template"]][["H3_trust"]] %>%
   mutate(date = forcats::as_factor(Date),
          date_start = as.Date(date_start),
@@ -500,22 +472,15 @@ datasets[["3_trust"]] <- datasets[["sg_template"]][["H3_trust"]] %>%
            "(",
            date,
            ")"
+         ),
+         text_2020_short = paste0(
+           "<b>",
+           format(percent, big.mark = ","),
+           "%</b>\n",
+           date
          ))
 
 # Threat to Jobs --------------------------------------------------------------
-# datasets[["3_job"]] <- datasets[["sg_template"]][["H3_job"]] %>%
-#   mutate(date = as.Date(Date),
-#          percent = as.numeric(`%`),
-#          text_2020 = paste0(
-#            "<b>",
-#            format(percent, big.mark = ","),
-#            "% of people perceived a</br>threat to their job/business</b>\n",
-#            "(",
-#            format(date, "%d %B %Y"),
-#            ")"
-#          )) %>%
-#   select(Measure, date, percent, text_2020)
-
 datasets[["3_job"]] <- datasets[["sg_template"]][["H3_job"]] %>%
   mutate(date = forcats::as_factor(Date),
          date_start = as.Date(date_start),
@@ -527,6 +492,12 @@ datasets[["3_job"]] <- datasets[["sg_template"]][["H3_job"]] %>%
            "(",
            date,
            ")"
+         ),
+         text_2020_short = paste0(
+           "<b>",
+           format(percent, big.mark = ","),
+           "%</b>\n",
+           date
          ))
 
 # Transport -------------------------------------------------------------------
@@ -543,32 +514,38 @@ datasets[["H3_transport"]] <-
       "(asked during ",
       Date,
       ")"
+    ),
+    text_short = paste0(
+      "<b>",
+      percent,
+      "</b>\n",
+      Date
     )
   )
 
 # 4 Economy -------------------------------------------------------------------
-datasets[["4a"]] <- datasets[["sitrep"]] %>%
-  filter(Data == "Number of Universal Credit Claims") %>%
-  select(-c(Slide, Data)) %>%
-  gather(key = "date", value = "claims") %>%
-  mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
-         claims = as.numeric(claims)) %>%
-  drop_na() %>%
-  mutate(claims_7day_avg = data.table::frollmean(claims, 7),
-         claims_text = paste0(
-           "<b>",
-           format(claims, big.mark = ","),
-           " claims on</b> ",
-           format(date, "%A %d %B %Y")
-         ),
-         claims_7day_avg_text = paste0(
-           "<b>",
-           claims_7day_avg %>% round() %>% format(big.mark = ","),
-           " average claims per day</b>\n",
-           "(week ending ",
-           format(date, "%d %B %Y"),
-           ")"
-         ))
+# datasets[["4a"]] <- datasets[["sitrep"]] %>%
+#   filter(Data == "Number of Universal Credit Claims") %>%
+#   select(-c(Slide, Data)) %>%
+#   gather(key = "date", value = "claims") %>%
+#   mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
+#          claims = as.numeric(claims)) %>%
+#   drop_na() %>%
+#   mutate(claims_7day_avg = data.table::frollmean(claims, 7),
+#          claims_text = paste0(
+#            "<b>",
+#            format(claims, big.mark = ","),
+#            " claims on</b> ",
+#            format(date, "%A %d %B %Y")
+#          ),
+#          claims_7day_avg_text = paste0(
+#            "<b>",
+#            claims_7day_avg %>% round() %>% format(big.mark = ","),
+#            " average claims per day</b>\n",
+#            "(week ending ",
+#            format(date, "%d %B %Y"),
+#            ")"
+#          ))
 
 # Turnover --------------------------------------------------------------------
 datasets[["4_turnover"]] <- datasets[["sg_template"]][["H4_turnover"]] %>%
@@ -587,8 +564,64 @@ datasets[["4_turnover"]] <- datasets[["sg_template"]][["H4_turnover"]] %>%
     month,
     " 2020)"
   ),
+  text_short = paste0(
+    "<b>",
+    round(turnover, digits = 1),
+    "%</b>\n",
+    month
+  ),
   month_short = substr(month, 1, 3) %>% forcats::as_factor()) %>%
   group_by(industry)
+
+# GDP ----------------------------------------------------------------
+datasets[["4_GDP"]] <- datasets[["sg_template"]][["H4_GDP"]] %>%
+  mutate(
+    date = lubridate::as_date(paste0(year, month, "01")),
+    text = paste0(
+      "<b>Scottish GDP (2016=100) ",
+      round(gdp, 1),
+      "</b>\n",
+      "(",
+      month,
+      " ",
+      year,
+      ")"
+    ),
+    text_short = paste0(
+      "<b>",
+      round(gdp, 1),
+      "</b>\n",
+      "2016 = 100\n",
+      month,
+      " ",
+      year
+    )
+  )
+
+# Claimant counts -------------------------------------------------------------
+datasets[["4_claimants"]] <- datasets[["sg_template"]][["H4_claimants"]] %>%
+  rename(count = `Number of claimant counts (LHS)`,
+         change = `% change in claimant counts (RHS)`) %>%
+  mutate(count = count * 1000,
+         date = lubridate::as_date(paste0(year, month, "01")),
+         text = paste0(
+           "<b>",
+           format(count, big.mark = ","),
+           " claimant counts</b>\n",
+           "(",
+           stringr::str_to_sentence(month),
+           " ",
+           year,
+           ")"
+         ),
+         text_short = paste0(
+           "<b>",
+           format(count, big.mark = ","),
+           "</b>\n",
+           stringr::str_to_sentence(month),
+           " ",
+           year
+         ))
 
 # Unemployment ----------------------------------------------------------------
 datasets[["4_unemployment"]] <-
@@ -607,41 +640,16 @@ datasets[["4_unemployment"]] <-
       " ",
       year,
       ")"
+    ),
+    text_short = paste0(
+      "<b>",
+      scales::percent(rate),
+      "</b>\n",
+      quarter,
+      " ",
+      year
     )
   )
 
 datasets[["4_unemployment_spark"]] <- datasets[["4_unemployment"]] %>%
   filter(date >= as.Date("2020-01-01"))
-
-# Claimant counts -------------------------------------------------------------
-datasets[["4_claimants"]] <- datasets[["sg_template"]][["H4_claimants"]] %>%
-  rename(count = `Number of claimant counts (LHS)`,
-         change = `% change in claimant counts (RHS)`) %>%
-  mutate(count = count * 1000,
-         date = lubridate::as_date(paste0(year, month, "01")),
-         text = paste0(
-           "<b>",
-           format(count, big.mark = ","),
-           " claimant counts</b>\n",
-           "(",
-           stringr::str_to_sentence(month),
-           " ",
-           year,
-           ")"
-         ))
-
-# GDP ----------------------------------------------------------------
-datasets[["4_GDP"]] <- datasets[["sg_template"]][["H4_GDP"]] %>%
-  mutate(
-    date = lubridate::as_date(paste0(year, month, "01")),
-    text = paste0(
-      "<b>Scottish GDP (2016=100) ",
-      round(gdp, 1),
-      "</b>\n",
-      "(",
-      month,
-      " ",
-      year,
-      ")"
-    )
-  )

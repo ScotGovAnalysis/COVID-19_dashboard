@@ -17,7 +17,7 @@ plots[["1r_recent_spark"]] <- datasets[["1r_recent"]] %>%
                     color = "black",
                     thickness = 2,
                     width = 3),
-    text = ~ text
+    text = ~ text_short
   ) %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
@@ -63,7 +63,7 @@ plots[["1_infect_spark"]] <-  datasets[["1_infect"]] %>%
   plot_ly(x = ~ date,
           y = ~ midpoint,
           height = spark_height,
-          text = ~ text) %>%
+          text = ~ text_short) %>%
   add_style_spark()
 
 plots[["1_cases_spark"]] <- datasets[["1_cases"]] %>%
@@ -71,7 +71,7 @@ plots[["1_cases_spark"]] <- datasets[["1_cases"]] %>%
     x = ~ date,
     y = ~ count_7day_avg,
     height = spark_height,
-    text = ~ count_7day_avg_text
+    text = ~ count_7day_avg_text_short
   ) %>%
   add_style_spark()
 
@@ -80,7 +80,7 @@ plots[["1_deaths_spark"]] <- datasets[["H1_deaths"]] %>%
     x = ~ week_beginning,
     y = ~ count,
     height = spark_height,
-    text = ~ text
+    text = ~ text_short
   ) %>%
   add_style_spark()
 
@@ -89,7 +89,7 @@ plots[["1_admissions_spark"]] <- datasets[["H1_admissions"]] %>%
     x = ~ Date,
     y = ~ count_7day_avg,
     height = spark_height,
-    text = ~ text_7day_avg
+    text = ~ text_7day_avg_short
   ) %>%
   add_style_spark()
 
@@ -123,7 +123,7 @@ plots[["2a_spark"]] <- datasets[["2a_recent"]] %>%
   plot_ly(x = ~ week_ending_date,
           y = ~ attendance,
           height = spark_height,
-          text = ~ text) %>%
+          text = ~ text_short) %>%
   add_style_spark()
 
 plots[["2_admissions_emergency_spark"]] <- datasets[["H2_admissions"]] %>%
@@ -146,7 +146,7 @@ plots[["2_excess_spark"]] <- datasets[["2_excess_spark"]] %>%
   plot_ly(x = ~ date,
           y = ~ excess_deaths,
           height = spark_height,
-          text = ~ text) %>%
+          text = ~ text_short) %>%
   add_style_spark()
 
 plots[["2_GP_spark"]] <- datasets[["2_GP"]] %>%
@@ -157,11 +157,8 @@ plots[["2_GP_spark"]] <- datasets[["2_GP"]] %>%
   mutate(text = paste0(
     "<b>",
     round(percent, digits = 1),
-    "% of people say they would avoid GPs or hospital</b>\n",
-    " for immediate non-COVID-19 health concerns\n",
-    "(",
-    format(date_start, "%d %B %Y"),
-    ")"
+    "%</b>\n",
+    format(date_start, "%d %B %Y")
   )) %>%
   plot_ly(x = ~ date_start,
           y = ~ percent,
@@ -195,7 +192,7 @@ plots[["2_sparklines"]] <-
 plots[["3_school_spark"]] <- datasets[["3_school"]] %>%
   filter(grepl("All", Measure, ignore.case = TRUE)) %>%
   plot_ly(x = ~ date, y = ~ count, height = spark_height,
-          text = ~ text) %>%
+          text = ~ text_short) %>%
   add_style_spark()
 
 plots[["3_crisis_applications_spark"]] <-
@@ -203,35 +200,35 @@ plots[["3_crisis_applications_spark"]] <-
   plot_ly(x = ~ month_ending_date,
           y = ~ variation,
           height = spark_height,
-          text = ~ text) %>%
+          text = ~ text_short) %>%
   add_style_spark()
 
 plots[["3_loneliness_spark"]] <- datasets[["3_loneliness"]] %>%
   plot_ly(x = ~ date_start,
           y = ~ percent,
           height = spark_height,
-          text = ~ text_2020) %>%
+          text = ~ text_2020_short) %>%
   add_style_spark()
 
 plots[["3_trust_spark"]] <- datasets[["3_trust"]] %>%
   plot_ly(x = ~ date_start,
           y = ~ percent,
           height = spark_height,
-          text = ~ text_2020) %>%
+          text = ~ text_2020_short) %>%
   add_style_spark()
 
 plots[["3_job_spark"]] <- datasets[["3_job"]] %>%
   plot_ly(x = ~ date_start,
           y = ~ percent,
           height = spark_height,
-          text = ~ text_2020) %>%
+          text = ~ text_2020_short) %>%
   add_style_spark()
 
 plots[["3_transport_spark"]] <- datasets[["H3_transport"]] %>%
   plot_ly(x = ~ Date_start,
           y = ~ `%`,
           height = spark_height,
-          text = ~ text) %>%
+          text = ~ text_short) %>%
   add_style_spark() %>%
   layout(
     yaxis = list(range = c(0, max(datasets[["H3_transport"]][["%"]]) * 1.05))
@@ -264,9 +261,8 @@ plots[["4_turnover_spark"]] <- datasets[["4_turnover"]] %>%
   plot_ly(
     x = ~ date,
     y = ~ turnover,
-    text = ~ text,
-    height = spark_height,
-    color = "black"
+    text = ~ text_short,
+    height = spark_height
   ) %>%
   add_style_spark(range = c(dates[["start_sparklines_economy"]],
                             as.character(Sys.Date())))
@@ -276,7 +272,7 @@ plots[["4_GDP_spark"]] <- datasets[["4_GDP"]] %>%
     x = ~ date,
     y = ~ gdp,
     height = spark_height,
-    text = ~ text
+    text = ~ text_short
   ) %>%
   add_style_spark(range = c(dates[["start_sparklines_economy"]],
                             as.character(Sys.Date())))
@@ -285,7 +281,7 @@ plots[["4_claimants_spark"]] <- datasets[["4_claimants"]] %>%
   plot_ly(x = ~ date,
           y = ~ count,
           height = spark_height,
-          text = ~ text) %>%
+          text = ~ text_short) %>%
   add_style_spark(range = c(dates[["start_sparklines_economy"]],
                             as.character(Sys.Date())))
 
@@ -294,7 +290,7 @@ plots[["4_unemployment_spark"]] <-
   plot_ly(x = ~ date,
           y = ~ rate,
           height = spark_height,
-          text = ~ text) %>%
+          text = ~ text_short) %>%
   add_style_spark(range = c(dates[["start_sparklines_economy"]],
                             as.character(Sys.Date())))
 
