@@ -12,6 +12,10 @@ library(markdown)
 library(htmltools)
 
 
+# Define last updated date ------------------------------------------------
+
+last_updated <- list(data = "6 July 2020")
+
 # Define data paths -------------------------------------------------------
 datasets <- plots <- shapes <- list()
 
