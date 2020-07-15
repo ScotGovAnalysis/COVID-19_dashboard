@@ -320,13 +320,18 @@ plots[["3_school"]] <- plot_ly(
   x = ~ date,
   y = ~ count,
   name = ~ Measure,
-  marker = list(size = 7),
   hoverinfo = ~ "text"
 ) %>%
   add_style_chart() %>%
   add_trace(type = "scatter",
             mode = "markers+lines",
+            marker = list(size = 7),
             text = ~ text) %>%
+  add_trace(data = filter(datasets[["3_school"]],
+                          date > as.Date("2020-06-26")),
+            type = "scatter",
+            mode = "lines",
+            connectgaps = TRUE) %>%
   layout(
     showlegend = FALSE,
     colorway = col_palette[c("sg_grey", "sg_blue", "sg_blue")],
@@ -549,7 +554,7 @@ plots[["4_claimants"]] <- plot_ly(
 plots[["4_GDP"]] <- plot_ly(
   data = datasets[["4_GDP"]],
   x = ~ date,
-  y = ~ gdp,
+  y = ~ `GDP (2016=100)`,
   marker = list(size = 7),
   hoverinfo = ~ "text",
   text = ~text

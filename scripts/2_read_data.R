@@ -297,6 +297,7 @@ datasets[["H2_admissions"]] <-
 
 # Avoiding ----------------------------------------------------------------
 datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
+  arrange(date_start) %>%
   mutate(date = forcats::as_factor(Date),
          date_start = as.Date(date_start),
          sentiment = factor(sentiment, levels = c("strongly disagree",
@@ -315,7 +316,7 @@ datasets[["2_GP"]] <- datasets[["sg_template"]][["H2_avoiding"]] %>%
            date,
            ")"
          )) %>%
-  arrange(sentiment)
+  arrange(date_start, sentiment)
 
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
@@ -524,29 +525,6 @@ datasets[["H3_transport"]] <-
   )
 
 # 4 Economy -------------------------------------------------------------------
-# datasets[["4a"]] <- datasets[["sitrep"]] %>%
-#   filter(Data == "Number of Universal Credit Claims") %>%
-#   select(-c(Slide, Data)) %>%
-#   gather(key = "date", value = "claims") %>%
-#   mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
-#          claims = as.numeric(claims)) %>%
-#   drop_na() %>%
-#   mutate(claims_7day_avg = data.table::frollmean(claims, 7),
-#          claims_text = paste0(
-#            "<b>",
-#            format(claims, big.mark = ","),
-#            " claims on</b> ",
-#            format(date, "%A %d %B %Y")
-#          ),
-#          claims_7day_avg_text = paste0(
-#            "<b>",
-#            claims_7day_avg %>% round() %>% format(big.mark = ","),
-#            " average claims per day</b>\n",
-#            "(week ending ",
-#            format(date, "%d %B %Y"),
-#            ")"
-#          ))
-
 # Turnover --------------------------------------------------------------------
 datasets[["4_turnover"]] <- datasets[["sg_template"]][["H4_turnover"]] %>%
   rename(industry = `Monthly Business Turnover Index.`) %>%
@@ -579,7 +557,7 @@ datasets[["4_GDP"]] <- datasets[["sg_template"]][["H4_GDP"]] %>%
     date = lubridate::as_date(paste0(year, month, "01")),
     text = paste0(
       "<b>Scottish GDP (2016=100) ",
-      round(gdp, 1),
+      round(`GDP (2016=100)`, 1),
       "</b>\n",
       "(",
       month,
@@ -589,7 +567,7 @@ datasets[["4_GDP"]] <- datasets[["sg_template"]][["H4_GDP"]] %>%
     ),
     text_short = paste0(
       "<b>",
-      round(gdp, 1),
+      round(`GDP (2016=100)`, 1),
       "</b>\n",
       "2016 = 100\n",
       month,

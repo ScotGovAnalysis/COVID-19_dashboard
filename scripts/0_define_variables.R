@@ -158,7 +158,17 @@ shapes <- list(
       yref = "paper",
       y0 = 0,
       y1 = 1,
-      # y1 = 15000,
+      line = list(width = 0)
+    ),
+    list(
+      type = "rect",
+      layer = "below",
+      fillcolor = col_palette[["sg_light_blue"]],
+      x0 = as.Date("2020-06-29"),
+      x1 = as.Date("2020-07-08"),
+      yref = "paper",
+      y0 = 0,
+      y1 = 1,
       line = list(width = 0)
     ),
     list(
@@ -166,8 +176,9 @@ shapes <- list(
       layer = "below",
       x0 = as.Date("2020-05-08"),
       x1 = as.Date("2020-05-08"),
-      y0 = 6179,
-      y1 = 15000,
+      yref = "paper",
+      y0 = 0,
+      y1 = 1,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),
@@ -188,8 +199,8 @@ shapes <- list(
       layer = "below",
       x0 = as.Date("2020-05-21"),
       x1 = as.Date("2020-05-21"),
-      y0 = 60,
-      y1 = 73 + 12 / 7,
+      y0 = 50,
+      y1 = 73,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),

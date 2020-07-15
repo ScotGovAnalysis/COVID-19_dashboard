@@ -31,8 +31,7 @@ nav_buttons <-
           alt = "The four harms of Covid-19: direct health, indirect health,
           society, economy"
         ),
-        a(href = "summary.html", h2("Visual summary")),
-        p("Click on here to see an overview of the four harms")
+        a(href = "summary.html", h2("Visual summary"))
         ),
       div(
         class = "col-md-6",
@@ -41,8 +40,7 @@ nav_buttons <-
             alt = ""),
         # alt text left intentionally empty as the image is
         # purely decorative
-        a(href = "detail.html", h2("Detailed analysis")),
-        p("Click on here to explore the four harms")
+        a(href = "detail.html", h2("Detailed analysis"))
       ))
 
 

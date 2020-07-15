@@ -14,7 +14,7 @@ for (script in list.files("scripts", full.names = TRUE)) {
 ```
 
 <!-- Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`** -->
-Last updated: **6 July 2020**
+Last updated: **13 July 2020**
 
 ```{r}
 narrative %>% 
