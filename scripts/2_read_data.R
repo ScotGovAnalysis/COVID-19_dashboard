@@ -99,19 +99,6 @@ datasets[["1_cases"]] <-
     )
   )
 
-# datasets[["1b_weeknum_lookup"]] <-
-#   datasets[["nrs"]][["Figure 5 data"]][2:3, ] %>%
-#   select(-1) %>%
-#   `names<-`(.[1, ]) %>%
-#   filter(`Week 1` != "Week 1") %>%
-#   gather(key = "week", value = "week_ending_date") %>%
-#   mutate(week_ending_date = dmy(
-#     paste(week_ending_date,
-#           if_else(week == "Week 1", "2019", "2020"))),
-#     week = as.numeric(substr(
-#       week, start = 6, stop = length(week)
-#     )))
-
 # Weekly deaths ---------------------------------------------------------------
 datasets[["H1_deaths"]] <-
   datasets[["sg_template"]][["H1_deaths"]] %>%
@@ -575,7 +562,6 @@ datasets[["4_turnover"]] <- datasets[["sg_template"]][["H4_turnover"]] %>%
 
 # GDP ----------------------------------------------------------------
 datasets[["4_GDP"]] <- datasets[["sg_template"]][["H4_GDP"]] %>%
-  rename(gdp = matches("gdp")) %>%
   mutate(
     date = lubridate::as_date(paste0(year, month, "01")),
     text = paste0(
