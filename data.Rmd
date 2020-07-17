@@ -12,6 +12,6 @@ for (script in list.files("scripts", full.names = TRUE)) {
 ```
 
 <!-- Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`** -->
-Last updated: **13 July 2020**
+Last updated: **`r format.Date(dates["data_updated"], "%d %B %Y")`**
 
 [Download the data](download/Scottish Government COVID-19 data (`r format.Date(dates["data_updated"], "%d %B %Y")`).xlsx) for these charts (Excel spreadsheet about 100KB).
