@@ -3,7 +3,15 @@ title: "Data"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+for (script in list.files("scripts", full.names = TRUE)) {
+  source(script)
+}
+```
+
 <!-- Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`** -->
 Last updated: **13 July 2020**
 
-[Download the data](download/Scottish Government COVID-19 data (`r format(Sys.Date(), "%d-%m-%Y")`).xlsx) for these charts (Excel spreadsheet about 100KB).
+[Download the data](download/Scottish Government COVID-19 data (`r format.Date(dates["data_updated"], "%d %B %Y")`).xlsx) for these charts (Excel spreadsheet about 100KB).
