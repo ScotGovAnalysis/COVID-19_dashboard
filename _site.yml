@@ -21,14 +21,11 @@ navbar:
     icon: glyphicon-download-alt
   right:
   - text: "About"
+    href: about.html
     icon: glyphicon-info-sign
-    menu:
-      - text: "About"
-        href: about.html
-        icon: glyphicon-info-sign
-      - text: "Contact"
-        href: contact.html
-        icon: glyphicon-comment
-      - text: "Accessibility"
-        href: accessibility.html
-        icon: glyphicon-user
+  - text: "Contact"
+    href: contact.html
+    icon: glyphicon-comment
+  - text: "Accessibility"
+    href: accessibility.html
+    icon: glyphicon-user

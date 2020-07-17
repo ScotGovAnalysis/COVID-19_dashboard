@@ -15,8 +15,7 @@ text_before_chart <- function(worksheet,
   paste(
     sep = "\r\n\r\n",
     paste("###", pull(text, "TITLE_max_35_characters")),
-    pull(text, "HEADLINE_max_60_characters"),
-    pull(text, "SUMMARY_max_30_words")
+    pull(text, "HEADLINE_max_60_characters")
   ) %>%
     create_html()
 }
@@ -28,6 +27,7 @@ text_after_chart <- function(worksheet,
 
   paste(
     sep = "\r\n\r\n",
+    pull(text, "SUMMARY_max_30_words"),
     pull(text, "DISCUSSION_max_100_words"),
     paste("**Source:**", pull(text, "source")),
     paste("**Methodology:**",
@@ -39,7 +39,7 @@ text_after_chart <- function(worksheet,
 
 spark_labels <- datasets[["sg_template"]][["TEXT"]] %>%
   select(position, worksheet_name, spark_text) %>%
-  filter(!(worksheet_name %in% c("H3_crime"))) %>%
+  # filter(!(worksheet_name %in% c("H3_crime"))) %>%
   arrange(position)
 
 # Read annotations --------------------------------------------------------

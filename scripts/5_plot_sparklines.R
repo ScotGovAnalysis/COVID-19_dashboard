@@ -93,30 +93,6 @@ plots[["1_admissions_spark"]] <- datasets[["H1_admissions"]] %>%
   ) %>%
   add_style_spark()
 
-## Create subplots ------------------------------------------------------------
-plots[["1_sparklines"]] <-
-  plots[c(
-    "1r_recent_spark",
-    "1_infect_spark",
-    "1_cases_spark",
-    "1_deaths_spark",
-    "1_admissions_spark"
-  )] %>%
-  subplot(nrows = length(.),
-          shareX = TRUE) %>%
-  layout(showlegend = FALSE,
-         annotations = filter(spark_labels,
-                              stringr::str_starts(worksheet_name, "H1")) %>%
-           mutate(x = 0,
-                  xref = "paper",
-                  yref = "paper",
-                  y = seq(from = 9 / 10, by = -1 / 5, length.out = 5),
-                  yanchor = "middle")) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-  )
-
 # 2 Indirect health -----------------------------------------------------------
 ## Define sparklines ----------------------------------------------------------
 plots[["2a_spark"]] <- datasets[["2a_recent"]] %>%
@@ -166,34 +142,55 @@ plots[["2_GP_spark"]] <- datasets[["2_GP"]] %>%
           text = ~ text) %>%
   add_style_spark()
 
-## Create subplots ------------------------------------------------------------
-plots[["2_sparklines"]] <-
-  plots[c("2a_spark", "2_admissions_emergency_spark",
-          "2_admissions_planned_spark", "2_excess_spark",
-          "2_GP_spark")] %>%
-  subplot(nrows = length(.),
-          shareX = TRUE) %>%
-  layout(showlegend = FALSE,
-         annotations = filter(spark_labels,
-                              stringr::str_starts(worksheet_name, "H2"),
-                              worksheet_name != "H2_admissions") %>%
-           mutate(x = 0,
-                  xref = "paper",
-                  yref = "paper",
-                  y = seq(from = 9 / 10, by = -1 / 5, length.out = 5),
-                  yanchor = "middle")) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-  )
-
 # 3 Society -------------------------------------------------------------------
 ## Define sparklines ----------------------------------------------------------
+
+# For some reason it's not possible to set connectgaps = TRUE in
+# add_style_spark(). So for now, this just copies that function and adds the
+# option manually
 plots[["3_school_spark"]] <- datasets[["3_school"]] %>%
   filter(grepl("All", Measure, ignore.case = TRUE)) %>%
   plot_ly(x = ~ date, y = ~ count, height = spark_height,
           text = ~ text_short) %>%
-  add_style_spark()
+  add_trace(
+    type = "scatter",
+    mode = "lines",
+    line = list(color = "black"),
+    fill = "tozeroy",
+    fillcolor = col_palette["sg_light_blue"],
+    hoverinfo = "text",
+    connectgaps = TRUE
+  ) %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  layout(
+    paper_bgcolor = "rgba(0, 0, 0, 0)",
+    plot_bgcolor = "rgba(0, 0, 0, 0)",
+    yaxis = list(
+      fixedrange = TRUE,
+      title = "",
+      showgrid = FALSE,
+      zeroline = FALSE,
+      rangemode = "tozero",
+      showticklabels = FALSE
+    ),
+    xaxis = list(
+      fixedrange = TRUE,
+      title = "",
+      showgrid = FALSE,
+      showticklabels = FALSE,
+      range = c(dates[["start_sparklines"]],
+                as.character(Sys.Date()))
+    ),
+    margin = list(l = 0, #210,
+                  r = 0,
+                  t = 0,
+                  b = 0)
+  ) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
 
 plots[["3_crisis_applications_spark"]] <-
   datasets[["3_crisis_applications_spark"]] %>%
@@ -201,6 +198,12 @@ plots[["3_crisis_applications_spark"]] <-
           y = ~ variation,
           height = spark_height,
           text = ~ text_short) %>%
+  add_style_spark()
+
+plots[["3_crime_spark"]] <- datasets[["3_crime_spark"]] %>%
+  filter(crime_group == "Total crimes") %>%
+  plot_ly(x = ~ date, y = ~ variation_rate, height = spark_height,
+          text = ~ text_variation_short) %>%
   add_style_spark()
 
 plots[["3_loneliness_spark"]] <- datasets[["3_loneliness"]] %>%
@@ -232,26 +235,6 @@ plots[["3_transport_spark"]] <- datasets[["H3_transport"]] %>%
   add_style_spark() %>%
   layout(
     yaxis = list(range = c(0, max(datasets[["H3_transport"]][["%"]]) * 1.05))
-  )
-
-## Create subplots ------------------------------------------------------------
-plots[["3_sparklines"]] <-
-  plots[c("3_school_spark", "3_crisis_applications_spark",
-          "3_loneliness_spark", "3_trust_spark",
-          "3_job_spark", "3_transport_spark")] %>%
-  subplot(nrows = length(.),
-          shareX = TRUE) %>%
-  layout(showlegend = FALSE,
-         annotations = filter(spark_labels,
-                              stringr::str_starts(worksheet_name, "H3")) %>%
-           mutate(x = 0,
-                  xref = "paper",
-                  yref = "paper",
-                  y = seq(from = 11 / 12, by = -1 / 6, length.out = 6),
-                  yanchor = "middle")) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
   )
 
 # 4 Economy -------------------------------------------------------------------
@@ -293,25 +276,3 @@ plots[["4_unemployment_spark"]] <-
           text = ~ text_short) %>%
   add_style_spark(range = c(dates[["start_sparklines_economy"]],
                             as.character(Sys.Date())))
-
-## Create subplots ------------------------------------------------------------
-plots[["4_sparklines"]] <- plots[c(
-  "4_turnover_spark",
-  "4_GDP_spark",
-  "4_claimants_spark",
-  "4_unemployment_spark"
-  )] %>%
-  subplot(nrows = length(.),
-          shareX = TRUE) %>%
-  layout(showlegend = FALSE,
-         annotations = filter(spark_labels,
-                              stringr::str_starts(worksheet_name, "H4")) %>%
-           mutate(x = 0,
-                  xref = "paper",
-                  yref = "paper",
-                  y = c(7 / 8, 5 / 8, 0.32, 0.1),
-                  yanchor = "middle")) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-  )

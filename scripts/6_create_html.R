@@ -114,29 +114,6 @@ harm_panels_3_4 <-
 
 
 # Summary -----------------------------------------------------------------
-# harm_panels_1_2_spark <-
-#   div(class = "row fluid-row",
-#       div(class = "col-md-6", div(
-#         class = "panel panel-default",
-#         div(class = "panel-heading",
-#             h3(
-#               class = "panel-title",
-#               a("Direct health impacts",
-#                 href = "detail.html#1_direct_health_harms")
-#             )),
-#         div(class = "panel-body", plots[["1_sparklines"]])
-#       )),
-#       div(class = "col-md-6", div(
-#         class = "panel panel-default",
-#         div(class = "panel-heading",
-#             h3(
-#               class = "panel-title",
-#               a("Health impacts not directly related to COVID-19",
-#                 href = "detail.html#2_indirect_health_harms")
-#             )),
-#         div(class = "panel-body", plots[["2_sparklines"]])
-#       )))
-
 harm_panels_1_2_spark <-
   div(class = "row fluid-row",
       div(class = "col-md-6", div(
@@ -202,6 +179,7 @@ harm_panels_3_4_spark <-
                 pull(spark_text),
               spark_lines = c("3_school_spark",
                               "3_crisis_applications_spark",
+                              "3_crime_spark",
                               "3_loneliness_spark",
                               "3_trust_spark",
                               "3_job_spark",

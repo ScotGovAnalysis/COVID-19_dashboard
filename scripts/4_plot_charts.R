@@ -270,6 +270,12 @@ plots[["2_excess"]] <- plot_ly(
   )
 
 # Avoiding GPs and hospitals --------------------------------------------------
+# "#333e48" - grey from SG branding guidelines
+# "#99A4AE" - same grey as above but lightened 40%
+# "#E5F0F8" - sg_light_blue
+# "#66CBFF" - sg_blue lightened 40%
+# "#0065bd" - sg_blue
+
 plots[["2_GP"]] <-
   plot_ly(
     data = datasets[["2_GP"]],
@@ -284,24 +290,21 @@ plots[["2_GP"]] <-
             text = ~text_2020) %>%
   add_style_chart() %>%
   layout(
+    title = "\"<b>I would avoid</b> GP/Hospital for immediate non COVID-19 health concerns\"",
     showlegend = FALSE,
     barmode = "stack",
     yaxis = list(tickformat = "%"),
-    colorway = col_palette[c("sg_blue",
-                             "sg_grey",
-                             "sg_light_blue",
-                             "sg_grey",
-                             "sg_blue")],
+    colorway = c("#333e48", "#99A4AE", "#E5F0F8", "#66CBFF", "#0065bd"),
     annotations = datasets[["2_GP"]] %>%
       filter(date_start == max(date_start)) %>%
       mutate(rate_cum = cumsum(rate) - rate / 2) %>% # Position annotations in the middle of each bar
       select(date, sentiment, rate_cum) %>%
       mutate(text = stringr::str_to_sentence(sentiment) %>%
                stringr::str_wrap(width = 15),
-             font = c(list(list(color = col_palette["sg_blue"])),
+             font = c(list(list(color = "#333e48")),
+                      list(list(color = "#99A4AE")),
                       list(list(color = col_palette["sg_grey"])),
-                      list(list(color = col_palette["sg_grey"])),
-                      list(list(color = col_palette["sg_grey"])),
+                      list(list(color = "#66CBFF")),
                       list(list(color = col_palette["sg_blue"]))),
              plot = "2_GP",
              dataset = "2_GP",
@@ -373,17 +376,46 @@ plots[["3_crisis_applications"]] <- plot_ly(
   )
 
 ## Crime ----------------------------------------------------------------------
-plots[["3_crime"]] <- plot_ly(
+
+p <- ggplot(
   data = datasets[["3_crime"]],
-  x = ~ recorded,
-  y = ~ crime_group,
-  name = ~ forcats::as_factor(year) %>% forcats::fct_rev(),
-  text = ~ text,
-  hoverinfo = ~ "text"
-) %>%
-  add_trace(type = "bar") %>%
-  add_style_chart() %>%
-  layout(colorway = c(col_palette["sg_blue"], col_palette["sg_grey"]))
+  mapping = aes(x = month,
+                y = recorded,
+                group = year,
+                colour = as.factor(year))
+) +
+  geom_line() +
+  geom_point() +
+  facet_wrap( ~ crime_group, ncol = 3) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_colour_manual(values = c(col_palette[["sg_grey"]],
+                                 col_palette[["sg_blue"]])) +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    strip.background = element_rect(fill = "white"),
+    panel.background = element_blank(),
+    legend.title = element_blank(),
+    panel.border = element_rect(fill = NA,
+                                size = 0.5,
+                                colour = col_palette[["sg_grey"]]),
+    panel.spacing = unit(10, "mm")
+  )
+
+plots[["3_crime"]] <- ggplotly(p) %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  layout(
+    legend = list(xanchor = "left",
+                  yanchor = "bottom",
+                  orientation = "h",
+                  x = 0,
+                  y = 1.05)
+  ) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
 
 # Loneliness ------------------------------------------------------------------
 plots[["3_loneliness"]] <- plot_ly(
@@ -395,7 +427,7 @@ plots[["3_loneliness"]] <- plot_ly(
 ) %>%
   add_trace(
     type = "scatter",
-    y = ~ percent,
+    y = ~ percent / 100,
     text = ~text_2020,
     mode = "markers+lines",
     line = list(color = col_palette["sg_blue"]),
@@ -403,6 +435,9 @@ plots[["3_loneliness"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(showlegend = FALSE,
+         yaxis = list(
+           tickformat = "%"
+         ),
          shapes = shapes[["3_loneliness"]],
          annotations = filter(annotations,
                               plot == "3_loneliness",
@@ -419,7 +454,7 @@ plots[["3_trust"]] <- plot_ly(
 ) %>%
   add_trace(
     type = "scatter",
-    y = ~ percent,
+    y = ~ percent / 100,
     text = ~text_2020,
     mode = "markers+lines",
     line = list(color = col_palette["sg_blue"]),
@@ -427,6 +462,9 @@ plots[["3_trust"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(showlegend = FALSE,
+         yaxis = list(
+           tickformat = "%"
+         ),
          shapes = shapes[["3_trust"]],
          annotations = filter(annotations,
                               plot == "3_trust",
@@ -443,7 +481,7 @@ plots[["3_job"]] <- plot_ly(
 ) %>%
   add_trace(
     type = "scatter",
-    y = ~ percent,
+    y = ~ percent / 100,
     text = ~text_2020,
     mode = "markers+lines",
     line = list(color = col_palette["sg_blue"]),
@@ -451,6 +489,9 @@ plots[["3_job"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(showlegend = FALSE,
+         yaxis = list(
+           tickformat = "%"
+         ),
          shapes = shapes[["3_job"]],
          annotations = filter(annotations,
                               plot == "3_job",
@@ -482,9 +523,36 @@ plots[["H3_transport"]] <- plot_ly(
 
 # 4 Economy -------------------------------------------------------------------
 # Turnover --------------------------------------------------------------------
+plots[["4_turnover"]] <- plot_ly(
+  data = datasets[["4_turnover"]] %>%
+    ungroup() %>%
+    filter(industry == "All MBS \r\nIndustries"),
+  x = ~ month,
+  hoverinfo = ~ "text",
+  height = 200
+) %>%
+  add_ribbons(
+    ymin = ~ 60,
+    ymax = ~ turnover,
+    line = list(color = "transparent"),
+    fillcolor = col_palette["sg_light_blue"]
+  ) %>%
+  add_trace(
+    type = "scatter",
+    y = ~ turnover,
+    text = ~text,
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(size = 7, color = col_palette["sg_blue"])
+  ) %>%
+  add_style_chart() %>%
+  layout(showlegend = FALSE)
+
 p <- ggplot(
   data = datasets[["4_turnover"]] %>%
-    ungroup(),
+    ungroup() %>%
+    filter(industry != "All MBS \r\nIndustries") %>%
+    mutate(industry = forcats::fct_reorder(industry, turnover, .fun = min)),
   mapping = aes(x = month_short,
                 y = turnover,
                 group = industry)
@@ -494,16 +562,17 @@ p <- ggplot(
               fill = col_palette["sg_light_blue"]) +
   geom_line(colour = col_palette["sg_blue"]) +
   geom_point(colour = col_palette["sg_blue"]) +
-  facet_wrap( ~ industry, ncol = 5) +
+  facet_wrap( ~ industry, ncol = 3) +
   theme(
     axis.title = element_blank(),
     axis.ticks = element_blank(),
     strip.background = element_rect(fill = "white"),
-    panel.background = element_blank()
+    panel.background = element_blank(),
+    panel.spacing = unit(10, "mm")
   )
 
 
-plots[["4_turnover"]] <- ggplotly(p) %>%
+plots[["4_turnover_by_industry"]] <- ggplotly(p) %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
   htmlwidgets::onRender(
@@ -514,7 +583,7 @@ plots[["4_turnover"]] <- ggplotly(p) %>%
 # Unemployment ----------------------------------------------------------------
 plots[["4_unemployment"]] <- plot_ly(
   data = datasets[["4_unemployment"]],
-  x = ~ year_quarter,
+  x = ~ date,
   y = ~ rate,
   marker = list(size = 7),
   hoverinfo = ~ "text",

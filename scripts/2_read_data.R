@@ -398,9 +398,17 @@ datasets[["3_crisis_applications_spark"]] <-
   
 ## Crime ----------------------------------------------------------------------
 datasets[["3_crime"]] <- datasets[["sg_template"]][["H3_crime"]] %>%
-  filter(month == "May") %>%
   arrange(year, recorded) %>%
-  mutate(crime_group = forcats::as_factor(crime_group),
+  mutate(crime_group = factor(crime_group,
+                              levels = c("Total crimes",
+                                         "Crimes of dishonesty",
+                                         "Other crimes",
+                                         "Fire-raising, vandalism etc.",
+                                         "Sexual crimes",
+                                         "Non-sexual crimes of violence",
+                                         "Total offences",
+                                         "Miscellaneous offences",
+                                         "Motor vehicle offences")),
          text = paste0(
            "<b>",
            format(recorded, big.mark = ","),
@@ -422,7 +430,16 @@ datasets[["3_crime_spark"]] <- datasets[["3_crime"]] %>%
   filter(total == TRUE) %>%
   select(crime_group, recorded, year, month) %>%
   spread(key = year, value = recorded) %>%
-  mutate(variation = `2020` - `2019`) %>%
+  mutate(variation = `2020` - `2019`,
+         variation_rate = variation / `2019`,
+         text_variation_short = paste0(
+           "<b>",
+           scales::percent(-variation_rate, accuracy = 0.1),
+           " fewer</b>\n",
+           "crimes than\n",
+           month,
+           " 2019"
+         )) %>%
   select(-c(`2019`, `2020`)) %>%
   mutate(date = as.Date(paste("2020", month, "01"), format = "%Y %B %d") %>%
            lubridate::ceiling_date(unit = "month") -

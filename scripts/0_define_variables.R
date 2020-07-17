@@ -46,7 +46,7 @@ dates <- c(
   WHO_declares_pandemic = "2020-03-11",
   start_sparklines = "2020-03-07",
   start_sparklines_economy = "2016-01-01",
-  data_updated = "2020-07-13"
+  data_updated = "2020-07-20"
 )
 spark_height <- 80 * 1.2 # Temporarily increasing this until we reduce the word
                          # count of some headlines
@@ -66,25 +66,7 @@ shapes <- list(
       y0 = 1,
       y1 = 1,
       line = list(color = "black", dash = "dot")
-    ),
-    list(
-      type = "line",
-      layer = "below",
-      x0 = "2020-03-26",
-      x1 = "2020-03-26",
-      y0 = 0.1,
-      y1 = 1,
-      line = list(color = col_palette["sg_grey"], dash = "dot")
     )
-  ),
-  "1_infect" = list(
-    type = "line",
-    layer = "below",
-    x0 = dates[["lockdown"]],
-    x1 = dates[["lockdown"]],
-    y0 = 0,
-    y1 = 18500,
-    line = list(color = col_palette["sg_grey"], dash = "dot")
   ),
   "1a" = list(
     type = "line",
@@ -166,7 +148,7 @@ shapes <- list(
       layer = "below",
       fillcolor = col_palette[["sg_light_blue"]],
       x0 = as.Date("2020-06-29"),
-      x1 = as.Date("2020-07-08"),
+      x1 = as.Date("2020-07-15"),
       yref = "paper",
       y0 = 0,
       y1 = 1,
@@ -191,17 +173,6 @@ shapes <- list(
       x1 = 2,
       y0 = 20000,
       y1 = 28971,
-      line = list(color = col_palette["sg_grey"], dash = "dot")
-    )
-  ),
-  "3_trust" = list(
-    list(
-      type = "line",
-      layer = "below",
-      x0 = as.Date("2020-05-21"),
-      x1 = as.Date("2020-05-21"),
-      y0 = 50,
-      y1 = 73,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),

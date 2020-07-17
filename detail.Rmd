@@ -17,8 +17,7 @@ for (script in list.files("scripts", full.names = TRUE)) {
 }
 ```
 
-<!-- Last updated: **`r format.Date(Sys.Date(), "%d %B %Y")`** -->
-Last updated: **`r format.Date(dates["data_updated"], "%d %B %Y")`**
+Last updated: **`r format.Date(dates[["data_updated"]], "%d %B %Y")`**
 
 ```{r}
 narrative %>% 
@@ -73,6 +72,8 @@ plots[["H2_admissions"]]
 text_after_chart("H2_admissions")
 
 text_before_chart("H2_avoiding")
+br()
+br() # This chart has a title, so we add space to distinguish it from text above
 plots[["2_GP"]]
 text_after_chart("H2_avoiding")
 ```
@@ -113,7 +114,10 @@ text_after_chart("H3_transport")
 
 ```{r}
 text_before_chart("H4_turnover")
+htmltools::h4("All Industries")
 plots[["4_turnover"]]
+htmltools::h4("By sector")
+plots[["4_turnover_by_industry"]]
 text_after_chart("H4_turnover")
 
 text_before_chart("H4_GDP")
