@@ -376,46 +376,61 @@ plots[["3_crisis_applications"]] <- plot_ly(
   )
 
 ## Crime ----------------------------------------------------------------------
+plots[["3_crime"]] <- plot_ly(
+  data = filter(datasets[["3_crime"]], month == "May"),
+  x = ~ recorded,
+  y = ~ crime_group,
+  name = ~ forcats::as_factor(year),
+  text = ~ text,
+  hoverinfo = ~ "text"
+) %>%
+  add_trace(type = "bar") %>%
+  add_style_chart() %>%
+  layout(colorway = c(col_palette["sg_grey"], col_palette["sg_blue"]),
+         yaxis = list(autorange = "reversed",
+                      tickformat = "[[ ]<]"),
+         xaxis = list(tickformat = ","))
 
-p <- ggplot(
-  data = datasets[["3_crime"]],
-  mapping = aes(x = month,
-                y = recorded,
-                group = year,
-                colour = as.factor(year))
-) +
-  geom_line() +
-  geom_point() +
-  facet_wrap( ~ crime_group, ncol = 3) +
-  scale_y_continuous(labels = scales::comma) +
-  scale_colour_manual(values = c(col_palette[["sg_grey"]],
-                                 col_palette[["sg_blue"]])) +
-  theme(
-    axis.title = element_blank(),
-    axis.ticks = element_blank(),
-    strip.background = element_rect(fill = "white"),
-    panel.background = element_blank(),
-    legend.title = element_blank(),
-    panel.border = element_rect(fill = NA,
-                                size = 0.5,
-                                colour = col_palette[["sg_grey"]]),
-    panel.spacing = unit(10, "mm")
-  )
-
-plots[["3_crime"]] <- ggplotly(p) %>%
-  config(displayModeBar = FALSE,
-         showAxisDragHandles = FALSE) %>%
-  layout(
-    legend = list(xanchor = "left",
-                  yanchor = "bottom",
-                  orientation = "h",
-                  x = 0,
-                  y = 1.05)
-  ) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-  )
+# We'll use the small multiples below once we have 3 data points
+# p <- ggplot(
+#   data = datasets[["3_crime"]],
+#   mapping = aes(x = month,
+#                 y = recorded,
+#                 group = year,
+#                 colour = as.factor(year))
+# ) +
+#   geom_line() +
+#   geom_point() +
+#   facet_wrap( ~ crime_group, ncol = 3) +
+#   scale_y_continuous(labels = scales::comma) +
+#   scale_colour_manual(values = c(col_palette[["sg_grey"]],
+#                                  col_palette[["sg_blue"]])) +
+#   theme(
+#     axis.title = element_blank(),
+#     axis.ticks = element_blank(),
+#     strip.background = element_rect(fill = "white"),
+#     panel.background = element_blank(),
+#     legend.title = element_blank(),
+#     panel.border = element_rect(fill = NA,
+#                                 size = 0.5,
+#                                 colour = col_palette[["sg_grey"]]),
+#     panel.spacing = unit(10, "mm")
+#   )
+# 
+# plots[["3_crime"]] <- ggplotly(p) %>%
+#   config(displayModeBar = FALSE,
+#          showAxisDragHandles = FALSE) %>%
+#   layout(
+#     legend = list(xanchor = "left",
+#                   yanchor = "bottom",
+#                   orientation = "h",
+#                   x = 0,
+#                   y = 1.05)
+#   ) %>%
+#   htmlwidgets::onRender(
+#     "function(el, x) {
+#     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+#   )
 
 # Loneliness ------------------------------------------------------------------
 plots[["3_loneliness"]] <- plot_ly(
