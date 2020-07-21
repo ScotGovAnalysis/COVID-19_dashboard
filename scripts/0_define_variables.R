@@ -23,13 +23,7 @@ data_path <- function(pattern) {
 }
 
 paths <- list(
-  sg = data_path("^Trends\\+in\\+daily\\+COVID-19\\+data\\+.*\\.xlsx"),
-  sg_template = here::here("data/COVID-19 Pubic Facing Dashboard - Four Harms Input Data.xlsx"),
-  nrs = data_path("^covid-deaths-data-week-[0-9][0-9]\\.xlsx"),
-  phs = data_path("^202[0-9]-[0-9][0-9]-[0-9][0-9]-ed-weekly-nhsscotland-data.csv$"),
-  phs_admissions = here::here("data/data_extract.csv"),
-  pop_est = here::here("data/mid-year-pop-est-19-info.xlsx"),
-  sitrep = here::here("data/Dashboard - Time series.xlsx")
+  sg_template = here::here("data/COVID-19 Pubic Facing Dashboard - Four Harms Input Data.xlsx")
 )
 
 # Define plotting variables -----------------------------------------------

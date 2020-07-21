@@ -38,9 +38,9 @@ text_after_chart <- function(worksheet,
 }
 
 spark_labels <- datasets[["sg_template"]][["TEXT"]] %>%
-  select(position, worksheet_name, spark_text) %>%
+  select(worksheet_name, spark_text)
   # filter(!(worksheet_name %in% c("H3_crime"))) %>%
-  arrange(position)
+  # arrange(position)
 
 # Read annotations --------------------------------------------------------
 annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
@@ -55,7 +55,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                           # properly so have hardcoded it to ignore this one.
                           TRUE ~ text)) %>%
   bind_rows(
-    datasets[["1_infect"]] %>%
+    datasets[["1.2_infectious"]] %>%
       filter(date == min(date)) %>%
       select(date, lowerbound, midpoint, upperbound) %>%
       gather(key = "estimate", value = "value", -date) %>%
@@ -68,7 +68,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              align = "left") %>%
       rename(y = value,
              x = date),
-    datasets[["1_cases"]] %>%
+    datasets[["1.3_cases"]] %>%
       filter(date == max(date)) %>%
       select(count_7day_avg, date) %>%
       mutate(text = "7 day average",
@@ -81,7 +81,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              align = "left") %>%
       rename(y = count_7day_avg,
              x = date),
-    datasets[["2a"]] %>%
+    datasets[["2.1_A&E"]] %>%
       filter(week_ending_date == max(week_ending_date)) %>%
       select(week_ending_date, attendance) %>%
       mutate(plot = "2a",
@@ -94,7 +94,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              align = "left") %>%
       rename(y = attendance,
              x = week_ending_date),
-    datasets[["2_excess"]] %>%
+    datasets[["2.2_excess"]] %>%
       filter(date == max(date)) %>%
       select(date, measure, count) %>%
       arrange(measure) %>%
@@ -113,7 +113,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
       rename(y = count,
              x = date,
              text = measure),
-    datasets[["H2_admissions"]] %>%
+    datasets[["2.3_admissions"]] %>%
       filter(Week_ending == max(Week_ending)) %>%
       select(Week_ending, Count, Average_2018_2019, Admission_type) %>%
       gather(key = measure, value = count, -Week_ending, -Admission_type) %>%
@@ -135,7 +135,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                                        "\nadmissions\n(average 2018-19)"))) %>%
       rename(y = count,
              x = Week_ending),
-    datasets[["3_crime"]] %>%
+    datasets[["3.3_crime"]] %>%
       filter(year == 2020) %>%
       select(year, recorded, crime_group) %>%
       mutate(plot = "3_crime",
@@ -147,7 +147,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              x = as.Date("2020-04-01")) %>%
       rename(y = recorded,
              text = crime_group),
-    datasets[["3_school"]] %>%
+    datasets[["3.1_schools"]] %>%
       filter(date == max(date)) %>%
       select(count, date, Measure) %>%
       mutate(

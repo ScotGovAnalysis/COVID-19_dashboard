@@ -13,13 +13,9 @@ download_data[["H4_claimants"]][["% change in claimant counts (RHS)"]] <- downlo
 
 download_metadata <- datasets[["sg_template"]][["TEXT"]] %>%
   filter(worksheet_name %in% names(download_data)) %>%
-  mutate(harm = substr(worksheet_name, 2, 2)) %>%
-  group_by(harm) %>%
-  arrange(position) %>%
-  mutate(table_no = paste0(harm, ".", row_number())) %>%
-  ungroup() %>%
+  mutate(table_no = substr(worksheet_name, 1, 3)) %>%
   arrange(table_no) %>%
-  select(position, worksheet_name, TITLE_max_35_characters, source, methodology, table_no)#..1 is position, ..2 worksheet_name, and so on
+  select(worksheet_name, TITLE_max_35_characters, source, methodology, table_no)#..1 is position, ..2 worksheet_name, and so on
   
 
 download_wb <- createWorkbook()
@@ -42,9 +38,9 @@ download_metadata %>%
 #add tables
 download_metadata %>%
   pwalk(~ {
-        data_table <- download_data[[..2]] %>% 
+        data_table <- download_data[[..1]] %>% 
           select(matches("^year$"), contains("month"), contains("week"), contains("date"), everything())
-        sheet_name <- sub("^H\\d", ..6, ..2)
+        sheet_name <- sub("^H\\d", ..5, ..1)
         
         #set up sheet
         ncols <- length(data_table)
@@ -53,7 +49,7 @@ download_metadata %>%
         setColWidths(download_wb, sheet_name, width = c(14, rep("auto", ncols - 1)), cols = 1:ncols, ignoreMergedCells = TRUE)
         
         #set up links (convert markdown format to excel links format)
-        link <- ..4
+        link <- ..3
         if(grepl("^.*\\[(.*)\\]\\((.*)\\).*$", link)) {
           names(link) <- sub("^.*\\[(.*)\\]\\((.*)\\).*$", "\\1", link)
           class(link) <- "hyperlink"
@@ -82,10 +78,10 @@ download_metadata %>%
         )
         
         #write spreadsheet
-        writeData(download_wb, sheet_name, x = paste(..6, ..3)) #title
+        writeData(download_wb, sheet_name, x = paste(..5, ..2)) #title
         writeData(download_wb, sheet_name, x = link, startRow = 2) #source/link
         writeData(download_wb, sheet_name, x = data_table, startRow = 4) #table
         writeData(download_wb, sheet_name, x = "Notes:", startRow = nrows + 6)
-        writeData(download_wb, sheet_name, x =  ..5, startRow = nrows + 7) #methodology
+        writeData(download_wb, sheet_name, x =  ..4, startRow = nrows + 7) #methodology
       })
 saveWorkbook(download_wb, paste0("download/Scottish Government COVID-19 data (", format.Date(dates["data_updated"], "%d %B %Y"), ").xlsx"), overwrite = TRUE)

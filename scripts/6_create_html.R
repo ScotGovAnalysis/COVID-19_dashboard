@@ -127,14 +127,14 @@ harm_panels_1_2_spark <-
         div(class = "panel-body",
             create_spark_lines(
               harm_ids = spark_labels %>%
-                filter(stringr::str_starts(worksheet_name, "H1")) %>%
+                filter(stringr::str_starts(worksheet_name, "1.")) %>%
                 pull(spark_text),
               spark_lines = c(
-                "1r_recent_spark",
-                "1_infect_spark",
-                "1_cases_spark",
-                "1_deaths_spark",
-                "1_admissions_spark"
+                "1.1_R_spark",
+                "1.2_infectious_spark",
+                "1.3_cases_spark",
+                "1.4_deaths_spark",
+                "1.5_admissions_spark"
               )
             ))
       )),
@@ -149,15 +149,15 @@ harm_panels_1_2_spark <-
         div(class = "panel-body",
             create_spark_lines(
               harm_ids = spark_labels %>%
-                filter(stringr::str_starts(worksheet_name, "H2"),
-                       worksheet_name != "H2_admissions") %>%
+                filter(stringr::str_starts(worksheet_name, "2."),
+                       worksheet_name != "2.3_admissions") %>%
                 pull(spark_text),
               spark_lines = c(
-                "2a_spark",
-                "2_admissions_emergency_spark",
-                "2_admissions_planned_spark",
-                "2_excess_spark",
-                "2_GP_spark"
+                "2.1_A&E_spark",
+                "2.2_excess_spark",
+                "2.3.1_admissions_spark",
+                "2.3.2_admissions_spark",
+                "2.4_avoiding_spark"
               )
             ))
       )))
@@ -175,15 +175,15 @@ harm_panels_3_4_spark <-
         div(class = "panel-body",
             create_spark_lines(
               harm_ids = spark_labels %>%
-                filter(stringr::str_starts(worksheet_name, "H3")) %>%
+                filter(stringr::str_starts(worksheet_name, "3.")) %>%
                 pull(spark_text),
-              spark_lines = c("3_school_spark",
-                              "3_crisis_applications_spark",
-                              "3_crime_spark",
-                              "3_loneliness_spark",
-                              "3_trust_spark",
-                              "3_job_spark",
-                              "3_transport_spark")
+              spark_lines = c("3.1_schools_spark",
+                              "3.2_crisis_spark",
+                              "3.3_crime_spark",
+                              "3.4_loneliness_spark",
+                              "3.5_trust_spark",
+                              "3.6_job_spark",
+                              "3.7_transport_spark")
             ))
       )),
       div(class = "col-md-6", div(
@@ -196,13 +196,13 @@ harm_panels_3_4_spark <-
         div(class = "panel-body",
             create_spark_lines(
               harm_ids = spark_labels %>%
-                filter(stringr::str_starts(worksheet_name, "H4")) %>%
+                filter(stringr::str_starts(worksheet_name, "4.")) %>%
                 pull(spark_text),
               spark_lines = c(
-                "4_turnover_spark",
-                "4_GDP_spark",
-                "4_claimants_spark",
-                "4_unemployment_spark"
+                "4.1_turnover_spark",
+                "4.2_GDP_spark",
+                "4.3_unemployment_spark",
+                "4.4_claimants_spark"
               )
             ))
       )))
