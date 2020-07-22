@@ -98,7 +98,7 @@ shapes <- list(
       layer = "below",
       x0 = "2020-04-26",
       x1 = "2020-04-26",
-      y0 = 3000,
+      y0 = 7000,
       y1 = 15056,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )

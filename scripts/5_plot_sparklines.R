@@ -59,7 +59,7 @@ plots[["1.1_R_spark"]] <- datasets[["1.1_R"]] %>%
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
   )
 
-plots[["1.2_infectious_spark"]] <-  datasets[["1.2_infectious"]] %>%
+plots[["1.2_infectious_spark"]] <- datasets[["1.2_infectious"]] %>%
   plot_ly(x = ~ date,
           y = ~ midpoint,
           height = spark_height,

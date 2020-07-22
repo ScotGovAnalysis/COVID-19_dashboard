@@ -50,10 +50,11 @@ plots[["1.2_infectious"]] <- plot_ly(
   add_style_chart() %>%
   layout(
     showlegend = FALSE,
+    # yaxis = list(type = "log", # In case we want to present on a log scale
+    #              tickformat = ",.1r"), 
     annotations = filter(annotations,
                          plot == "1_infect",
-                         dataset == "1_infect"),
-    shapes = shapes[["1_infect"]]
+                         dataset == "1_infect")
   )
 
 ## Cases ------------------------------------------------------------
@@ -290,7 +291,7 @@ plots[["2.4_avoiding"]] <-
             text = ~text_2020) %>%
   add_style_chart() %>%
   layout(
-    title = "\"<b>I would avoid</b> GP/Hospital for immediate non COVID-19 health concerns\"",
+    title = "<b>I would avoid</b> GP/Hospital \nfor immediate non COVID-19 health concerns",
     showlegend = FALSE,
     barmode = "stack",
     yaxis = list(tickformat = "%"),

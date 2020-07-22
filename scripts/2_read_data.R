@@ -6,15 +6,6 @@ datasets[["sg_template"]] <- paths[["sg_template"]] %>%
   set_names() %>%
   map(read_excel, path = paths[["sg_template"]])
 
-datasets[["sg_template"]][["TEXT"]] <-
-  datasets[["sg_template"]][["TEXT"]] %>%
-  mutate(
-    spark_text = paste0("<H3 style = 'margin:0; font-size:18px;'>",
-                        TITLE_max_35_characters,
-                        "</H3>",
-                        HEADLINE_max_60_characters)
-    )
-
 # 1 Direct health -------------------------------------------------------------
 # R number --------------------------------------------------------------------
 datasets[["1.1_R"]] <- datasets[["sg_template"]][["1.1_R"]] %>%

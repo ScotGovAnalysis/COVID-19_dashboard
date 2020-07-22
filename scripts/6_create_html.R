@@ -1,20 +1,40 @@
-# Create functions --------------------------------------------------------
-create_spark_lines <- function(harm_ids, spark_lines) {
-  purrr::map2(
-    .x = harm_ids,
-    .y = spark_lines,
-    .f = ~ div(
-      class = "row fluid-row",
-      div(
-        class = "col-sm-7",
-        style = 'padding-right:0;',
-        htmltools::HTML(.x)
-      ),
-      div(class = "col-sm-5",
-          div(alt = "", plots[[.y]]))
-    )
+# Add plots and HTML to existing dataset ----------------------------------
+datasets[["sg_template"]][["TEXT"]] <-
+  datasets[["sg_template"]][["TEXT"]] %>%
+  mutate(
+    slug = TITLE_max_35_characters %>%
+      stringr::str_to_lower() %>%
+      stringr::str_replace_all(pattern = " ", replacement = "_") %>%
+      stringr::str_remove_all(pattern = "&") %>%
+      paste0("detail.html#", .),
+    slug = case_when(
+      stringr::str_starts(worksheet_name, pattern = "2.3.") ~
+        "detail.html#emergency_and_planned_admissions",
+      TRUE ~ slug
+    ), 
+    spark_text = paste0("<H3 style = 'margin:0; font-size:18px;'>",
+                        "<a href=\"",
+                        slug,
+                        "\">",
+                        TITLE_max_35_characters,
+                        "</a>",
+                        "</H3>",
+                        HEADLINE_max_60_characters),
+    spark_plot = plots[paste0(worksheet_name, "_spark")],
+    spark_exists = map(spark_plot, is.list),
+    spark_html = map2(.x = spark_text,
+                      .y = spark_plot,
+                      .f = ~ div(
+                        class = "row fluid-row",
+                        div(
+                          class = "col-sm-7",
+                          style = 'padding-right:0;',
+                          htmltools::HTML(.x)
+                        ),
+                        div(class = "col-sm-5",
+                            div(alt = "", .y))
+                      ))
   )
-}
 
 # Index -------------------------------------------------------------------
 h_rule <- htmltools::hr(style="height: 2px;
@@ -125,18 +145,11 @@ harm_panels_1_2_spark <-
                 href = "detail.html#1_direct_health_harms")
             )),
         div(class = "panel-body",
-            create_spark_lines(
-              harm_ids = spark_labels %>%
-                filter(stringr::str_starts(worksheet_name, "1.")) %>%
-                pull(spark_text),
-              spark_lines = c(
-                "1.1_R_spark",
-                "1.2_infectious_spark",
-                "1.3_cases_spark",
-                "1.4_deaths_spark",
-                "1.5_admissions_spark"
-              )
-            ))
+            datasets[["sg_template"]][["TEXT"]] %>%
+              filter(stringr::str_starts(worksheet_name, "1."),
+                     spark_exists == TRUE) %>%
+              pull(spark_html)
+            )
       )),
       div(class = "col-md-6", div(
         class = "panel panel-default",
@@ -147,19 +160,10 @@ harm_panels_1_2_spark <-
                 href = "detail.html#2_indirect_health_harms")
             )),
         div(class = "panel-body",
-            create_spark_lines(
-              harm_ids = spark_labels %>%
-                filter(stringr::str_starts(worksheet_name, "2."),
-                       worksheet_name != "2.3_admissions") %>%
-                pull(spark_text),
-              spark_lines = c(
-                "2.1_A&E_spark",
-                "2.2_excess_spark",
-                "2.3.1_admissions_spark",
-                "2.3.2_admissions_spark",
-                "2.4_avoiding_spark"
-              )
-            ))
+            datasets[["sg_template"]][["TEXT"]] %>%
+              filter(stringr::str_starts(worksheet_name, "2."),
+                     spark_exists == TRUE) %>%
+              pull(spark_html))
       )))
 
 
@@ -173,18 +177,10 @@ harm_panels_3_4_spark <-
               a("Societal impacts", href = "detail.html#3_societal_harms")
             )),
         div(class = "panel-body",
-            create_spark_lines(
-              harm_ids = spark_labels %>%
-                filter(stringr::str_starts(worksheet_name, "3.")) %>%
-                pull(spark_text),
-              spark_lines = c("3.1_schools_spark",
-                              "3.2_crisis_spark",
-                              "3.3_crime_spark",
-                              "3.4_loneliness_spark",
-                              "3.5_trust_spark",
-                              "3.6_job_spark",
-                              "3.7_transport_spark")
-            ))
+            datasets[["sg_template"]][["TEXT"]] %>%
+              filter(stringr::str_starts(worksheet_name, "3."),
+                     spark_exists == TRUE) %>%
+              pull(spark_html))
       )),
       div(class = "col-md-6", div(
         class = "panel panel-default",
@@ -194,15 +190,8 @@ harm_panels_3_4_spark <-
               a("Economic impacts", href = "detail.html#4_economic_harms")
             )),
         div(class = "panel-body",
-            create_spark_lines(
-              harm_ids = spark_labels %>%
-                filter(stringr::str_starts(worksheet_name, "4.")) %>%
-                pull(spark_text),
-              spark_lines = c(
-                "4.1_turnover_spark",
-                "4.2_GDP_spark",
-                "4.3_unemployment_spark",
-                "4.4_claimants_spark"
-              )
-            ))
+            datasets[["sg_template"]][["TEXT"]] %>%
+              filter(stringr::str_starts(worksheet_name, "4."),
+                     spark_exists == TRUE) %>%
+              pull(spark_html))
       )))

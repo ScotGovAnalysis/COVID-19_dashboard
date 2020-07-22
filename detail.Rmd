@@ -34,101 +34,150 @@ br()
 
 ## 1. Direct health impacts
 
+
 ```{r}
-text_before_chart("1.1_R")
-plots[["1.1_R"]]
-text_after_chart("1.1_R")
-
-text_before_chart("1.2_infectious")
-plots[["1.2_infectious"]]
-text_after_chart("1.2_infectious")
-
-text_before_chart("1.3_cases")
-plots[["1.3_cases"]]
-text_after_chart("1.3_cases")
-
-text_before_chart("1.4_deaths")
-plots[["1.4_deaths"]]
-text_after_chart("1.4_deaths")
-
-text_before_chart("1.5_admissions")
-plots[["1.5_admissions"]]
-text_after_chart("1.5_admissions")
+# Wrap content in a div with classes: section level3. This makes the link
+# anchors work properly. Although this feels hacky. There may be a better way.
+htmltools::div(class = "section level3",
+               text_before_chart("1.1_R"),
+               plots[["1.1_R"]],
+               text_after_chart("1.1_R"))
+               
+htmltools::div(
+               class = "section level3",
+               text_before_chart("1.2_infectious"),
+               plots[["1.2_infectious"]],
+               text_after_chart("1.2_infectious")
+               )
+               
+htmltools::div(class = "section level3",
+               text_before_chart("1.3_cases"),
+               plots[["1.3_cases"]],
+               text_after_chart("1.3_cases"))
+               
+htmltools::div(class = "section level3",
+               text_before_chart("1.4_deaths"),
+               plots[["1.4_deaths"]],
+               text_after_chart("1.4_deaths"))
+               
+htmltools::div(
+               class = "section level3",
+               text_before_chart("1.5_admissions"),
+               plots[["1.5_admissions"]],
+               text_after_chart("1.5_admissions")
+               )
 ```
 
 ## 2. Indirect health impacts
 
 ```{r}
-text_before_chart("2.1_A&E")
-plots[["2.1_A&E"]]
-text_after_chart("2.1_A&E")
 
-text_before_chart("2.2_excess")
-plots[["2.2_excess"]]
-text_after_chart("2.2_excess")
-
-text_before_chart("2.3_admissions")
-plots[["2.3_admissions"]]
-text_after_chart("2.3_admissions")
-
-text_before_chart("2.4_avoiding")
-br()
-br() # This chart has a title, so we add space to distinguish it from text above
-plots[["2.4_avoiding"]]
-text_after_chart("2.4_avoiding")
+htmltools::div(class = "section level3",
+               text_before_chart("2.1_A&E"),
+               plots[["2.1_A&E"]],
+               text_after_chart("2.1_A&E"))
+               
+htmltools::div(class = "section level3",
+               text_before_chart("2.2_excess"),
+               plots[["2.2_excess"]],
+               text_after_chart("2.2_excess"))
+               
+htmltools::div(
+               class = "section level3",
+               text_before_chart("2.3_admissions"),
+               plots[["2.3_admissions"]],
+               text_after_chart("2.3_admissions")
+               )
+               
+htmltools::div(
+               class = "section level3",
+               text_before_chart("2.4_avoiding"),
+               br(),
+               br(),
+               # This chart has a title, so we add space to distinguish it from text above
+               plots[["2.4_avoiding"]],
+               text_after_chart("2.4_avoiding")
+               )
 ```
 
 ## 3. Societal impacts
 
 ```{r}
-text_before_chart("3.1_schools")
-plots[["3.1_schools"]]
-text_after_chart("H.1_schools")
-
-text_before_chart("3.2_crisis")
-plots[["3.2_crisis"]]
-text_after_chart("3.2_crisis")
-
-text_before_chart("3.3_crime")
-plots[["3.3_crime"]]
-text_after_chart("3.3_crime")
-
-text_before_chart("3.4_loneliness")
-plots[["3.4_loneliness"]]
-text_after_chart("3.4_loneliness")
-
-text_before_chart("3.5_trust")
-plots[["3.5_trust"]]
-text_after_chart("3.5_trust")
-
-text_before_chart("3.6_job")
-plots[["3.6_job"]]
-text_after_chart("3.6_job")
-
-text_before_chart("3.7_transport")
-plots[["3.7_transport"]]
-text_after_chart("3.7_transport")
+htmltools::div(class = "section level3",
+               text_before_chart("3.1_schools"),
+               plots[["3.1_schools"]],
+               text_after_chart("3.1_schools"))
+               
+htmltools::div(class = "section level3",
+               text_before_chart("3.2_crisis"),
+               plots[["3.2_crisis"]],
+               text_after_chart("3.2_crisis"))
+               
+htmltools::div(class = "section level3",
+               text_before_chart("3.3_crime"),
+               plots[["3.3_crime"]],
+               text_after_chart("3.3_crime"))
+               
+htmltools::div(
+               class = "section level3",
+               text_before_chart("3.4_loneliness"),
+               plots[["3.4_loneliness"]],
+               text_after_chart("3.4_loneliness")
+               )
+               
+htmltools::div(class = "section level3",
+               text_before_chart("3.5_trust"),
+               plots[["3.5_trust"]],
+               text_after_chart("3.5_trust"))
+               
+htmltools::div(class = "section level3",
+               text_before_chart("3.6_job"),
+               plots[["3.6_job"]],
+               text_after_chart("3.6_job"))
+               
+htmltools::div(
+               class = "section level3",
+               text_before_chart("3.7_transport"),
+               plots[["3.7_transport"]],
+               text_after_chart("3.7_transport")
+               )
 ```
 
 ## 4. Economic impacts
 
 ```{r}
-text_before_chart("4.1_turnover")
-htmltools::h4("All Industries")
-plots[["4.1.1_turnover"]]
-htmltools::h4("By sector")
-plots[["4.1.2_turnover"]]
-text_after_chart("4.1_turnover")
-
-text_before_chart("4.2_GDP")
-plots[["4.2_GDP"]]
-text_after_chart("4.2_GDP")
-
-text_before_chart("4.3_unemployment")
-plots[["4.3_unemployment"]]
-text_after_chart("4.3_unemployment")
-
-text_before_chart("4.4_claimants")
-plots[["4.4_claimants"]]
-text_after_chart("4.4_claimants")
+htmltools::div(
+  class = "section level3",
+  text_before_chart("4.1_turnover"),
+  htmltools::div(
+    class = "section level4",
+    htmltools::h4("All Industries"),
+    plots[["4.1.1_turnover"]]
+  ),
+  htmltools::div(
+    class = "section level4",
+    htmltools::h4("By sector"),
+    plots[["4.1.2_turnover"]]
+  ),
+  text_after_chart("4.1_turnover")
+  )
+  
+htmltools::div(class = "section level3",
+  text_before_chart("4.2_GDP"),
+  plots[["4.2_GDP"]],
+  text_after_chart("4.2_GDP"))
+  
+htmltools::div(
+  class = "section level3",
+  text_before_chart("4.3_unemployment"),
+  plots[["4.3_unemployment"]],
+  text_after_chart("4.3_unemployment")
+  )
+  
+htmltools::div(
+  class = "section level3",
+  text_before_chart("4.4_claimants"),
+  plots[["4.4_claimants"]],
+  text_after_chart("4.4_claimants")
+  )
 ```

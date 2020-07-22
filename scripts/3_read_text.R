@@ -37,11 +37,6 @@ text_after_chart <- function(worksheet,
     create_html()
 }
 
-spark_labels <- datasets[["sg_template"]][["TEXT"]] %>%
-  select(worksheet_name, spark_text)
-  # filter(!(worksheet_name %in% c("H3_crime"))) %>%
-  # arrange(position)
-
 # Read annotations --------------------------------------------------------
 annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
   mutate(x = as.Date(x),
