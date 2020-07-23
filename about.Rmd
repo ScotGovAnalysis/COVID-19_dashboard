@@ -1,8 +1,0 @@
----
-title: "About"
-output: html_document
----
-
-Last updated: **25 June 2020**
-
-This site presents analysis on COVID-19 in Scotland. It is part of [our commitment to bring transparency to our work](https://www.gov.scot/publications/coronavirus-covid-19-framework-decision-making/) and decisions on the crisis and to support understanding and public engagement with some of the very difficult issues that we face. We have drawn together data and evidence on the various harms and wider impacts - health, societal and economic - caused by the crisis. Much of this evidence is still emerging, and the scale and nature of the impacts will change over time.
