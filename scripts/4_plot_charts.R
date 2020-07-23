@@ -377,61 +377,145 @@ plots[["3.2_crisis"]] <- plot_ly(
   )
 
 ## Crime ----------------------------------------------------------------------
-plots[["3.3_crime"]] <- plot_ly(
-  data = filter(datasets[["3.3_crime"]], month == "May"),
-  x = ~ recorded,
-  y = ~ crime_group,
-  name = ~ forcats::as_factor(year),
-  text = ~ text,
-  hoverinfo = ~ "text"
-) %>%
-  add_trace(type = "bar") %>%
-  add_style_chart() %>%
-  layout(colorway = c(col_palette["sg_grey"], col_palette["sg_blue"]),
-         yaxis = list(autorange = "reversed",
-                      tickformat = "[[ ]<]"),
-         xaxis = list(tickformat = ","))
+# plots[["3.3_crime"]] <- plot_ly(
+#   data = filter(datasets[["3.3_crime"]], month == "May"),
+#   x = ~ recorded,
+#   y = ~ crime_group,
+#   name = ~ forcats::as_factor(year),
+#   text = ~ text,
+#   hoverinfo = ~ "text"
+# ) %>%
+#   add_trace(type = "bar") %>%
+#   add_style_chart() %>%
+#   layout(colorway = c(col_palette["sg_grey"], col_palette["sg_blue"]),
+#          yaxis = list(autorange = "reversed",
+#                       tickformat = "[[ ]<]"),
+#          xaxis = list(tickformat = ","))
 
-# We'll use the small multiples below once we have 3 data points
-# p <- ggplot(
-#   data = datasets[["3_crime"]],
-#   mapping = aes(x = month,
-#                 y = recorded,
-#                 group = year,
-#                 colour = as.factor(year))
-# ) +
-#   geom_line() +
-#   geom_point() +
-#   facet_wrap( ~ crime_group, ncol = 3) +
-#   scale_y_continuous(labels = scales::comma) +
-#   scale_colour_manual(values = c(col_palette[["sg_grey"]],
-#                                  col_palette[["sg_blue"]])) +
-#   theme(
-#     axis.title = element_blank(),
-#     axis.ticks = element_blank(),
-#     strip.background = element_rect(fill = "white"),
-#     panel.background = element_blank(),
-#     legend.title = element_blank(),
-#     panel.border = element_rect(fill = NA,
-#                                 size = 0.5,
-#                                 colour = col_palette[["sg_grey"]]),
-#     panel.spacing = unit(10, "mm")
-#   )
-# 
-# plots[["3_crime"]] <- ggplotly(p) %>%
-#   config(displayModeBar = FALSE,
-#          showAxisDragHandles = FALSE) %>%
-#   layout(
-#     legend = list(xanchor = "left",
-#                   yanchor = "bottom",
-#                   orientation = "h",
-#                   x = 0,
-#                   y = 1.05)
-#   ) %>%
-#   htmlwidgets::onRender(
-#     "function(el, x) {
-#     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-#   )
+plots[["3.3.1_crime"]] <- plot_ly(
+  data = datasets[["3.3_crime"]] %>%
+    filter(crime_group == "Total crimes"),
+  x = ~ month,
+  y = ~ recorded,
+  name = ~ year,
+  text = ~ text,
+  hoverinfo = ~ "text",
+  height = 200
+) %>%
+  add_trace(type = "scatter",
+            mode = "lines+markers") %>%
+  add_style_chart() %>%
+  layout(
+    colorway = c(col_palette),
+    legend = list(xanchor = "left",
+                  yanchor = "bottom",
+                  orientation = "h",
+                  x = 0,
+                  y = 1.05)
+  )
+
+p <- ggplot(
+  data = datasets[["3.3_crime"]] %>%
+    filter(crime_group %in% c("Non-sexual crimes of violence",
+                              "Sexual crimes",
+                              "Crimes of dishonesty",
+                              "Fire-raising, vandalism etc.",
+                              "Other crimes")),
+  mapping = aes(x = month,
+                y = recorded,
+                group = year,
+                colour = as.factor(year))
+) +
+  geom_line() +
+  geom_point() +
+  facet_wrap( ~ crime_group, ncol = 2) +
+  # facet_grid(cols = vars(crime_group)) +
+  scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
+  scale_colour_manual(values = c(col_palette[["sg_grey"]],
+                                 col_palette[["sg_blue"]])) +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    strip.background = element_rect(fill = "white"),
+    panel.background = element_blank(),
+    legend.title = element_blank()
+  )
+
+plots[["3.3.2_crime"]] <- ggplotly(p) %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  layout(
+    legend = list(xanchor = "left",
+                  yanchor = "bottom",
+                  orientation = "h",
+                  x = 0,
+                  y = 1.05)
+  ) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
+
+plots[["3.3.3_crime"]] <- plot_ly(
+  data = datasets[["3.3_crime"]] %>%
+    filter(crime_group == "Total offences"),
+  x = ~ month,
+  y = ~ recorded,
+  name = ~ year,
+  text = ~ text,
+  hoverinfo = ~ "text",
+  height = 200
+) %>%
+  add_trace(type = "scatter",
+            mode = "lines+markers") %>%
+  add_style_chart() %>%
+  layout(
+    colorway = c(col_palette),
+    legend = list(xanchor = "left",
+                  yanchor = "bottom",
+                  orientation = "h",
+                  x = 0,
+                  y = 1.05)
+  )
+
+p <- ggplot(
+  data = datasets[["3.3_crime"]] %>%
+    filter(crime_group %in% c("Miscellaneous offences",
+                              "Motor vehicle offences")),
+  mapping = aes(x = month,
+                y = recorded,
+                group = year,
+                colour = as.factor(year))
+) +
+  geom_line() +
+  geom_point() +
+  facet_wrap( ~ crime_group, ncol = 2) +
+  # facet_grid(cols = vars(crime_group)) +
+  scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
+  scale_colour_manual(values = c(col_palette[["sg_grey"]],
+                                 col_palette[["sg_blue"]])) +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    strip.background = element_rect(fill = "white"),
+    panel.background = element_blank(),
+    legend.title = element_blank()
+  )
+
+plots[["3.3.4_crime"]] <- ggplotly(p) %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  layout(
+    legend = list(xanchor = "left",
+                  yanchor = "bottom",
+                  orientation = "h",
+                  x = 0,
+                  y = 1.05)
+  ) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
 
 # Loneliness ------------------------------------------------------------------
 plots[["3.4_loneliness"]] <- plot_ly(
@@ -539,16 +623,18 @@ plots[["3.7_transport"]] <- plot_ly(
 
 # 4 Economy -------------------------------------------------------------------
 # Turnover --------------------------------------------------------------------
+turnover_baseline <- 50
+
+## Turnover All ---------------------------------------------------------------
 plots[["4.1.1_turnover"]] <- plot_ly(
   data = datasets[["4.1_turnover"]] %>%
-    ungroup() %>%
-    filter(industry == "All MBS \r\nIndustries"),
-  x = ~ month,
+    filter(industry == "All Industries"),
+  x = ~ date,
   hoverinfo = ~ "text",
   height = 200
 ) %>%
   add_ribbons(
-    ymin = ~ 60,
+    ymin = ~ turnover_baseline,
     ymax = ~ turnover,
     line = list(color = "transparent"),
     fillcolor = col_palette["sg_light_blue"]
@@ -564,21 +650,19 @@ plots[["4.1.1_turnover"]] <- plot_ly(
   add_style_chart() %>%
   layout(showlegend = FALSE)
 
+## Turnover Broad sectors -----------------------------------------------------
 p <- ggplot(
   data = datasets[["4.1_turnover"]] %>%
-    ungroup() %>%
-    filter(industry != "All MBS \r\nIndustries") %>%
-    mutate(industry = forcats::fct_reorder(industry, turnover, .fun = min)),
-  mapping = aes(x = month_short,
+    filter(parent == "All Industries"),
+  mapping = aes(x = date,
                 y = turnover,
                 group = industry)
 ) +
-  geom_ribbon(mapping = aes(ymin = 50,
+  geom_ribbon(mapping = aes(ymin = turnover_baseline,
                             ymax = turnover),
               fill = col_palette["sg_light_blue"]) +
   geom_line(colour = col_palette["sg_blue"]) +
-  geom_point(colour = col_palette["sg_blue"]) +
-  facet_wrap( ~ industry, ncol = 3) +
+  facet_wrap( ~ industry) +
   theme(
     axis.title = element_blank(),
     axis.ticks = element_blank(),
@@ -587,8 +671,39 @@ p <- ggplot(
     panel.spacing = unit(10, "mm")
   )
 
+plots[["4.1.2_turnover"]] <- ggplotly(p,
+                                      height = 240) %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
 
-plots[["4.1.2_turnover"]] <- ggplotly(p) %>%
+## Turnover Services ----------------------------------------------------------
+p <- ggplot(
+  data = datasets[["4.1_turnover"]] %>%
+    filter(parent == "Services") %>%
+    mutate(industry = forcats::fct_reorder(industry, turnover, .fun = min)),
+  mapping = aes(x = date,
+                y = turnover,
+                group = industry)
+) +
+  geom_ribbon(mapping = aes(ymin = turnover_baseline,
+                            ymax = turnover),
+              fill = col_palette["sg_light_blue"]) +
+  geom_line(colour = col_palette["sg_blue"]) +
+  facet_wrap( ~ industry, ncol = 2) +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    strip.background = element_rect(fill = "white"),
+    panel.background = element_blank()
+  )
+
+# plotly was cutting some of these small multiples off. So set the height to be
+# bigger than the default (450).
+plots[["4.1.3_turnover"]] <- ggplotly(p, height = 450 * 1.2) %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
   htmlwidgets::onRender(

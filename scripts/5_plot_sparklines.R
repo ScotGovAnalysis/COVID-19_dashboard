@@ -241,7 +241,7 @@ plots[["3.7_transport_spark"]] <- datasets[["3.7_transport"]] %>%
 # 4 Economy -------------------------------------------------------------------
 ## Define sparklines ----------------------------------------------------------
 plots[["4.1_turnover_spark"]] <- datasets[["4.1_turnover"]] %>%
-  filter(grepl(x = industry, pattern = "MBS")) %>%
+  filter(industry == "All Industries") %>%
   plot_ly(
     x = ~ date,
     y = ~ turnover,

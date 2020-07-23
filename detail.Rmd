@@ -113,10 +113,21 @@ htmltools::div(class = "section level3",
                plots[["3.2_crisis"]],
                text_after_chart("3.2_crisis"))
                
-htmltools::div(class = "section level3",
-               text_before_chart("3.3_crime"),
-               plots[["3.3_crime"]],
-               text_after_chart("3.3_crime"))
+htmltools::div(
+  class = "section level3",
+  text_before_chart("3.3_crime"),
+  htmltools::div(
+    class = "section level4",
+    htmltools::h4("Crimes"),
+    plots[["3.3.2_crime"]]
+  ),
+  htmltools::div(
+    class = "section level4",
+    htmltools::h4("Offences"),
+    plots[["3.3.4_crime"]]
+  ),
+  text_after_chart("3.3_crime")
+  )
                
 htmltools::div(
                class = "section level3",
@@ -156,8 +167,13 @@ htmltools::div(
   ),
   htmltools::div(
     class = "section level4",
-    htmltools::h4("By sector"),
+    htmltools::h4("Manufacturing and Services"),
     plots[["4.1.2_turnover"]]
+  ),
+  htmltools::div(
+    class = "section level4",
+    htmltools::h4("Services industries"),
+    plots[["4.1.3_turnover"]]
   ),
   text_after_chart("4.1_turnover")
   )

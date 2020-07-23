@@ -377,7 +377,6 @@ datasets[["3.2_crisis_spark"]] <-
   
 ## Crime ----------------------------------------------------------------------
 datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%
-  arrange(year, recorded) %>%
   mutate(crime_group = factor(crime_group,
                               levels = c("Total crimes",
                                          "Crimes of dishonesty",
@@ -388,6 +387,7 @@ datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%
                                          "Total offences",
                                          "Miscellaneous offences",
                                          "Motor vehicle offences")),
+         month = factor(month, levels = month.name),
          text = paste0(
            "<b>",
            format(recorded, big.mark = ","),
@@ -403,7 +403,8 @@ datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%
          total = case_when(
            grepl("total", crime_group, ignore.case = TRUE) ~ TRUE,
            TRUE ~ FALSE
-         ))
+         )) %>%
+  arrange(year, month)
 
 datasets[["3.3_crime_spark"]] <- datasets[["3.3_crime"]] %>%
   filter(total == TRUE) %>%
@@ -510,11 +511,10 @@ datasets[["3.7_transport"]] <-
 # 4 Economy -------------------------------------------------------------------
 # Turnover --------------------------------------------------------------------
 datasets[["4.1_turnover"]] <- datasets[["sg_template"]][["4.1_turnover"]] %>%
-  rename(industry = `Monthly Business Turnover Index.`) %>%
-  gather(key = "month", value = turnover, -industry) %>%
-  mutate(month = forcats::as_factor(month),
-         date = as.Date(paste("2020", month, "01"), format = "%Y %B %d")) %>%
-  mutate(text = paste0(
+  mutate(date = ymd(paste0(year, "-", month, "-", "01")),
+         month_long = month(date, label = TRUE, abbr = FALSE),
+         month_short = month(date, label = TRUE),
+         text = paste0(
     "<b>",
     round(turnover, digits = 1),
     "% of firms in ",
@@ -522,17 +522,41 @@ datasets[["4.1_turnover"]] <- datasets[["sg_template"]][["4.1_turnover"]] %>%
     " reported increasing turnover</b>\n",
     "in real terms compared to 12 months ago\n",
     "(",
-    month,
+    month_long,
     " 2020)"
   ),
   text_short = paste0(
     "<b>",
     round(turnover, digits = 1),
     "%</b>\n",
-    month
-  ),
-  month_short = substr(month, 1, 3) %>% forcats::as_factor()) %>%
-  group_by(industry)
+    month_short,
+    " '", substr(year, start = 3, stop = 4)
+  ))
+
+# datasets[["4.1_turnover"]] <- datasets[["sg_template"]][["4.1_turnover"]] %>%
+#   rename(industry = `Monthly Business Turnover Index.`) %>%
+#   gather(key = "month", value = turnover, -industry) %>%
+#   mutate(month = forcats::as_factor(month),
+#          date = as.Date(paste("2020", month, "01"), format = "%Y %B %d")) %>%
+#   mutate(text = paste0(
+#     "<b>",
+#     round(turnover, digits = 1),
+#     "% of firms in ",
+#     industry,
+#     " reported increasing turnover</b>\n",
+#     "in real terms compared to 12 months ago\n",
+#     "(",
+#     month,
+#     " 2020)"
+#   ),
+#   text_short = paste0(
+#     "<b>",
+#     round(turnover, digits = 1),
+#     "%</b>\n",
+#     month
+#   ),
+#   month_short = substr(month, 1, 3) %>% forcats::as_factor()) %>%
+#   group_by(industry)
 
 # GDP ----------------------------------------------------------------
 datasets[["4.2_GDP"]] <- datasets[["sg_template"]][["4.2_GDP"]] %>%

@@ -20,9 +20,6 @@ navbar:
     href: data.html
     icon: glyphicon-download-alt
   right:
-  - text: "About"
-    href: about.html
-    icon: glyphicon-info-sign
   - text: "Contact"
     href: contact.html
     icon: glyphicon-comment
