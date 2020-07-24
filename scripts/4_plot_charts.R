@@ -517,6 +517,45 @@ plots[["3.3.4_crime"]] <- ggplotly(p) %>%
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
   )
 
+p <- ggplot(
+  data = datasets[["3.3_crime"]] %>%
+    filter(crime_group %in% c("Total crimes",
+                              "Total offences")),
+  mapping = aes(x = month,
+                y = recorded,
+                group = year,
+                colour = as.factor(year))
+) +
+  geom_line() +
+  geom_point() +
+  facet_wrap( ~ crime_group, ncol = 2) +
+  # facet_grid(cols = vars(crime_group)) +
+  scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
+  scale_colour_manual(values = c(col_palette[["sg_grey"]],
+                                 col_palette[["sg_blue"]])) +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    strip.background = element_rect(fill = "white"),
+    panel.background = element_blank(),
+    legend.title = element_blank()
+  )
+
+plots[["3.3.5_crime"]] <- ggplotly(p) %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  layout(
+    legend = list(xanchor = "left",
+                  yanchor = "bottom",
+                  orientation = "h",
+                  x = 0,
+                  y = 1.05)
+  ) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
+
 # Loneliness ------------------------------------------------------------------
 plots[["3.4_loneliness"]] <- plot_ly(
   data = datasets[["3.4_loneliness"]],

@@ -100,7 +100,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                       list(list(color = col_palette["sg_blue"])),
                       list(list(color = col_palette["sg_blue"]))),
              xanchor = "left",
-             yanchor = c("bottom", NA, "top"),
+             yanchor = c("top", NA, "bottom"),
              xshift = 8,
              align = "left",
              measure = stringr::str_replace_all(measure, "_", " ") %>%

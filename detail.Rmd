@@ -116,16 +116,7 @@ htmltools::div(class = "section level3",
 htmltools::div(
   class = "section level3",
   text_before_chart("3.3_crime"),
-  htmltools::div(
-    class = "section level4",
-    htmltools::h4("Crimes"),
-    plots[["3.3.2_crime"]]
-  ),
-  htmltools::div(
-    class = "section level4",
-    htmltools::h4("Offences"),
-    plots[["3.3.4_crime"]]
-  ),
+  plots[["3.3.5_crime"]],
   text_after_chart("3.3_crime")
   )
                

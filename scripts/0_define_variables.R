@@ -23,7 +23,7 @@ data_path <- function(pattern) {
 }
 
 paths <- list(
-  sg_template = here::here("data/COVID-19 Pubic Facing Dashboard - Four Harms Input Data.xlsx")
+  sg_template = here::here("data/COVID-19 Public Facing Dashboard - Four Harms Input Data.xlsx")
 )
 
 # Define plotting variables -----------------------------------------------
@@ -142,7 +142,7 @@ shapes <- list(
       layer = "below",
       fillcolor = col_palette[["sg_light_blue"]],
       x0 = as.Date("2020-06-29"),
-      x1 = as.Date("2020-07-15"),
+      x1 = as.Date("2020-07-22"),
       yref = "paper",
       y0 = 0,
       y1 = 1,
