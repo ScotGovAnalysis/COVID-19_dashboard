@@ -153,17 +153,17 @@ htmltools::div(
   text_before_chart("4.1_turnover"),
   htmltools::div(
     class = "section level4",
-    htmltools::h4("All Industries"),
+    htmltools::strong(p("All Industries")),
     plots[["4.1.1_turnover"]]
   ),
   htmltools::div(
     class = "section level4",
-    htmltools::h4("Manufacturing and Services"),
+    htmltools::strong(p("Manufacturing and Services")),
     plots[["4.1.2_turnover"]]
   ),
   htmltools::div(
     class = "section level4",
-    htmltools::h4("Services industries"),
+    htmltools::strong(p("Services industries")),
     plots[["4.1.3_turnover"]]
   ),
   text_after_chart("4.1_turnover")

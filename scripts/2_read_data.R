@@ -517,18 +517,19 @@ datasets[["4.1_turnover"]] <- datasets[["sg_template"]][["4.1_turnover"]] %>%
          text = paste0(
     "<b>",
     round(turnover, digits = 1),
-    "% of firms in ",
-    industry,
-    " reported increasing turnover</b>\n",
-    "in real terms compared to 12 months ago\n",
-    "(",
+    "</b>\n",
+    # "of firms in ",
+    # industry,
+    # " reported increasing turnover</b>\n",
+    # "in real terms compared to 12 months ago\n",
+    # "(",
     month_long,
-    " 2020)"
+    " 2020"
   ),
   text_short = paste0(
     "<b>",
     round(turnover, digits = 1),
-    "%</b>\n",
+    "</b>\n",
     month_short,
     " '", substr(year, start = 3, stop = 4)
   ))

@@ -541,7 +541,8 @@ p <- ggplot(
     legend.title = element_blank()
   )
 
-plots[["3.3.5_crime"]] <- ggplotly(p) %>%
+plots[["3.3.5_crime"]] <- ggplotly(p,
+                                   tooltip = c("month", "recorded", "year")) %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
   layout(
@@ -711,7 +712,8 @@ p <- ggplot(
   )
 
 plots[["4.1.2_turnover"]] <- ggplotly(p,
-                                      height = 240) %>%
+                                      height = 240,
+                                      tooltip = c("date", "turnover", "industry")) %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
   htmlwidgets::onRender(
@@ -742,7 +744,9 @@ p <- ggplot(
 
 # plotly was cutting some of these small multiples off. So set the height to be
 # bigger than the default (450).
-plots[["4.1.3_turnover"]] <- ggplotly(p, height = 450 * 1.2) %>%
+plots[["4.1.3_turnover"]] <- ggplotly(p,
+                                      height = 450 * 1.2,
+                                      tooltip = c("date", "turnover", "industry")) %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
   htmlwidgets::onRender(
