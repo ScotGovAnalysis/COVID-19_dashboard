@@ -109,7 +109,9 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              x = date,
              text = measure),
     datasets[["2.3_admissions"]] %>%
+      group_by(Admission_type) %>% # In case the latest date is different for planned vs admissions
       filter(Week_ending == max(Week_ending)) %>%
+      ungroup() %>%
       select(Week_ending, Count, Average_2018_2019, Admission_type) %>%
       gather(key = measure, value = count, -Week_ending, -Admission_type) %>%
       mutate(plot = "2_admissions",
