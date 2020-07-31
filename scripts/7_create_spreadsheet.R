@@ -6,17 +6,17 @@ options("openxlsx.datetimeFormat" = "dd/mm/yyyy")
 options("openxlsx.minWidth" = 10)
 
 #corrections to spreadsheets - e.g. making percentage formatting consistent
-download_data <- map(datasets[["sg_template"]], ~ drop_na(.x))
-download_data[["H3_transport"]][["%"]] <- download_data[["H3_transport"]][["%"]] * 100
-download_data[["H4_unemployment"]][["rate"]] <- download_data[["H4_unemployment"]][["rate"]] * 100
-download_data[["H4_claimants"]][["% change in claimant counts (RHS)"]] <- download_data[["H4_claimants"]][["% change in claimant counts (RHS)"]] * 100
+download_data <- map(datasets[["sg_template"]], ~ drop_na(.x, 1))
+download_data[["3.7_transport"]][["%"]] <- download_data[["3.7_transport"]][["%"]] * 100
+download_data[["3.7_transport"]] <- download_data[["3.7_transport"]] %>% drop_na()
+download_data[["4.3_unemployment"]][["rate"]] <- download_data[["4.3_unemployment"]][["rate"]] * 100
+download_data[["4.4_claimants"]][["% change in claimant counts (RHS)"]] <- download_data[["4.4_claimants"]][["% change in claimant counts (RHS)"]] * 100
 
 download_metadata <- datasets[["sg_template"]][["TEXT"]] %>%
   filter(worksheet_name %in% names(download_data)) %>%
   mutate(table_no = substr(worksheet_name, 1, 3)) %>%
   arrange(table_no) %>%
   select(worksheet_name, TITLE_max_35_characters, source, methodology, table_no)#..1 is position, ..2 worksheet_name, and so on
-  
 
 download_wb <- createWorkbook()
 
@@ -66,12 +66,14 @@ download_metadata %>%
                   addStyle(download_wb, sheet, rows = 4, col = id, 
                            style = createStyle(halign = "right", textDecoration = "bold", border = c("top", "bottom"))) #right align column headings for numbers
                   x <- replace_na(x, 0)
-                  if(any(x > 1000)) { #add comma formatting. Number formatting with 1 or 2 d.p. if data contains unrounded values
+                  if(any(abs(x) > 1000)) { #add comma formatting.
                     addStyle(download_wb, sheet, rows = (1:nrows) + 4, col = id, style = createStyle(numFmt = "#,##0"))
                   } else if(all(x == floor(x))) {
                     addStyle(download_wb, sheet, rows = (1:nrows) + 4, col = id, style = createStyle(numFmt = "#,##0"))
+                  } else if(all((x * 10) == floor(x * 10))) {#add number formatting with 1 or 2 d.p. if data contains unrounded values
+                    addStyle(download_wb, sheet, rows = (1:nrows) + 4, col = id, style = createStyle(numFmt = "0.0"))
                   } else {
-                    addStyle(download_wb, sheet, rows = (1:nrows) + 4, col = id, style = createStyle(numFmt = "0.0#"))
+                    addStyle(download_wb, sheet, rows = (1:nrows) + 4, col = id, style = createStyle(numFmt = "0.00"))
                   }
                 } 
               }
