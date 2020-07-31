@@ -142,7 +142,7 @@ shapes <- list(
       layer = "below",
       fillcolor = col_palette[["sg_light_blue"]],
       x0 = as.Date("2020-06-29"),
-      x1 = as.Date("2020-07-22"),
+      x1 = as.Date("2020-07-29"),
       yref = "paper",
       y0 = 0,
       y1 = 1,
