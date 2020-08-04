@@ -103,17 +103,17 @@ shapes <- list(
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),
-  "2_excess" = list(
-    list(
-      type = "line",
-      layer = "below",
-      x0 = "2020-04-20",
-      x1 = "2020-04-20",
-      y0 = 0,
-      y1 = 659,
-      line = list(color = col_palette["sg_grey"], dash = "dot")
-    )
-  ),
+  # "2_excess" = list(
+  #   list(
+  #     type = "line",
+  #     layer = "below",
+  #     x0 = "2020-04-20",
+  #     x1 = "2020-04-20",
+  #     y0 = 0,
+  #     y1 = 659,
+  #     line = list(color = col_palette["sg_grey"], dash = "dot")
+  #   )
+  # ),
   "2_GP" = list(
     list(
       type = "line",

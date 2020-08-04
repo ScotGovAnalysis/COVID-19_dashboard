@@ -99,15 +99,35 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              font = c(list(list(color = col_palette["sg_grey"])),
                       list(list(color = col_palette["sg_blue"])),
                       list(list(color = col_palette["sg_blue"]))),
-             xanchor = "left",
-             yanchor = c("top", NA, "bottom"),
-             xshift = 8,
-             align = "left",
+             xanchor = "right",
+             yanchor = c("top", "bottom", "bottom"),
+             yshift = c(-12, 8, 15),
+             # xshift = 8,
+             # align = "left",
              measure = stringr::str_replace_all(measure, "_", " ") %>%
                stringr::str_to_sentence()) %>%
       rename(y = count,
              x = date,
              text = measure),
+    # datasets[["2.2_excess"]] %>%
+    #   filter(date == max(date)) %>%
+    #   select(date, measure, count) %>%
+    #   arrange(measure) %>%
+    #   mutate(plot = "2_excess",
+    #          dataset = "2_excess",
+    #          showarrow = FALSE,
+    #          font = c(list(list(color = col_palette["sg_grey"])),
+    #                   list(list(color = col_palette["sg_blue"])),
+    #                   list(list(color = col_palette["sg_blue"]))),
+    #          xanchor = "left",
+    #          yanchor = c("top", NA, "bottom"),
+    #          xshift = 8,
+    #          align = "left",
+    #          measure = stringr::str_replace_all(measure, "_", " ") %>%
+    #            stringr::str_to_sentence()) %>%
+    #   rename(y = count,
+    #          x = date,
+    #          text = measure),
     datasets[["2.3_admissions"]] %>%
       group_by(Admission_type) %>% # In case the latest date is different for planned vs admissions
       filter(Week_ending == max(Week_ending)) %>%
@@ -121,9 +141,11 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                       list(list(color = col_palette["sg_blue"])),
                       list(list(color = col_palette["sg_grey"])),
                       list(list(color = col_palette["sg_grey"]))),
-             xanchor = "left",
-             xshift = 8,
-             align = "left",
+             xanchor = "right",
+             yanchor = c("top", "top", "bottom", "bottom"),
+             yshift = c(-8, -8, 15, 15),
+             # xshift = 8,
+             align = "right",
              text = case_when(measure == "Count" ~
                                 paste0("<b>", Admission_type, "</b>\n",
                                        "admissions 2020"),
