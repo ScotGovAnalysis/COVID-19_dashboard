@@ -174,7 +174,7 @@ datasets[["2.2_excess"]] <-
       "<b>",
       count %>% as.integer() %>% format(big.mark = ","),
       " deaths</b>\n",
-      "(week ending ",
+      "(week beginning ",
       format(date, "%d %B %Y"),
       ")"
     ),
@@ -182,7 +182,7 @@ datasets[["2.2_excess"]] <-
       "<b>",
       count %>% format(big.mark = ","),
       " average deaths this week in 2015-19</b>\n",
-      "(week ending ",
+      "(week beginning ",
       format(date, "%d %B %Y"),
       ")"
     ),
@@ -190,7 +190,7 @@ datasets[["2.2_excess"]] <-
       "<b>",
       count %>% as.integer() %>% format(big.mark = ","),
       " COVID-19 deaths</b>\n",
-      "(week ending ",
+      "(week beginning ",
       format(date, "%d %B %Y"),
       ")"
     )
@@ -205,7 +205,7 @@ datasets[["2.2_excess_spark"]] <- datasets[["2.2_excess"]] %>%
            "<b>",
            round(excess_deaths, digits = 1),
            " excess deaths</b>\n",
-           "(week ending ",
+           "(week beginning ",
            format(date, "%d %B %Y"),
            ")"
          ),
@@ -214,7 +214,7 @@ datasets[["2.2_excess_spark"]] <- datasets[["2.2_excess"]] %>%
            round(excess_deaths, digits = 1),
            "</b>\n",
            "7 day average", "\n",
-           "w/e ",
+           "w/b ",
            format(date, "%d %B %Y")
          )) %>%
   rename(all_2020 = total_deaths,

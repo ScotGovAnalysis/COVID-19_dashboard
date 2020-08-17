@@ -21,7 +21,7 @@ plots[["1.1_R"]] <- plot_ly(
   layout(
     xaxis = list(showspikes = TRUE,
                  spikemode = "across"),
-    yaxis = list(tickformat = ".1g"),
+    yaxis = list(tickformat = ".1f"),
     shapes = shapes[["1r"]],
     annotations = filter(annotations, plot == "1r", dataset == "1r") %>%
       pmap(list)

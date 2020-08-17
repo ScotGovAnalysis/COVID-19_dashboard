@@ -40,7 +40,7 @@ dates <- c(
   WHO_declares_pandemic = "2020-03-11",
   start_sparklines = "2020-03-07",
   start_sparklines_economy = "2016-01-01",
-  data_updated = "2020-08-03"
+  data_updated = "2020-08-17"
 )
 spark_height <- 80 * 1.2 # Temporarily increasing this until we reduce the word
                          # count of some headlines
@@ -103,17 +103,6 @@ shapes <- list(
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),
-  # "2_excess" = list(
-  #   list(
-  #     type = "line",
-  #     layer = "below",
-  #     x0 = "2020-04-20",
-  #     x1 = "2020-04-20",
-  #     y0 = 0,
-  #     y1 = 659,
-  #     line = list(color = col_palette["sg_grey"], dash = "dot")
-  #   )
-  # ),
   "2_GP" = list(
     list(
       type = "line",
@@ -142,7 +131,7 @@ shapes <- list(
       layer = "below",
       fillcolor = col_palette[["sg_light_blue"]],
       x0 = as.Date("2020-06-29"),
-      x1 = as.Date("2020-07-29"),
+      x1 = as.Date("2020-08-05"),
       yref = "paper",
       y0 = 0,
       y1 = 1,
