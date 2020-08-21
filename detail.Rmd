@@ -34,7 +34,6 @@ br()
 
 ## 1. Direct health impacts
 
-
 ```{r}
 # Wrap content in a div with classes: section level3. This makes the link
 # anchors work properly. Although this feels hacky. There may be a better way.
@@ -42,14 +41,12 @@ htmltools::div(class = "section level3",
                text_before_chart("1.1_R"),
                plots[["1.1_R"]],
                text_after_chart("1.1_R"))
-               
-htmltools::div(
-               class = "section level3",
+
+htmltools::div(class = "section level3",
                text_before_chart("1.2_infectious"),
                plots[["1.2_infectious"]],
-               text_after_chart("1.2_infectious")
-               )
-               
+               text_after_chart("1.2_infectious"))
+
 htmltools::div(class = "section level3",
                text_before_chart("1.3_cases"),
                plots[["1.3_cases"]],

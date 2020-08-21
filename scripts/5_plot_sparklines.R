@@ -210,6 +210,7 @@ plots[["3.3_crime_spark"]] <- datasets[["3.3_crime_spark"]] %>%
 plots[["3.4_loneliness_spark"]] <- datasets[["3.4_loneliness"]] %>%
   plot_ly(x = ~ date_start,
           y = ~ percent,
+          name = ~ source,
           height = spark_height,
           text = ~ text_2020_short) %>%
   add_style_spark()
@@ -217,6 +218,7 @@ plots[["3.4_loneliness_spark"]] <- datasets[["3.4_loneliness"]] %>%
 plots[["3.5_trust_spark"]] <- datasets[["3.5_trust"]] %>%
   plot_ly(x = ~ date_start,
           y = ~ percent,
+          name = ~ source,
           height = spark_height,
           text = ~ text_2020_short) %>%
   add_style_spark()
@@ -224,6 +226,7 @@ plots[["3.5_trust_spark"]] <- datasets[["3.5_trust"]] %>%
 plots[["3.6_job_spark"]] <- datasets[["3.6_job"]] %>%
   plot_ly(x = ~ date_start,
           y = ~ percent,
+          name = ~ source,
           height = spark_height,
           text = ~ text_2020_short) %>%
   add_style_spark()
