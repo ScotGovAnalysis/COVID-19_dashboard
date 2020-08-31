@@ -130,6 +130,54 @@ plots[["1.3_cases"]] <- plot_ly(
                   x = 0, y = 100)
   )
 
+## Cases ------------------------------------------------------------
+plots[["1.3_cases"]] <- plot_ly(
+  data = datasets[["1.3_cases"]],
+  x = ~ date,
+  hoverinfo = "text"
+) %>%
+  add_trace(
+    name = "Cases",
+    y = ~ count,
+    type = "bar",
+    marker = list(color = col_palette["sg_grey"]),
+    text = ~ count_text
+  ) %>%
+  add_trace(
+    name = "7 day average",
+    y = ~ count_7day_avg,
+    type = "scatter",
+    mode = "markers+lines",
+    marker = list(size = 7, color = col_palette["sg_blue"]),
+    line = list(color = col_palette["sg_blue"]),
+    text = ~ count_7day_avg_text
+  ) %>%
+  add_style_chart() %>%
+  layout(
+    showlegend = FALSE,
+    yaxis = list(type = "log",
+                 tickformat = ",.1r",
+                 range = c(0, log10(450))),
+    shapes = list(
+      list(
+        type = "line",
+        layer = "below",
+        x0 = dates[["lockdown"]],
+        x1 = dates[["lockdown"]],
+        y0 = 0,
+        y1 = 450,
+        line = list(color = col_palette["sg_grey"], dash = "dot")
+      )
+    ),
+    annotations = filter(annotations,
+                         plot == "1_cases",
+                         dataset == "1_cases") %>%
+      mutate(y = log10(y)) %>%
+      pmap(list),
+    legend = list(orientation = "h",
+                  x = 0, y = 100)
+  )
+
 plots[["1.3_cases_logscale"]] <- plot_ly(
   data = datasets[["1.3_cases"]],
   x = ~ date,
