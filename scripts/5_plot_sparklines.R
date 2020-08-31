@@ -59,11 +59,13 @@ plots[["1.1_R_spark"]] <- datasets[["1.1_R"]] %>%
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
   )
 
-plots[["1.2_infectious_spark"]] <- datasets[["1.2_infectious"]] %>%
-  plot_ly(x = ~ date,
-          y = ~ midpoint,
-          height = spark_height,
-          text = ~ text_short) %>%
+#Changed data set so the below runs
+plots[["1.2_infectious_spark"]] <- datasets[["1.3_cases"]] %>%
+  plotly_empty(#x = ~ date,
+          #y = ~ midpoint,
+          height = spark_height#,
+          #text = ~ text_short
+          ) %>%
   add_style_spark()
 
 plots[["1.3_cases_spark"]] <- datasets[["1.3_cases"]] %>%
@@ -150,9 +152,13 @@ plots[["2.4_avoiding_spark"]] <- datasets[["2.4_avoiding"]] %>%
 # add_style_spark(). So for now, this just copies that function and adds the
 # option manually
 plots[["3.1_schools_spark"]] <- datasets[["3.1_schools"]] %>%
-  filter(grepl("All", Measure, ignore.case = TRUE)) %>%
-  plot_ly(x = ~ date, y = ~ count, height = spark_height,
-          text = ~ text_short) %>%
+  #filter(grepl("All", Measure, ignore.case = TRUE)) %>%
+  plotly_empty(
+    #x = ~ date, 
+    #y = ~ count, 
+    height = spark_height#,
+          #text = ~ text_short
+    ) %>%
   add_trace(
     type = "scatter",
     mode = "lines",

@@ -50,33 +50,33 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                           # properly so have hardcoded it to ignore this one.
                           TRUE ~ text)) %>%
   bind_rows(
-    datasets[["1.2_infectious"]] %>%
-      filter(date == min(date)) %>%
-      select(date, lowerbound, midpoint, upperbound) %>%
-      gather(key = "estimate", value = "value", -date) %>%
-      mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
-             plot = "1_infect",
-             dataset = "1_infect",
-             showarrow = FALSE,
-             xanchor = "left",
-             xshift = -90,
-             align = "left") %>%
-      rename(y = value,
-             x = date),
-    datasets[["1.2_infectious"]] %>%
-      filter(date == max(date)) %>%
-      select(date, lowerbound, midpoint, upperbound) %>%
-      gather(key = "estimate", value = "value", -date) %>%
-      mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
-             plot = "1_infect_logscale",
-             dataset = "1_infect_logscale",
-             showarrow = FALSE,
-             xanchor = "left",
-             xshift = 10,
-             align = "left",
-             value = log10(value)) %>%
-      rename(y = value,
-             x = date),
+    #datasets[["1.2_infectious"]] #,%>%
+    #   filter(date == min(date)) %>%
+    #   select(date, lowerbound, midpoint, upperbound) %>%
+    #   gather(key = "estimate", value = "value", -date) %>%
+    #   mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
+    #          plot = "1_infect",
+    #          dataset = "1_infect",
+    #          showarrow = FALSE,
+    #          xanchor = "left",
+    #          xshift = -90,
+    #          align = "left") %>%
+    #   rename(y = value,
+    #          x = date),
+    # datasets[["1.2_infectious"]] %>%
+    #   filter(date == max(date)) %>%
+    #   select(date, lowerbound, midpoint, upperbound) %>%
+    #   gather(key = "estimate", value = "value", -date) %>%
+    #   mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
+    #          plot = "1_infect_logscale",
+    #          dataset = "1_infect_logscale",
+    #          showarrow = FALSE,
+    #          xanchor = "left",
+    #          xshift = 10,
+    #          align = "left",
+    #          value = log10(value)) %>%
+    #   rename(y = value,
+    #          x = date),
     datasets[["1.3_cases"]] %>%
       filter(date == max(date)) %>%
       select(count_7day_avg, date) %>%
@@ -157,28 +157,28 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              align = "left",
              x = as.Date("2020-04-01")) %>%
       rename(y = recorded,
-             text = crime_group),
-    datasets[["3.1_schools"]] %>%
-      filter(date == max(date)) %>%
-      select(count, date, Measure) %>%
-      mutate(
-        text = case_when(
-          grepl("All", Measure, ignore.case = TRUE) ~ "All CYP attending",
-          grepl("Key", Measure, ignore.case = TRUE) ~ "Key worker CYP",
-          grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "Vulnerable CYP"
-        ),
-        font = c(list(list(color = col_palette["sg_grey"])),
-                 list(list(color = col_palette["sg_blue"])),
-                 list(list(color = col_palette["sg_blue"]))),
-        plot = "3_school",
-        dataset = "3_school",
-        showarrow = FALSE,
-        xanchor = "left",
-        xshift = 5,
-        align = "left"
-      ) %>%
-      rename(y = count,
-             x = date)
+             text = crime_group)#,
+    # datasets[["3.1_schools"]] %>%
+    #   filter(date == max(date)) %>%
+    #   select(count, date, Measure) %>%
+    #   mutate(
+    #     text = case_when(
+    #       grepl("All", Measure, ignore.case = TRUE) ~ "All CYP attending",
+    #       grepl("Key", Measure, ignore.case = TRUE) ~ "Key worker CYP",
+    #       grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "Vulnerable CYP"
+    #     ),
+    #     font = c(list(list(color = col_palette["sg_grey"])),
+    #              list(list(color = col_palette["sg_blue"])),
+    #              list(list(color = col_palette["sg_blue"]))),
+    #     plot = "3_school",
+    #     dataset = "3_school",
+    #     showarrow = FALSE,
+    #     xanchor = "left",
+    #     xshift = 5,
+    #     align = "left"
+    #   ) %>%
+    #    rename(y = count,
+    #           x = date)
   )
 
 # Read web text -----------------------------------------------------------
