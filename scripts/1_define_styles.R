@@ -12,6 +12,7 @@ add_style_spark <- function(p,
     config(displayModeBar = FALSE,
            showAxisDragHandles = FALSE) %>%
     layout(
+      showlegend = FALSE,
       paper_bgcolor = "rgba(0, 0, 0, 0)",
       plot_bgcolor = "rgba(0, 0, 0, 0)",
       yaxis = list(

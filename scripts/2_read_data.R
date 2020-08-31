@@ -22,26 +22,26 @@ datasets[["1.1_R"]] <- datasets[["sg_template"]][["1.1_R"]] %>%
 
 
 # Infectious people -----------------------------------------------------------
-datasets[["1.2_infectious"]] <-
-  datasets[["sg_template"]][["1.2_infectious"]] %>%
-  spread(key = Variable, value = Value) %>%
-  rename_at(.vars = vars(starts_with("Infectious_people_")),
-            ~ stringr::str_remove(., "Infectious_people_")) %>%
-  mutate(
-    Date = as.Date(Date),
-    text = paste0(
-      "<b>Between ",
-      format(lowerbound, big.mark = ","),
-      " and ",
-      format(upperbound, big.mark = ","),
-      " infectious people</b>\non ",
-      format(Date, "%d %B %Y")
-    ),
-    text_short = paste0("<b>", format(lowerbound, big.mark = ","), " to ",
-                       format(upperbound, big.mark = ","), "</b>\n",
-                       format(Date, "%d %B %Y"))
-  ) %>%
-  rename(date = Date)
+datasets[["1.2_infectious"]] #<-
+  # datasets[["sg_template"]][["1.2_infectious"]] %>%
+  # spread(key = Variable, value = Value) %>%
+  # rename_at(.vars = vars(starts_with("Infectious_people_")),
+  #           ~ stringr::str_remove(., "Infectious_people_")) %>%
+  # mutate(
+  #   Date = as.Date(Date),
+  #   text = paste0(
+  #     "<b>Between ",
+  #     format(lowerbound, big.mark = ","),
+  #     " and ",
+  #     format(upperbound, big.mark = ","),
+  #     " infectious people</b>\non ",
+  #     format(Date, "%d %B %Y")
+  #   ),
+  #   text_short = paste0("<b>", format(lowerbound, big.mark = ","), " to ",
+  #                      format(upperbound, big.mark = ","), "</b>\n",
+  #                      format(Date, "%d %B %Y"))
+  # ) %>%
+  # rename(date = Date)
 
 
 # Cases -----------------------------------------------------------------------
@@ -287,47 +287,47 @@ datasets[["2.4_avoiding"]] <- datasets[["sg_template"]][["2.4_avoiding"]] %>%
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
 datasets[["3.1_schools"]] <-
-  datasets[["sg_template"]][["3.1_schools"]] %>%
-  mutate(date = as.Date(Date)) %>%
-  full_join(tibble(date = seq(
-    from = min(.$date),
-    to = max(.$date),
-    by = 1
-  )), by = "date") %>% #add breaks for weekends
-  arrange(date) %>%
-  gather("Measure",
-         "count",
-         All_CYP_attending,
-         Key_worker_CYP,
-         Vulnerable_CYP) %>%
-  mutate(
-    CYP_label = case_when(
-      grepl("All", Measure, ignore.case = TRUE) ~
-        "total children &\nyoung people attending",
-      grepl("Key", Measure, ignore.case = TRUE) ~
-        "key worker children &\nyoung people attending",
-      grepl("Vulnerable", Measure, ignore.case = TRUE) ~
-        "vulnerable children &\nyoung people attending"
-    ),
-    text = paste0(
-      "<b>",
-      format(count, big.mark = ","),
-      " ",
-      CYP_label,
-      "</b>\n",
-      "(",
-      format(date, "%A %d %B %Y"),
-      ")"
-    ),
-    text_short = paste0(
-      "<b>",
-      format(count, big.mark = ","),
-      " attending",
-      "</b>\n",
-      format(date, "%a %d %B %Y")
-    )
-  ) %>%
-  select(Measure, date, count, text, text_short)
+  datasets[["sg_template"]][["3.1_schools"]] #%>%
+  # mutate(date = as.Date(Date)) %>%
+  # full_join(tibble(date = seq(
+  #   from = min(.$date),
+  #   to = max(.$date),
+  #   by = 1
+  # )), by = "date") %>% #add breaks for weekends
+  # arrange(date) %>%
+  # gather("Measure",
+  #        "count",
+  #        All_CYP_attending,
+  #        Key_worker_CYP,
+  #        Vulnerable_CYP) %>%
+  # mutate(
+  #   CYP_label = case_when(
+  #     grepl("All", Measure, ignore.case = TRUE) ~
+  #       "total children &\nyoung people attending",
+  #     grepl("Key", Measure, ignore.case = TRUE) ~
+  #       "key worker children &\nyoung people attending",
+  #     grepl("Vulnerable", Measure, ignore.case = TRUE) ~
+  #       "vulnerable children &\nyoung people attending"
+  #   ),
+  #   text = paste0(
+  #     "<b>",
+  #     format(count, big.mark = ","),
+  #     " ",
+  #     CYP_label,
+  #     "</b>\n",
+  #     "(",
+  #     format(date, "%A %d %B %Y"),
+  #     ")"
+  #   ),
+  #   text_short = paste0(
+  #     "<b>",
+  #     format(count, big.mark = ","),
+  #     " attending",
+  #     "</b>\n",
+  #     format(date, "%a %d %B %Y")
+  #   )
+  # ) %>%
+  # select(Measure, date, count, text, text_short)
 
 ## Crisis applications --------------------------------------------------------
 datasets[["3.2_crisis"]] <-

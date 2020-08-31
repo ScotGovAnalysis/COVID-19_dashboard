@@ -28,34 +28,63 @@ plots[["1.1_R"]] <- plot_ly(
   )
 
 ## Number of infectious people ------------------------------------------------
-plots[["1.2_infectious"]] <- plot_ly(
-  data = datasets[["1.2_infectious"]],
-  x = ~ date,
-  hoverinfo = "text",
-  y = ~ midpoint
-) %>%
-  add_ribbons(
-    ymin = ~ lowerbound,
-    ymax = ~ upperbound,
-    line = list(color = "transparent"),
-    fillcolor = col_palette["sg_light_blue"]
-  ) %>%
-  add_trace(
-    type = "scatter",
-    mode = "lines+markers",
-    marker = list(color = col_palette["sg_blue"]),
-    line = list(color = col_palette["sg_blue"]),
-    text = ~ text
-  ) %>%
-  add_style_chart() %>%
-  layout(
-    showlegend = FALSE,
-    # yaxis = list(type = "log", # In case we want to present on a log scale
-    #              tickformat = ",.1r"), 
-    annotations = filter(annotations,
-                         plot == "1_infect",
-                         dataset == "1_infect")
-  )
+# plots[["1.2_infectious"]] <- plot_ly(
+#   data = datasets[["1.2_infectious"]],
+#   x = ~ date,
+#   hoverinfo = "text",
+#   y = ~ midpoint
+# ) %>%
+#   add_ribbons(
+#     ymin = ~ lowerbound,
+#     ymax = ~ upperbound,
+#     line = list(color = "transparent"),
+#     fillcolor = col_palette["sg_light_blue"]
+#   ) %>%
+#   add_trace(
+#     type = "scatter",
+#     mode = "lines+markers",
+#     marker = list(color = col_palette["sg_blue"]),
+#     line = list(color = col_palette["sg_blue"]),
+#     text = ~ text
+#   ) %>%
+#   add_style_chart() %>%
+#   layout(
+#     showlegend = FALSE,
+#     annotations = filter(annotations,
+#                          plot == "1_infect",
+#                          dataset == "1_infect")
+#   )
+
+# 
+# plots[["1.2_infectious_logscale"]] <- plot_ly(
+#   data = datasets[["1.2_infectious"]],
+#   x = ~ date,
+#   hoverinfo = "text",
+#   y = ~ midpoint
+# ) %>%
+#   add_ribbons(
+#     ymin = ~ lowerbound,
+#     ymax = ~ upperbound,
+#     line = list(color = "transparent"),
+#     fillcolor = col_palette["sg_light_blue"]
+#   ) %>%
+#   add_trace(
+#     type = "scatter",
+#     mode = "lines+markers",
+#     marker = list(color = col_palette["sg_blue"]),
+#     line = list(color = col_palette["sg_blue"]),
+#     text = ~ text
+#   ) %>%
+#   add_style_chart() %>%
+#   layout(
+#     showlegend = FALSE,
+#     yaxis = list(type = "log",
+#                  tickformat = ",.1r",
+#                  range = c(0, 4)),
+#     annotations = filter(annotations,
+#                          plot == "1_infect_logscale",
+#                          dataset == "1_infect_logscale")
+#   )
 
 ## Cases ------------------------------------------------------------
 plots[["1.3_cases"]] <- plot_ly(
@@ -96,6 +125,53 @@ plots[["1.3_cases"]] <- plot_ly(
     annotations = filter(annotations,
                          plot == "1_cases",
                          dataset == "1_cases") %>%
+      pmap(list),
+    legend = list(orientation = "h",
+                  x = 0, y = 100)
+  )
+
+plots[["1.3_cases_logscale"]] <- plot_ly(
+  data = datasets[["1.3_cases"]],
+  x = ~ date,
+  hoverinfo = "text"
+) %>%
+  add_trace(
+    name = "Cases",
+    y = ~ count,
+    type = "bar",
+    marker = list(color = col_palette["sg_grey"]),
+    text = ~ count_text
+  ) %>%
+  add_trace(
+    name = "7 day average",
+    y = ~ count_7day_avg,
+    type = "scatter",
+    mode = "markers+lines",
+    marker = list(size = 7, color = col_palette["sg_blue"]),
+    line = list(color = col_palette["sg_blue"]),
+    text = ~ count_7day_avg_text
+  ) %>%
+  add_style_chart() %>%
+  layout(
+    showlegend = FALSE,
+    yaxis = list(type = "log",
+                 tickformat = ",.1r",
+                 range = c(0, log10(450))),
+    shapes = list(
+      list(
+        type = "line",
+        layer = "below",
+        x0 = dates[["lockdown"]],
+        x1 = dates[["lockdown"]],
+        y0 = 0,
+        y1 = 450,
+        line = list(color = col_palette["sg_grey"], dash = "dot")
+      )
+    ),
+    annotations = filter(annotations,
+                         plot == "1_cases",
+                         dataset == "1_cases") %>%
+      mutate(y = log10(y)) %>%
       pmap(list),
     legend = list(orientation = "h",
                   x = 0, y = 100)
@@ -144,6 +220,33 @@ plots[["1.5_admissions"]] <- plot_ly(
   add_style_chart() %>%
   layout(
     showlegend = FALSE
+  )
+
+plots[["1.5_admissions_logscale"]] <- plot_ly(
+  data = datasets[["1.5_admissions"]],
+  x = ~ Date,
+  hoverinfo = "text"
+) %>%
+  add_trace(
+    y = ~ count,
+    type = "bar",
+    marker = list(color = col_palette["sg_grey"]),
+    text = ~ text_count
+  ) %>%
+  add_trace(
+    y = ~ count_7day_avg,
+    type = "scatter",
+    mode = "markers+lines",
+    marker = list(size = 7, color = col_palette["sg_blue"]),
+    line = list(color = col_palette["sg_blue"]),
+    text = ~ text_7day_avg
+  ) %>%
+  add_style_chart() %>%
+  layout(
+    showlegend = FALSE,
+    yaxis = list(type = "log",
+                 tickformat = ",.1r",
+                 range = c(0, log10(213)))
   )
 
 # 2 Indirect health -----------------------------------------------------------
@@ -319,32 +422,32 @@ plots[["2.4_avoiding"]] <-
 
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
-plots[["3.1_schools"]] <- plot_ly(
-  data = datasets[["3.1_schools"]],
-  x = ~ date,
-  y = ~ count,
-  name = ~ Measure,
-  hoverinfo = ~ "text"
-) %>%
-  add_style_chart() %>%
-  add_trace(type = "scatter",
-            mode = "markers+lines",
-            marker = list(size = 7),
-            text = ~ text) %>%
-  add_trace(data = filter(datasets[["3.1_schools"]],
-                          date > as.Date("2020-06-26")),
-            type = "scatter",
-            mode = "lines",
-            connectgaps = TRUE) %>%
-  layout(
-    showlegend = FALSE,
-    colorway = col_palette[c("sg_grey", "sg_blue", "sg_blue")],
-    shapes = shapes[["3_school"]],
-    annotations = filter(annotations,
-                         plot == "3_school",
-                         dataset == "3_school") %>%
-      pmap(list)
-  )
+# plots[["3.1_schools"]] <- plot_ly(
+#   data = datasets[["3.1_schools"]],
+#   x = ~ date,
+#   y = ~ count,
+#   name = ~ Measure,
+#   hoverinfo = ~ "text"
+# ) %>%
+#   add_style_chart() %>%
+#   add_trace(type = "scatter",
+#             mode = "markers+lines",
+#             marker = list(size = 7),
+#             text = ~ text) %>%
+#   add_trace(data = filter(datasets[["3.1_schools"]],
+#                           date > as.Date("2020-06-26")),
+#             type = "scatter",
+#             mode = "lines",
+#             connectgaps = TRUE) %>%
+#   layout(
+#     showlegend = FALSE,
+#     colorway = col_palette[c("sg_grey", "sg_blue", "sg_blue")],
+#     shapes = shapes[["3_school"]],
+#     annotations = filter(annotations,
+#                          plot == "3_school",
+#                          dataset == "3_school") %>%
+#       pmap(list)
+#   )
 
 ## Crisis applications --------------------------------------------------------
 plots[["3.2_crisis"]] <- plot_ly(
@@ -560,9 +663,9 @@ plots[["3.3.5_crime"]] <- ggplotly(p,
 # Loneliness ------------------------------------------------------------------
 plots[["3.4_loneliness"]] <- plot_ly(
   data = datasets[["3.4_loneliness"]],
-  x = ~ date,
+  x = ~ date_start,
   marker = list(size = 7),
-  name = ~ Measure,
+  name = ~ source,
   hoverinfo = ~ "text"
 ) %>%
   add_trace(
@@ -578,18 +681,17 @@ plots[["3.4_loneliness"]] <- plot_ly(
          yaxis = list(
            tickformat = "%"
          ),
-         shapes = shapes[["3_loneliness"]],
          annotations = filter(annotations,
-                              plot == "3_loneliness",
-                              dataset == "3_loneliness") %>%
+                              plot == "3.4_loneliness",
+                              dataset == "3.4_loneliness") %>%
            pmap(list))
 
 # Trust in government ---------------------------------------------------------
 plots[["3.5_trust"]] <- plot_ly(
   data = datasets[["3.5_trust"]],
-  x = ~ date,
+  x = ~ date_start,
   marker = list(size = 7),
-  name = ~ Measure,
+  name = ~ source,
   hoverinfo = ~ "text"
 ) %>%
   add_trace(
@@ -605,18 +707,17 @@ plots[["3.5_trust"]] <- plot_ly(
          yaxis = list(
            tickformat = "%"
          ),
-         shapes = shapes[["3_trust"]],
          annotations = filter(annotations,
-                              plot == "3_trust",
-                              dataset == "3_trust") %>%
+                              plot == "3.5_trust",
+                              dataset == "3.5_trust") %>%
            pmap(list))
 
 # Threats to Jobs -------------------------------------------------------------
 plots[["3.6_job"]] <- plot_ly(
   data = datasets[["3.6_job"]],
-  x = ~ date,
+  x = ~ date_start,
   marker = list(size = 7),
-  name = ~ Measure,
+  name = ~ source,
   hoverinfo = ~ "text"
 ) %>%
   add_trace(
@@ -632,10 +733,9 @@ plots[["3.6_job"]] <- plot_ly(
          yaxis = list(
            tickformat = "%"
          ),
-         shapes = shapes[["3_job"]],
          annotations = filter(annotations,
-                              plot == "3_job",
-                              dataset == "3_job") %>%
+                              plot == "3.6_job",
+                              dataset == "3.6_job") %>%
            pmap(list))
 
 # Transport -------------------------------------------------------------------
