@@ -957,4 +957,3 @@ plots[["4.4_claimants"]] <- plot_ly(
     marker = list(color = col_palette["sg_blue"])
   ) %>%
   add_style_chart()
-
