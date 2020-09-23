@@ -287,47 +287,90 @@ datasets[["2.4_avoiding"]] <- datasets[["sg_template"]][["2.4_avoiding"]] %>%
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
 datasets[["3.1_schools"]] <-
-  datasets[["sg_template"]][["3.1_schools"]] #%>%
-  # mutate(date = as.Date(Date)) %>%
-  # full_join(tibble(date = seq(
-  #   from = min(.$date),
-  #   to = max(.$date),
-  #   by = 1
-  # )), by = "date") %>% #add breaks for weekends
-  # arrange(date) %>%
-  # gather("Measure",
-  #        "count",
-  #        All_CYP_attending,
-  #        Key_worker_CYP,
-  #        Vulnerable_CYP) %>%
-  # mutate(
-  #   CYP_label = case_when(
-  #     grepl("All", Measure, ignore.case = TRUE) ~
-  #       "total children &\nyoung people attending",
-  #     grepl("Key", Measure, ignore.case = TRUE) ~
-  #       "key worker children &\nyoung people attending",
-  #     grepl("Vulnerable", Measure, ignore.case = TRUE) ~
-  #       "vulnerable children &\nyoung people attending"
-  #   ),
-  #   text = paste0(
-  #     "<b>",
-  #     format(count, big.mark = ","),
-  #     " ",
-  #     CYP_label,
-  #     "</b>\n",
-  #     "(",
-  #     format(date, "%A %d %B %Y"),
-  #     ")"
-  #   ),
-  #   text_short = paste0(
-  #     "<b>",
-  #     format(count, big.mark = ","),
-  #     " attending",
-  #     "</b>\n",
-  #     format(date, "%a %d %B %Y")
-  #   )
-  # ) %>%
-  # select(Measure, date, count, text, text_short)
+  datasets[["sg_template"]][["3.1_schools"]] %>%
+  mutate(date = as.Date(Date)) %>%
+  full_join(tibble(date = seq(
+    from = min(.$date),
+    to = max(.$date),
+    by = 1
+  )), by = "date") %>% #add breaks for weekends
+  arrange(date) %>%
+  gather("Measure",
+         "count",
+         All_attending,
+         Non_covid_absence,
+         Covid_absence) %>%
+  mutate(
+    CYP_label = case_when(
+      grepl("All", Measure, ignore.case = TRUE) ~
+        "Percentage attendance",
+      grepl("Non_covid_absence", Measure, ignore.case = TRUE) ~
+        "Percentage of opening where pupils were not in school for non COVID \n related reasons (authorised and unauthorised, including exclusions)",
+      grepl("Covid_absence", Measure, ignore.case = TRUE) ~
+        "Percentage of openings where pupils were not in school because of \n COVID-19 related reasons"
+    ),
+    text = paste0(
+      "<b>",
+      format(round(count*100,0), big.mark = ","),
+      "% ",
+      CYP_label,
+      "</b>\n",
+      "(",
+      format(date, "%A %d %B %Y"),
+      ")"
+    ),
+    text_short = paste0(
+      "<b>",
+      format(round(count*100,0), big.mark = ","),
+      "% Covid-19\n related\n absence",
+      "</b>\n",
+      format(date, "%d %B")
+    )
+  ) %>%
+  select(Measure, date, count, text, text_short)
+
+# datasets[["3.1_schools"]] <-
+#   datasets[["sg_template"]][["3.1_schools"]] %>%
+#   mutate(date = as.Date(Date)) %>%
+#   full_join(tibble(date = seq(
+#     from = min(.$date),
+#     to = max(.$date),
+#     by = 1
+#   )), by = "date") %>% #add breaks for weekends
+#   arrange(date) %>%
+#   gather("Measure",
+#          "count",
+#          All_CYP_attending,
+#          Key_worker_CYP,
+#          Vulnerable_CYP) %>%
+#   mutate(
+#     CYP_label = case_when(
+#       grepl("All", Measure, ignore.case = TRUE) ~
+#         "total children &\nyoung people attending",
+#       grepl("Key", Measure, ignore.case = TRUE) ~
+#         "key worker children &\nyoung people attending",
+#       grepl("Vulnerable", Measure, ignore.case = TRUE) ~
+#         "vulnerable children &\nyoung people attending"
+#     )#,
+#     # text = paste0(
+#     #   "<b>",
+#     #   format(count, big.mark = ","),
+#     #   " ",
+#     #   CYP_label,
+#     #   "</b>\n",
+#     #   "(",
+#     #   format(date, "%A %d %B %Y"),
+#     #   ")"
+#     # ),
+#     # text_short = paste0(
+#     #   "<b>",
+#     #   format(count, big.mark = ","),
+#     #   " attending",
+#     #   "</b>\n",
+#     #   format(date, "%a %d %B %Y")
+#     # )
+#   ) #%>%
+#   #select(Measure, date, count, text, text_short)
 
 ## Crisis applications --------------------------------------------------------
 datasets[["3.2_crisis"]] <-
@@ -617,8 +660,8 @@ datasets[["4_unemployment_spark"]] <- datasets[["4.3_unemployment"]] %>%
 
 # Claimant counts -------------------------------------------------------------
 datasets[["4.4_claimants"]] <- datasets[["sg_template"]][["4.4_claimants"]] %>%
-  rename(count = `Number of claimant counts (LHS)`,
-         change = `% change in claimant counts (RHS)`) %>%
+  rename(count = `Number of claimant counts`,
+         change = `% change in claimant counts`) %>%
   mutate(count = count * 1000,
          date = lubridate::as_date(paste0(year, month, "01")),
          text = paste0(

@@ -151,14 +151,63 @@ plots[["2.4_avoiding_spark"]] <- datasets[["2.4_avoiding"]] %>%
 # For some reason it's not possible to set connectgaps = TRUE in
 # add_style_spark(). So for now, this just copies that function and adds the
 # option manually
-plots[["3.1_schools_spark"]] <- datasets[["3.1_schools"]] %>%
+# plots[["3.1_schools_spark"]] <- datasets[["3.1_schools"]] %>%
+#   #filter(grepl("All", Measure, ignore.case = TRUE)) %>%
+#   plotly_empty(
+#     #x = ~ date, 
+#     #y = ~ count, 
+#     height = spark_height#,
+#           #text = ~ text_short
+#     ) %>%
+#   add_trace(
+#     type = "scatter",
+#     mode = "lines",
+#     line = list(color = "black"),
+#     fill = "tozeroy",
+#     fillcolor = col_palette["sg_light_blue"],
+#     hoverinfo = "text",
+#     connectgaps = TRUE
+#   ) %>%
+#   config(displayModeBar = FALSE,
+#          showAxisDragHandles = FALSE) %>%
+#   layout(
+#     paper_bgcolor = "rgba(0, 0, 0, 0)",
+#     plot_bgcolor = "rgba(0, 0, 0, 0)",
+#     yaxis = list(
+#       fixedrange = TRUE,
+#       title = "",
+#       showgrid = FALSE,
+#       zeroline = FALSE,
+#       rangemode = "tozero",
+#       showticklabels = FALSE
+#     ),
+#     xaxis = list(
+#       fixedrange = TRUE,
+#       title = "",
+#       showgrid = FALSE,
+#       showticklabels = FALSE,
+#       range = c(dates[["start_sparklines"]],
+#                 as.character(Sys.Date()))
+#     ),
+#     margin = list(l = 0, #210,
+#                   r = 0,
+#                   t = 0,
+#                   b = 0)
+#   ) %>%
+#   htmlwidgets::onRender(
+#     "function(el, x) {
+#     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+#   )
+
+#Get only the pubils absent due to covid-19
+plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>% filter(Measure=='Covid_absence') %>%
   #filter(grepl("All", Measure, ignore.case = TRUE)) %>%
-  plotly_empty(
-    #x = ~ date, 
-    #y = ~ count, 
-    height = spark_height#,
-          #text = ~ text_short
-    ) %>%
+  plot_ly(
+    x = ~ date, 
+    y = ~ count, 
+    height = spark_height,
+    text = ~ text_short
+  ) %>%
   add_trace(
     type = "scatter",
     mode = "lines",
@@ -179,7 +228,8 @@ plots[["3.1_schools_spark"]] <- datasets[["3.1_schools"]] %>%
       showgrid = FALSE,
       zeroline = FALSE,
       rangemode = "tozero",
-      showticklabels = FALSE
+      showticklabels = FALSE,
+      range=c(0,0.1)
     ),
     xaxis = list(
       fixedrange = TRUE,
@@ -198,6 +248,9 @@ plots[["3.1_schools_spark"]] <- datasets[["3.1_schools"]] %>%
     "function(el, x) {
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
   )
+
+
+
 
 plots[["3.2_crisis_spark"]] <-
   datasets[["3.2_crisis_spark"]] %>%

@@ -470,6 +470,30 @@ plots[["2.4_avoiding"]] <-
 
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
+library('stringr')
+plots[["3.1_schools"]] <-plot_ly(
+  #data = filter(datasets[["3.1_schools"]],Measure!='All_attending'),
+  data = datasets[["3.1_schools"]] %>% filter(Measure!='All_attending'), 
+  x = ~ as.Date(date[!is.na(count)]) %>% format("%b %d"),
+  y = ~ count[!is.na(count)],
+  name = ~ Measure[!is.na(count)] %>% str_replace_all(c("Non_covid_absence"),c("Non covid-19 related absence")) %>% str_replace_all(c("Covid_absence"),c("Covid-19 related absence")),
+  text = ~ text[!is.na(count)],
+  hoverinfo = ~ "text"
+) %>%
+  add_style_chart() %>%
+  add_trace(type = "bar",
+            marker = list(size = 7),
+            text = ~ text[!is.na(count)]) %>%
+  layout(barmode = 'group',
+         xaxis = list(type = "category"),
+         yaxis = list(tickformat = "%"),
+         legend = list(xanchor = "left",
+                       yanchor = "bottom",
+                       orientation = "h",
+                       x = 0,
+                       y = 1.05),
+         colorway = c("#66CBFF", "#0065bd"))
+
 # plots[["3.1_schools"]] <- plot_ly(
 #   data = datasets[["3.1_schools"]],
 #   x = ~ date,

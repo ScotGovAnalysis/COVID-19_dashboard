@@ -10,7 +10,7 @@ download_data <- map(datasets[["sg_template"]], ~ drop_na(.x, 1))
 download_data[["3.7_transport"]][["%"]] <- download_data[["3.7_transport"]][["%"]] * 100
 download_data[["3.7_transport"]] <- download_data[["3.7_transport"]] %>% drop_na()
 download_data[["4.3_unemployment"]][["rate"]] <- download_data[["4.3_unemployment"]][["rate"]] * 100
-download_data[["4.4_claimants"]][["% change in claimant counts (RHS)"]] <- download_data[["4.4_claimants"]][["% change in claimant counts (RHS)"]] * 100
+download_data[["4.4_claimants"]][["% change in claimant counts"]] <- download_data[["4.4_claimants"]][["% change in claimant counts"]] * 100
 
 download_metadata <- datasets[["sg_template"]][["TEXT"]] %>%
   filter(worksheet_name %in% names(download_data)) %>%
