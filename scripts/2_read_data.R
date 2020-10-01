@@ -22,26 +22,6 @@ datasets[["1.1_R"]] <- datasets[["sg_template"]][["1.1_R"]] %>%
 
 
 # Infectious people -----------------------------------------------------------
-datasets[["1.2_infectious"]] #<-
-  # datasets[["sg_template"]][["1.2_infectious"]] %>%
-  # spread(key = Variable, value = Value) %>%
-  # rename_at(.vars = vars(starts_with("Infectious_people_")),
-  #           ~ stringr::str_remove(., "Infectious_people_")) %>%
-  # mutate(
-  #   Date = as.Date(Date),
-  #   text = paste0(
-  #     "<b>Between ",
-  #     format(lowerbound, big.mark = ","),
-  #     " and ",
-  #     format(upperbound, big.mark = ","),
-  #     " infectious people</b>\non ",
-  #     format(Date, "%d %B %Y")
-  #   ),
-  #   text_short = paste0("<b>", format(lowerbound, big.mark = ","), " to ",
-  #                      format(upperbound, big.mark = ","), "</b>\n",
-  #                      format(Date, "%d %B %Y"))
-  # ) %>%
-  # rename(date = Date)
 
 
 # Cases -----------------------------------------------------------------------

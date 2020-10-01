@@ -28,63 +28,6 @@ plots[["1.1_R"]] <- plot_ly(
   )
 
 ## Number of infectious people ------------------------------------------------
-# plots[["1.2_infectious"]] <- plot_ly(
-#   data = datasets[["1.2_infectious"]],
-#   x = ~ date,
-#   hoverinfo = "text",
-#   y = ~ midpoint
-# ) %>%
-#   add_ribbons(
-#     ymin = ~ lowerbound,
-#     ymax = ~ upperbound,
-#     line = list(color = "transparent"),
-#     fillcolor = col_palette["sg_light_blue"]
-#   ) %>%
-#   add_trace(
-#     type = "scatter",
-#     mode = "lines+markers",
-#     marker = list(color = col_palette["sg_blue"]),
-#     line = list(color = col_palette["sg_blue"]),
-#     text = ~ text
-#   ) %>%
-#   add_style_chart() %>%
-#   layout(
-#     showlegend = FALSE,
-#     annotations = filter(annotations,
-#                          plot == "1_infect",
-#                          dataset == "1_infect")
-#   )
-
-# 
-# plots[["1.2_infectious_logscale"]] <- plot_ly(
-#   data = datasets[["1.2_infectious"]],
-#   x = ~ date,
-#   hoverinfo = "text",
-#   y = ~ midpoint
-# ) %>%
-#   add_ribbons(
-#     ymin = ~ lowerbound,
-#     ymax = ~ upperbound,
-#     line = list(color = "transparent"),
-#     fillcolor = col_palette["sg_light_blue"]
-#   ) %>%
-#   add_trace(
-#     type = "scatter",
-#     mode = "lines+markers",
-#     marker = list(color = col_palette["sg_blue"]),
-#     line = list(color = col_palette["sg_blue"]),
-#     text = ~ text
-#   ) %>%
-#   add_style_chart() %>%
-#   layout(
-#     showlegend = FALSE,
-#     yaxis = list(type = "log",
-#                  tickformat = ",.1r",
-#                  range = c(0, 4)),
-#     annotations = filter(annotations,
-#                          plot == "1_infect_logscale",
-#                          dataset == "1_infect_logscale")
-#   )
 
 ## Cases ------------------------------------------------------------
 plots[["1.3_cases"]] <- plot_ly(
