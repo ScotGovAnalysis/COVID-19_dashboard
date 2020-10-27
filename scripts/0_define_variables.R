@@ -23,7 +23,9 @@ data_path <- function(pattern) {
 }
 
 paths <- list(
-  sg_template = here::here("data/COVID-19 Public Facing Dashboard - Four Harms Input Data.xlsx")
+  #The below line was in use until 27-10-2020 but would not read in week 43 for deaths
+  #sg_template = here::here("data/COVID-19 Public Facing Dashboard - Four Harms Input Data.xlsx")
+  sg_template = "data/COVID-19 Public Facing Dashboard - Four Harms Input Data.xlsx"
 )
 
 # Define plotting variables -----------------------------------------------
