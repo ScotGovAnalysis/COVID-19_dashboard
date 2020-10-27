@@ -28,6 +28,63 @@ plots[["1.1_R"]] <- plot_ly(
   )
 
 ## Number of infectious people ------------------------------------------------
+# plots[["1.2_infectious"]] <- plot_ly(
+#   data = datasets[["1.2_infectious"]],
+#   x = ~ date,
+#   hoverinfo = "text",
+#   y = ~ midpoint
+# ) %>%
+#   add_ribbons(
+#     ymin = ~ lowerbound,
+#     ymax = ~ upperbound,
+#     line = list(color = "transparent"),
+#     fillcolor = col_palette["sg_light_blue"]
+#   ) %>%
+#   add_trace(
+#     type = "scatter",
+#     mode = "lines+markers",
+#     marker = list(color = col_palette["sg_blue"]),
+#     line = list(color = col_palette["sg_blue"]),
+#     text = ~ text
+#   ) %>%
+#   add_style_chart() %>%
+#   layout(
+#     showlegend = FALSE,
+#     annotations = filter(annotations,
+#                          plot == "1_infect",
+#                          dataset == "1_infect")
+#   )
+
+#
+# plots[["1.2_infectious_logscale"]] <- plot_ly(
+#   data = datasets[["1.2_infectious"]],
+#   x = ~ date,
+#   hoverinfo = "text",
+#   y = ~ midpoint
+# ) %>%
+#   add_ribbons(
+#     ymin = ~ lowerbound,
+#     ymax = ~ upperbound,
+#     line = list(color = "transparent"),
+#     fillcolor = col_palette["sg_light_blue"]
+#   ) %>%
+#   add_trace(
+#     type = "scatter",
+#     mode = "lines+markers",
+#     marker = list(color = col_palette["sg_blue"]),
+#     line = list(color = col_palette["sg_blue"]),
+#     text = ~ text
+#   ) %>%
+#   add_style_chart() %>%
+#   layout(
+#     showlegend = FALSE,
+#     yaxis = list(type = "log",
+#                  tickformat = ",.1r",
+#                  range = c(0, 4)),
+#     annotations = filter(annotations,
+#                          plot == "1_infect_logscale",
+#                          dataset == "1_infect_logscale")
+#   )
 
 ## Cases ------------------------------------------------------------
 plots[["1.3_cases"]] <- plot_ly(
@@ -416,8 +473,8 @@ plots[["2.4_avoiding"]] <-
 library('stringr')
 plots[["3.1_schools"]] <-plot_ly(
   #data = filter(datasets[["3.1_schools"]],Measure!='All_attending'),
-  data = datasets[["3.1_schools"]] %>% filter(Measure!='All_attending'), 
-  x = ~ as.Date(date[!is.na(count)]) %>% format("%b %d"),
+  data = datasets[["3.1_schools"]] %>% filter(Measure!='All_attending'),
+  x = ~ as.Date(date[!is.na(count)],format= '%d/%m/%Y'),# %>% format("%d %b")),
   y = ~ count[!is.na(count)],
   name = ~ Measure[!is.na(count)] %>% str_replace_all(c("Non_covid_absence"),c("Non covid-19 related absence")) %>% str_replace_all(c("Covid_absence"),c("Covid-19 related absence")),
   text = ~ text[!is.na(count)],
