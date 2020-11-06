@@ -442,7 +442,7 @@ plots[["2.4_avoiding"]] <-
             text = ~text_2020) %>%
   add_style_chart() %>%
   layout(
-    title = "<b>I would avoid</b> GP/Hospital \nfor immediate non COVID-19 health concerns",
+    title = "<b>I would avoid</b> contacting GP \nfor immediate non-COVID-19 health concerns",
     showlegend = FALSE,
     barmode = "stack",
     yaxis = list(tickformat = "%"),
@@ -462,7 +462,7 @@ plots[["2.4_avoiding"]] <-
              dataset = "2_GP",
              showarrow = FALSE,
              xanchor = "left",
-             xshift = 30,
+             xshift = 150, #Was orginally 30 but have changed due to smaller number of bars
              align = "left") %>%
       rename(y = rate_cum,
              x = date) %>%
