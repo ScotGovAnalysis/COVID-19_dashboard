@@ -228,8 +228,7 @@ plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>% filter(Measure=='Co
       showgrid = FALSE,
       zeroline = FALSE,
       rangemode = "tozero",
-      showticklabels = FALSE,
-      range=c(0,0.1)
+      showticklabels = FALSE
     ),
     xaxis = list(
       fixedrange = TRUE,
