@@ -60,13 +60,71 @@ plots[["1.1_R_spark"]] <- datasets[["1.1_R"]] %>%
   )
 
 #Changed data set so the below runs
-plots[["1.2_infectious_spark"]] <- datasets[["1.3_cases"]] %>%
-  plotly_empty(#x = ~ date,
-          #y = ~ midpoint,
-          height = spark_height#,
-          #text = ~ text_short
-          ) %>%
-  add_style_spark()
+plots[["1.2_infectious_spark"]] <- datasets[["1.2_infectious"]] %>%
+  plot_ly(
+    x = ~ date,
+    y = ~ midpoint,
+    height = spark_height,
+    hoverinfo = "text"
+  ) %>%
+  add_trace(
+    type = "scatter",
+    mode = "markers",
+    marker = list(opacity = 0,
+                  color = "black"),
+    error_y = ~list(array = upperbound - midpoint,
+                    arrayminus = midpoint - lowerbound,
+                    color = "black",
+                    thickness = 2,
+                    width = 3),
+    text = ~ text_short
+  ) %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  layout(
+    paper_bgcolor = "rgba(0, 0, 0, 0)",
+    plot_bgcolor = "rgba(0, 0, 0, 0)",
+    yaxis = list(
+      fixedrange = TRUE,
+      title = "",
+      showgrid = FALSE,
+      zeroline = FALSE,
+      showticklabels = FALSE
+    ),
+    xaxis = list(
+      fixedrange = TRUE,
+      title = "",
+      showgrid = FALSE,
+      showticklabels = FALSE,
+      range = c(dates[["start_sparklines"]], as.character(Sys.Date()))
+    ),
+    margin = list(l = 0,
+                  r = 0,
+                  t = 0,
+                  b = 0),
+    shapes = list(
+      list(
+        type = "line",
+        layer = "below",
+        x0 = dates[["start_sparklines"]],
+        x1 = as.character(Sys.Date()),
+        y0 = 1,
+        y1 = 1,
+        line = list(color = col_palette["sg_grey"], dash = "dot")
+      )
+    )
+  ) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
+
+  #   plot_ly(x = ~ date,
+  #         y = ~ midpoint,
+  #         height = spark_height#,
+  #         #text = ~ text_short
+  #         ) %>%
+  # add_style_spark()
 
 plots[["1.3_cases_spark"]] <- datasets[["1.3_cases"]] %>%
   plot_ly(
@@ -200,54 +258,66 @@ plots[["2.4_avoiding_spark"]] <- datasets[["2.4_avoiding"]] %>%
 #   )
 
 #Get only the pubils absent due to covid-19
-plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>% filter(Measure=='Covid_absence') %>%
-  #filter(grepl("All", Measure, ignore.case = TRUE)) %>%
-  plot_ly(
-    x = ~ date, 
-    y = ~ count, 
-    height = spark_height,
-    text = ~ text_short
-  ) %>%
-  add_trace(
-    type = "scatter",
-    mode = "lines",
-    line = list(color = "black"),
-    fill = "tozeroy",
-    fillcolor = col_palette["sg_light_blue"],
-    hoverinfo = "text",
-    connectgaps = TRUE
-  ) %>%
-  config(displayModeBar = FALSE,
-         showAxisDragHandles = FALSE) %>%
-  layout(
-    paper_bgcolor = "rgba(0, 0, 0, 0)",
-    plot_bgcolor = "rgba(0, 0, 0, 0)",
-    yaxis = list(
-      fixedrange = TRUE,
-      title = "",
-      showgrid = FALSE,
-      zeroline = FALSE,
-      rangemode = "tozero",
-      showticklabels = FALSE
-    ),
-    xaxis = list(
-      fixedrange = TRUE,
-      title = "",
-      showgrid = FALSE,
-      showticklabels = FALSE,
-      range = c(dates[["start_sparklines"]],
-                as.character(Sys.Date()))
-    ),
-    margin = list(l = 0, #210,
-                  r = 0,
-                  t = 0,
-                  b = 0)
-  ) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-  )
+# plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>% filter(Measure=='Covid_absence') %>%
+#   #filter(grepl("All", Measure, ignore.case = TRUE)) %>%
+#   plot_ly(
+#     x = ~ date, 
+#     y = ~ count, 
+#     height = spark_height,
+#     text = ~ text_short
+#   ) %>%
+#   add_trace(
+#     type = "scatter",
+#     mode = "lines",
+#     line = list(color = "black"),
+#     fill = "tozeroy",
+#     fillcolor = col_palette["sg_light_blue"],
+#     hoverinfo = "text",
+#     connectgaps = TRUE
+#   ) %>%
+#   config(displayModeBar = FALSE,
+#          showAxisDragHandles = FALSE) %>%
+#   layout(
+#     paper_bgcolor = "rgba(0, 0, 0, 0)",
+#     plot_bgcolor = "rgba(0, 0, 0, 0)",
+#     yaxis = list(
+#       fixedrange = TRUE,
+#       title = "",
+#       showgrid = FALSE,
+#       zeroline = FALSE,
+#       rangemode = "tozero",
+#       showticklabels = FALSE
+#     ),
+#     xaxis = list(
+#       fixedrange = TRUE,
+#       title = "",
+#       showgrid = FALSE,
+#       showticklabels = FALSE,
+#       range = c(dates[["start_sparklines"]],
+#                 as.character(Sys.Date()))
+#     ),
+#     margin = list(l = 0, #210,
+#                   r = 0,
+#                   t = 0,
+#                   b = 0)
+#   ) %>%
+#   htmlwidgets::onRender(
+#     "function(el, x) {
+#     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+#   )
 
+
+plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>%
+  plot_ly(x = ~ date,
+          y = ~ attendance,
+          height = spark_height,
+          text = ~ text_short) %>%
+  add_style_spark()
+
+
+#%>%
+#  add_style_spark(range = c(dates[["start_sparklines_economy"]],
+#                            as.character(Sys.Date())))
 
 
 
@@ -261,7 +331,13 @@ plots[["3.2_crisis_spark"]] <-
 
 plots[["3.3_crime_spark"]] <- datasets[["3.3_crime_spark"]] %>%
   filter(crime_group == "Total crimes") %>%
-  plot_ly(x = ~ date, y = ~ variation_rate, height = spark_height,
+  mutate(date_present=case_when(
+    month=="Jan" ~ dmy("31-01-21"),
+    month!="Jan" ~ date
+    ),
+  ) %>%
+  arrange(date_present) %>%
+  plot_ly(x = ~ date_present, y = ~ variation_rate, height = spark_height,
           text = ~ text_variation_short) %>%
   add_style_spark()
 
