@@ -50,33 +50,33 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                           # properly so have hardcoded it to ignore this one.
                           TRUE ~ text)) %>%
   bind_rows(
-    #datasets[["1.2_infectious"]] #,%>%
-    #   filter(date == min(date)) %>%
-    #   select(date, lowerbound, midpoint, upperbound) %>%
-    #   gather(key = "estimate", value = "value", -date) %>%
-    #   mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
-    #          plot = "1_infect",
-    #          dataset = "1_infect",
-    #          showarrow = FALSE,
-    #          xanchor = "left",
-    #          xshift = -90,
-    #          align = "left") %>%
-    #   rename(y = value,
-    #          x = date),
-    # datasets[["1.2_infectious"]] %>%
-    #   filter(date == max(date)) %>%
-    #   select(date, lowerbound, midpoint, upperbound) %>%
-    #   gather(key = "estimate", value = "value", -date) %>%
-    #   mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
-    #          plot = "1_infect_logscale",
-    #          dataset = "1_infect_logscale",
-    #          showarrow = FALSE,
-    #          xanchor = "left",
-    #          xshift = 10,
-    #          align = "left",
-    #          value = log10(value)) %>%
-    #   rename(y = value,
-    #          x = date),
+    datasets[["1.2_infectious"]] %>%
+      filter(date == min(date)) %>%
+      select(date, lowerbound, upperbound) %>%
+      gather(key = "estimate", value = "value", -date) %>%
+      mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
+             plot = "1_infect",
+             dataset = "1_infect",
+             showarrow = FALSE,
+             xanchor = "left",
+             xshift = -90,
+             align = "left") %>%
+      rename(y = value,
+             x = date),
+    datasets[["1.2_infectious"]] %>%
+      filter(date == max(date)) %>%
+      select(date, lowerbound, upperbound) %>%
+      gather(key = "estimate", value = "value", -date) %>%
+      mutate(text = paste0("<b>", stringr::str_to_title(estimate), "</b>\n"),
+             plot = "1_infect_logscale",
+             dataset = "1_infect_logscale",
+             showarrow = FALSE,
+             xanchor = "left",
+             xshift = 10,
+             align = "left",
+             value = log10(value)) %>%
+      rename(y = value,
+             x = date),
     datasets[["1.3_cases"]] %>%
       filter(date == max(date)) %>%
       select(count_7day_avg, date) %>%
@@ -93,14 +93,14 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
     datasets[["2.1_A&E"]] %>%
       filter(week_ending_date == max(week_ending_date)) %>%
       select(week_ending_date, attendance) %>%
-      mutate(plot = "2a",
-             dataset = "2a",
-             text = "2020",
-             font = list(list(color = col_palette["sg_blue"])),
-             showarrow = FALSE,
-             xanchor = "left",
-             xshift = 8,
-             align = "left") %>%
+      # mutate(plot = "2a",
+      #        dataset = "2a",
+      #        text = "2020",
+      #        font = list(list(color = col_palette["sg_blue"])),
+      #        showarrow = FALSE,
+      #        xanchor = "left",
+      #        xshift = 8,
+      #        align = "left") %>%
       rename(y = attendance,
              x = week_ending_date),
     datasets[["2.2_excess"]] %>%
@@ -115,7 +115,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                       list(list(color = col_palette["sg_blue"]))),
              xanchor = "right",
              yanchor = c("top", "bottom", "bottom"),
-             yshift = c(-12, 8, 15),
+             yshift = c(-50, 30, 50),   #ave 5 yrs, C19 deaths, Total
              measure = stringr::str_replace_all(measure, "_", " ") %>%
                stringr::str_to_sentence()) %>%
       rename(y = count,
@@ -136,7 +136,8 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                       list(list(color = col_palette["sg_grey"]))),
              xanchor = "right",
              yanchor = c("top", "top", "bottom", "bottom"),
-             yshift = c(-8, -8, 15, 15),
+             yshift = c(-20, -20, 20, 30),    # (emergency 2020, planned 2020, emergency ave, planned ave )
+        #     xshift = c(-20,0,0,0),
              align = "right",
              text = case_when(measure == "Count" ~
                                 paste0("<b>", Admission_type, "</b>\n",
@@ -183,3 +184,4 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
 
 # Read web text -----------------------------------------------------------
 narrative <- datasets[["sg_template"]][["NARRATIVE"]]
+

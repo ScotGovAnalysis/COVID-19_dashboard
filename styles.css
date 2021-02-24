@@ -16,3 +16,24 @@ p,
   font-size: large; /*Larger font for accessibility*/
   line-height: 1.8;
 }
+
+.equality-box {
+  border-radius: 20px;
+  padding: 10px;
+  margin: 0px 0px;
+}
+
+.equality-box li {
+  font-size: large;
+  line-height: 1.8;
+}
+
+.equality-box p {
+  margin: 0;
+}
+
+.equality-box a {
+  text-decoration: underline;
+  color: black;
+}
+

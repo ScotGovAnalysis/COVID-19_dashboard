@@ -24,38 +24,42 @@ plots[["1.1_R"]] <- plot_ly(
     yaxis = list(tickformat = ".1f"),
     shapes = shapes[["1r"]],
     annotations = filter(annotations, plot == "1r", dataset == "1r") %>%
-      pmap(list)
+      pmap(list),
+    margin = list(r = 10)
   )
-
+  
 ## Number of infectious people ------------------------------------------------
-# plots[["1.2_infectious"]] <- plot_ly(
-#   data = datasets[["1.2_infectious"]],
-#   x = ~ date,
-#   hoverinfo = "text",
-#   y = ~ midpoint
-# ) %>%
-#   add_ribbons(
-#     ymin = ~ lowerbound,
-#     ymax = ~ upperbound,
-#     line = list(color = "transparent"),
-#     fillcolor = col_palette["sg_light_blue"]
-#   ) %>%
-#   add_trace(
-#     type = "scatter",
-#     mode = "lines+markers",
-#     marker = list(color = col_palette["sg_blue"]),
-#     line = list(color = col_palette["sg_blue"]),
-#     text = ~ text
-#   ) %>%
-#   add_style_chart() %>%
-#   layout(
-#     showlegend = FALSE,
-#     annotations = filter(annotations,
-#                          plot == "1_infect",
-#                          dataset == "1_infect")
-#   )
-
-#
+plots[["1.2_infectious"]] <- plot_ly(
+  data = datasets[["1.2_infectious"]],
+  x = ~ date,
+  hoverinfo = "text",
+  y = ~ midpoint
+) %>%
+  add_trace(
+    type = "scatter",
+    mode = "markers",
+    marker = list(opacity = 0),
+    error_y = ~list(array = upperbound - midpoint,
+                    arrayminus = midpoint - lowerbound,
+                    color = col_palette["sg_blue"],
+                    thickness = 5,
+                    width = 6),
+    text = ~ text
+  ) %>%
+  add_style_chart() %>%
+  layout(
+    xaxis = list(showspikes = TRUE,
+                 spikemode = "across",
+                 type = "date",
+                 tickformat = "%d %b"
+                ),
+                     # yaxis = list(tickformat = ".1f"),
+    # shapes = shapes[["1r"]],
+    # annotations = filter(annotations, plot == "1r", dataset == "1r") %>%
+    #   pmap(list),
+    margin = list(r = 10)
+  )
+  
 # plots[["1.2_infectious_logscale"]] <- plot_ly(
 #   data = datasets[["1.2_infectious"]],
 #   x = ~ date,
@@ -127,7 +131,8 @@ plots[["1.3_cases"]] <- plot_ly(
                          dataset == "1_cases") %>%
       pmap(list),
     legend = list(orientation = "h",
-                  x = 0, y = 100)
+                  x = 0, y = 100),
+    margin = list(r = 15)
   )
 
 ## Cases ------------------------------------------------------------
@@ -222,7 +227,8 @@ plots[["1.3_cases_logscale"]] <- plot_ly(
       mutate(y = log10(y)) %>%
       pmap(list),
     legend = list(orientation = "h",
-                  x = 0, y = 100)
+                  x = 0, y = 100),
+    margin = list(r = 15)
   )
 
 # Weekly deaths ---------------------------------------------------------------
@@ -242,7 +248,8 @@ plots[["1.4_deaths"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(
-    showlegend = FALSE
+    showlegend = FALSE,
+    margin = list(r = 25)
   )
 
 ## Hospital admissions --------------------------------------------------------
@@ -267,7 +274,8 @@ plots[["1.5_admissions"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(
-    showlegend = FALSE
+    showlegend = FALSE,
+    margin = list(r = 15)
   )
 
 plots[["1.5_admissions_logscale"]] <- plot_ly(
@@ -294,34 +302,74 @@ plots[["1.5_admissions_logscale"]] <- plot_ly(
     showlegend = FALSE,
     yaxis = list(type = "log",
                  tickformat = ",.1r",
-                 range = c(0, log10(213)))
+                 range = c(0, log10(213))),
+    margin = list(r = 15)
   )
 
 # 2 Indirect health -----------------------------------------------------------
 ## A&E attendance -------------------------------------------------------------
+# plots[["2.1_A&E"]] <- plot_ly(
+#   x = ~ week_ending_date_2020,
+#   y = ~ attendance,
+#   hoverinfo = ~ "text"
+# ) %>%
+#   add_trace(data = datasets[["2.1_A&E"]] %>%
+#               group_by(year) %>%
+#               filter(year < 2020),
+#             type = "scatter",
+#             mode = "lines",
+#             text = ~ text) %>%
+#   add_trace(data = datasets[["2.1_A&E"]] %>%
+#               filter(year >= 2020),
+#             type = "scatter",
+#             mode = "markers+lines",
+#             marker = list(size = 7),
+#             text = ~ text) %>%
+#   add_style_chart() %>%
+#   layout(
+#     showlegend = FALSE,
+#     colorway = c(col_palette),
+#     shapes = shapes[["2a"]],
+#     annotations = filter(annotations, plot == "2a", dataset == "2a") %>%
+#       pmap(list) #transpose and convert to list
+#   )
 plots[["2.1_A&E"]] <- plot_ly(
   x = ~ week_ending_date_2020,
   y = ~ attendance,
   hoverinfo = ~ "text"
 ) %>%
-  add_trace(data = datasets[["2.1_A&E"]] %>%
-              group_by(year) %>%
-              filter(year != 2020),
+  add_trace(data = datasets[["2.1_A&E"]] %>% filter(year<2020) %>%
+              group_by(year),
+            name="2015-2019",
             type = "scatter",
             mode = "lines",
             text = ~ text) %>%
-  add_trace(data = datasets[["2.1_A&E"]] %>%
-              filter(year == 2020),
+  add_trace(data = datasets[["2.1_A&E"]] %>% filter(year==2020) %>%
+              group_by(year),
+            name="2020",
             type = "scatter",
-            mode = "markers+lines",
-            marker = list(size = 7),
+            mode = "lines",
+            text = ~ text) %>%
+  add_trace(data = datasets[["2.1_A&E"]] %>% filter(year==2021) %>%
+              group_by(year),
+            name="2021",
+            type = "scatter",
+            mode = "lines",
+            line=list(color=rgb(0,176/255,240/255)),
             text = ~ text) %>%
   add_style_chart() %>%
   layout(
-    showlegend = FALSE,
+    showlegend = TRUE,
+    legend=list(
+      font=list(size=10),
+      x= .7, y= 0
+    ),
     colorway = c(col_palette),
     shapes = shapes[["2a"]],
-    annotations = filter(annotations, plot == "2a", dataset == "2a") %>%
+    xaxis=list(tickformat="%b"),
+    annotations = filter(annotations, plot == "2a", dataset == "2a",
+                         #added this to remove the label from annotations
+                         id != 15) %>%
       pmap(list) #transpose and convert to list
   )
 
@@ -390,6 +438,7 @@ plots[["2.2_excess"]] <- plot_ly(
     Plotly.d3.select('.cursor-pointer').style('cursor', 'crosshair')}"
   )
 
+
 ## Emergency and planned admissions -------------------------------------------
 plots[["2.3_admissions"]] <- plot_ly(
   data = datasets[["2.3_admissions"]],
@@ -413,14 +462,14 @@ plots[["2.3_admissions"]] <- plot_ly(
     mode = "markers+lines",
     line = list(color = col_palette["sg_blue"]),
     marker = list(color = col_palette["sg_blue"])
-  ) %>%
+  )  %>%
   add_style_chart() %>%
   layout(showlegend = FALSE,
          annotations = filter(annotations,
                               plot == "2_admissions",
                               dataset == "2_admissions") %>%
-           pmap(list))
-
+           pmap(list),
+         margin = list(r = 10))
 # Avoiding GPs and hospitals --------------------------------------------------
 # "#333e48" - grey from SG branding guidelines
 # "#99A4AE" - same grey as above but lightened 40%
@@ -471,28 +520,52 @@ plots[["2.4_avoiding"]] <-
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
 library('stringr')
-plots[["3.1_schools"]] <-plot_ly(
-  #data = filter(datasets[["3.1_schools"]],Measure!='All_attending'),
-  data = datasets[["3.1_schools"]] %>% filter(Measure!='All_attending'),
-  x = ~ as.Date(date[!is.na(count)],format= '%d/%m/%Y'),# %>% format("%d %b")),
-  y = ~ count[!is.na(count)],
-  name = ~ Measure[!is.na(count)] %>% str_replace_all(c("Non_covid_absence"),c("Non covid-19 related absence")) %>% str_replace_all(c("Covid_absence"),c("Covid-19 related absence")),
-  text = ~ text[!is.na(count)],
-  hoverinfo = ~ "text"
+
+plots[["3.1_schools"]] <- plot_ly(
+  data = datasets[["3.1_schools"]],
+  x = ~ date,
+  y = ~ attendance,
+  marker = list(size = 7),
+  hoverinfo = ~ "text",
+  text = ~text
 ) %>%
+  add_trace(
+    type = "scatter",
+    mode = "markers+lines",
+    line = list(color = col_palette["sg_blue"]),
+    marker = list(color = col_palette["sg_blue"])
+  ) %>%
   add_style_chart() %>%
-  add_trace(type = "bar",
-            marker = list(size = 7),
-            text = ~ text[!is.na(count)]) %>%
-  layout(barmode = 'group',
-         xaxis = list(type = "category"),
-         yaxis = list(tickformat = "%"),
-         legend = list(xanchor = "left",
-                       yanchor = "bottom",
-                       orientation = "h",
-                       x = 0,
-                       y = 1.05),
-         colorway = c("#66CBFF", "#0065bd"))
+  layout(
+    yaxis = list(
+      tickformat = "%"
+    )
+  )
+
+
+
+# plots[["3.1_schools"]] <-plot_ly(
+#   #data = filter(datasets[["3.1_schools"]],Measure!='All_attending'),
+#   data = datasets[["3.1_schools"]] %>% filter(Measure!='All_attending'),
+#   x = ~ as.Date(date[!is.na(count)],format= '%d/%m/%Y'),# %>% format("%d %b")),
+#   y = ~ count[!is.na(count)],
+#   name = ~ Measure[!is.na(count)] %>% str_replace_all(c("Non_covid_absence"),c("Non covid-19 related absence")) %>% str_replace_all(c("Covid_absence"),c("Covid-19 related absence")),
+#   text = ~ text[!is.na(count)],
+#   hoverinfo = ~ "text"
+# ) %>%
+#   add_style_chart() %>%
+#   add_trace(type = "bar",
+#             marker = list(size = 7),
+#             text = ~ text[!is.na(count)]) %>%
+#   layout(barmode = 'group',
+#          xaxis = list(type = "category"),
+#          yaxis = list(tickformat = "%"),
+#          legend = list(xanchor = "left",
+#                        yanchor = "bottom",
+#                        orientation = "h",
+#                        x = 0,
+#                        y = 1.05),
+#          colorway = c("#66CBFF", "#0065bd"))
 
 # plots[["3.1_schools"]] <- plot_ly(
 #   data = datasets[["3.1_schools"]],
@@ -596,7 +669,7 @@ p <- ggplot(
                               "Crimes of dishonesty",
                               "Fire-raising, vandalism etc.",
                               "Other crimes")),
-  mapping = aes(x = month,
+  mapping = aes(x = reorder(month, date),
                 y = recorded,
                 group = year,
                 colour = as.factor(year))
@@ -607,6 +680,7 @@ p <- ggplot(
   # facet_grid(cols = vars(crime_group)) +
   scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
   scale_colour_manual(values = c(col_palette[["sg_grey"]],
+                                 col_palette[["sg_blue"]],
                                  col_palette[["sg_blue"]])) +
   theme(
     axis.title = element_blank(),
@@ -657,7 +731,7 @@ p <- ggplot(
   data = datasets[["3.3_crime"]] %>%
     filter(crime_group %in% c("Miscellaneous offences",
                               "Motor vehicle offences")),
-  mapping = aes(x = month,
+  mapping = aes(x = reorder(month, date),
                 y = recorded,
                 group = year,
                 colour = as.factor(year))
@@ -668,6 +742,7 @@ p <- ggplot(
   # facet_grid(cols = vars(crime_group)) +
   scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
   scale_colour_manual(values = c(col_palette[["sg_grey"]],
+                                 col_palette[["sg_blue"]],
                                  col_palette[["sg_blue"]])) +
   theme(
     axis.title = element_blank(),
@@ -695,11 +770,19 @@ plots[["3.3.4_crime"]] <- ggplotly(p) %>%
 p <- ggplot(
   data = datasets[["3.3_crime"]] %>%
     filter(crime_group %in% c("Total crimes",
-                              "Total offences")),
-  mapping = aes(x = month,
+                              "Total offences")) %>%
+    mutate(year_present = case_when(
+      month=="Jan" & year==2020 ~ '2019-20',
+      month=="Jan" & year==2021 ~ '2020-21',
+      year==2019 ~ '2019-20',
+      year==2020 ~ '2020-21'
+    )
+    ),
+  mapping = aes(x = reorder(month, date),
                 y = recorded,
-                group = year,
-                colour = as.factor(year))
+                group = year_present,
+                colour = as.factor(year_present),
+                text = text)
 ) +
   geom_line() +
   geom_point() +
@@ -707,6 +790,7 @@ p <- ggplot(
   # facet_grid(cols = vars(crime_group)) +
   scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
   scale_colour_manual(values = c(col_palette[["sg_grey"]],
+                                 col_palette[["sg_blue"]],
                                  col_palette[["sg_blue"]])) +
   theme(
     axis.title = element_blank(),
@@ -717,7 +801,7 @@ p <- ggplot(
   )
 
 plots[["3.3.5_crime"]] <- ggplotly(p,
-                                   tooltip = c("month", "recorded", "year")) %>%
+                                   tooltip = "text") %>% # c("month", "recorded", "year")) %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
   layout(
@@ -808,7 +892,8 @@ plots[["3.6_job"]] <- plot_ly(
          annotations = filter(annotations,
                               plot == "3.6_job",
                               dataset == "3.6_job") %>%
-           pmap(list))
+           pmap(list),
+         margin = list(r = 10))
 
 # Transport -------------------------------------------------------------------
 plots[["3.7_transport"]] <- plot_ly(
@@ -830,7 +915,8 @@ plots[["3.7_transport"]] <- plot_ly(
   layout(
     yaxis = list(
       tickformat = "%"
-    )
+    ),
+    margin = list(r = 40)
   )
 
 # 4 Economy -------------------------------------------------------------------
@@ -860,7 +946,8 @@ plots[["4.1.1_turnover"]] <- plot_ly(
     marker = list(size = 7, color = col_palette["sg_blue"])
   ) %>%
   add_style_chart() %>%
-  layout(showlegend = FALSE)
+  layout(showlegend = FALSE,
+         margin = list(r = 10))
 
 ## Turnover Broad sectors -----------------------------------------------------
 p <- ggplot(
@@ -980,4 +1067,7 @@ plots[["4.4_claimants"]] <- plot_ly(
     line = list(color = col_palette["sg_blue"]),
     marker = list(color = col_palette["sg_blue"])
   ) %>%
-  add_style_chart()
+  add_style_chart() %>%
+  layout(
+    margin = list(r = 30)
+  )

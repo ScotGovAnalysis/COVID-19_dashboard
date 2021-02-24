@@ -22,26 +22,29 @@ datasets[["1.1_R"]] <- datasets[["sg_template"]][["1.1_R"]] %>%
 
 
 # Infectious people -----------------------------------------------------------
-datasets[["1.2_infectious"]] #<-
-  # datasets[["sg_template"]][["1.2_infectious"]] %>%
-  # spread(key = Variable, value = Value) %>%
-  # rename_at(.vars = vars(starts_with("Infectious_people_")),
-  #           ~ stringr::str_remove(., "Infectious_people_")) %>%
-  # mutate(
-  #   Date = as.Date(Date),
-  #   text = paste0(
-  #     "<b>Between ",
-  #     format(lowerbound, big.mark = ","),
-  #     " and ",
-  #     format(upperbound, big.mark = ","),
-  #     " infectious people</b>\non ",
-  #     format(Date, "%d %B %Y")
-  #   ),
-  #   text_short = paste0("<b>", format(lowerbound, big.mark = ","), " to ",
-  #                      format(upperbound, big.mark = ","), "</b>\n",
-  #                      format(Date, "%d %B %Y"))
-  # ) %>%
-  # rename(date = Date)
+datasets[["1.2_infectious"]] <- datasets[["sg_template"]][["1.2_infectious"]] %>%
+  spread(key = Variable, value = Value) %>%
+  rename_at(.vars = vars(starts_with("Infectious_people_")),
+            ~ stringr::str_remove(., "Infectious_people_")) %>% 
+  rename(lowerbound = "Infections lower bound",
+         upperbound = "Infections upper bound") %>%
+  mutate(
+    Date = as.Date(Date),
+    midpoint = (lowerbound + upperbound) / 2,
+    text = paste0(
+      "<b>Between ",
+      lowerbound,
+      # format(lowerbound, big.mark = ","),
+      " and ",
+      upperbound,
+      " new daily infections per 100k</b>\non ",
+      format(Date, "%d %B %Y")
+    ),
+    text_short = paste0("<b>", format(lowerbound, big.mark = ","), " to ",
+                        format(upperbound, big.mark = ","), "</b>\n",
+                        format(Date, "%d %B %Y"))
+  ) %>%
+  rename(date = Date)
 
 
 # Cases -----------------------------------------------------------------------
@@ -108,7 +111,7 @@ datasets[["1.4_deaths"]] <-
 # New admissions to hospital with Covid-19 ------------------------------------
 datasets[["1.5_admissions"]] <-
   datasets[["sg_template"]][["1.5_admissions"]] %>%
-  rename(count = `Hospital Admissions`,
+  rename(count = `Hospital admissions`,
          count_7day_avg = `7-Day Moving Average`) %>%
   mutate(
     text_count = paste0(
@@ -142,8 +145,17 @@ datasets[["1.5_admissions"]] <-
 datasets[["2.1_A&E"]] <-
   datasets[["sg_template"]][["2.1_A&E"]] %>%
   mutate(week_ending_date = as.Date(week_ending_date),
-         week_ending_date_2020 = `year<-`(week_ending_date, 2020),
          year = lubridate::year(week_ending_date),
+         week_ending_date_2020 = `year<-`(week_ending_date, 2020),
+         week_id = format(week_ending_date, "%V"),
+         year_chart = case_when(
+           year < 2020 ~ "previous five years",
+           year == 2020 ~ "2020",
+           year == 2021 ~ "2021"
+         ),
+         # week_ending_date_2020 = case_when(
+         #   year == 2021 ~ `year<-`(week_ending_date, 2021),
+         #   year < 2021  ~ `year<-`(week_ending_date, 2020)),    
          text = paste0(
            "<b>",
            attendance %>% format(big.mark = ","),
@@ -158,7 +170,17 @@ datasets[["2.1_A&E"]] <-
            "</b>\n",
            "w/e ",
            format(week_ending_date, "%d %B %Y")
-         ))
+         )) 
+
+# to calculate five year average
+five_year <- datasets[["2.1_A&E"]] %>% filter(year < 2020)%>% 
+  group_by(week_id) %>%
+  summarise(five_year_attendance=mean(attendance)) 
+  # don't have full five years
+
+five_year$five_year_attendance[as.numeric(five_year$week_id)<8] <- NA
+datasets[["2.1_A&E"]] <- left_join(datasets[["2.1_A&E"]],five_year,by="week_id")
+
 
 # Excess deaths ---------------------------------------------------------------
 datasets[["2.2_excess"]] <-
@@ -218,7 +240,8 @@ datasets[["2.2_excess_spark"]] <- datasets[["2.2_excess"]] %>%
            format(date, "%d %B %Y")
          )) %>%
   rename(all_2020 = total_deaths,
-         avg_2015_19 = average_previous_5_years)
+         avg_2015_19 = average_previous_5_years) %>%
+  arrange(date)
 
 # Emergency and planned admissions --------------------------------------------
 datasets[["2.3_admissions"]] <-
@@ -284,50 +307,130 @@ datasets[["2.4_avoiding"]] <- datasets[["sg_template"]][["2.4_avoiding"]] %>%
          )) %>%
   arrange(date_start, sentiment)
 
+
+
+
+
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
 datasets[["3.1_schools"]] <-
   datasets[["sg_template"]][["3.1_schools"]] %>%
-  mutate(date = as.Date(Date)) %>%
+  mutate(date = as.Date(Date),
+         attendance = All_attending) %>%
   full_join(tibble(date = seq(
-    from = min(.$date),
-    to = max(.$date),
+    from = as_date(min(.$date)),
+    to = as_date(max(.$date)),
     by = 1
   )), by = "date") %>% #add breaks for weekends
   arrange(date) %>%
-  gather("Measure",
-         "count",
-         All_attending,
-         Non_covid_absence,
-         Covid_absence) %>%
-  mutate(
-    CYP_label = case_when(
-      grepl("All", Measure, ignore.case = TRUE) ~
-        "Percentage attendance",
-      grepl("Non_covid_absence", Measure, ignore.case = TRUE) ~
-        "Percentage of opening where pupils were not in school for non COVID \n related reasons (authorised and unauthorised, including exclusions)",
-      grepl("Covid_absence", Measure, ignore.case = TRUE) ~
-        "Percentage of openings where pupils were not in school because of \n COVID-19 related reasons"
-    ),
-    text = paste0(
-      "<b>",
-      format(round(count*100,0), big.mark = ","),
-      "% ",
-      CYP_label,
-      "</b>\n",
-      "(",
-      format(date, "%A %d %B %Y"),
-      ")"
-    ),
-    text_short = paste0(
-      "<b>",
-      format(round(count*100,0), big.mark = ","),
-      "% Covid-19\n related\n absence",
-      "</b>\n",
-      format(date, "%d %B")
-    )
-  ) %>%
-  select(Measure, date, count, text, text_short)
+  filter(!is.na(attendance)) %>%
+  mutate(text = paste0(
+    "<b>",
+             format(round(attendance*100,1), big.mark = ","),
+    "% of children physically attended school</b>\n",
+    "</b>\n",
+    "(",
+    format(date, "%A %d %B %Y"),
+    ")"
+  ),
+  text_short = paste0(
+    "<b>",
+    format(round(attendance*100,1), big.mark = ","),
+    "%",
+    "</b>\n",
+    "physical attendance",
+    "\n",
+    format(date, "%d %B"))) %>%
+  select(date, attendance,text, text_short)
+#   gather("Measure",
+#          "count",
+#          All_attending,
+#          Non_covid_absence,
+#          Covid_absence) %>%
+#   mutate(
+#     CYP_label = case_when(
+#       grepl("All", Measure, ignore.case = TRUE) ~
+#         "Percentage attendance",
+#       grepl("Non_covid_absence", Measure, ignore.case = TRUE) ~
+#         "Percentage of opening where pupils were not in school for non COVID \n related reasons (authorised and unauthorised, including exclusions)",
+#       grepl("Covid_absence", Measure, ignore.case = TRUE) ~
+#         "Percentage of openings where pupils were not in school because of \n COVID-19 related reasons"
+#     ),
+#     text = paste0(
+#       "<b>",
+#       format(round(count*100,0), big.mark = ","),
+#       "% ",
+#       CYP_label,
+#       "</b>\n",
+#       "(",
+#       format(date, "%A %d %B %Y"),
+#       ")"
+#     ),
+#     text_short = paste0(
+#       "<b>",
+#       format(round(count*100,0), big.mark = ","),
+#       "% Covid-19\n related\n absence",
+#       "</b>\n",
+#       format(date, "%d %B")
+#     )
+#   ) %>%
+#   select(Measure, date, count, text, text_short)
+
+
+
+
+
+
+# BM start commenting
+
+# 3 Society -------------------------------------------------------------------
+## Children at school ---------------------------------------------------------
+# datasets[["3.1_schools"]] <-
+#   datasets[["sg_template"]][["3.1_schools"]] %>%
+#   mutate(date = as.Date(Date)) %>%
+#   full_join(tibble(date = seq(
+#     from = min(.$date),
+#     to = max(.$date),
+#     by = 1
+#   )), by = "date") %>% #add breaks for weekends
+#   arrange(date) %>%
+#   gather("Measure",
+#          "count",
+#          All_attending,
+#          Non_covid_absence,
+#          Covid_absence) %>%
+#   mutate(
+#     CYP_label = case_when(
+#       grepl("All", Measure, ignore.case = TRUE) ~
+#         "Percentage attendance",
+#       grepl("Non_covid_absence", Measure, ignore.case = TRUE) ~
+#         "Percentage of opening where pupils were not in school for non COVID \n related reasons (authorised and unauthorised, including exclusions)",
+#       grepl("Covid_absence", Measure, ignore.case = TRUE) ~
+#         "Percentage of openings where pupils were not in school because of \n COVID-19 related reasons"
+#     ),
+#     text = paste0(
+#       "<b>",
+#       format(round(count*100,0), big.mark = ","),
+#       "% ",
+#       CYP_label,
+#       "</b>\n",
+#       "(",
+#       format(date, "%A %d %B %Y"),
+#       ")"
+#     ),
+#     text_short = paste0(
+#       "<b>",
+#       format(round(count*100,0), big.mark = ","),
+#       "% Covid-19\n related\n absence",
+#       "</b>\n",
+#       format(date, "%d %B")
+#     )
+#   ) %>%
+#   select(Measure, date, count, text, text_short)
+
+# BM end of uncommenting
+
+
 
 # datasets[["3.1_schools"]] <-
 #   datasets[["sg_template"]][["3.1_schools"]] %>%
@@ -430,7 +533,10 @@ datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%
                                          "Total offences",
                                          "Miscellaneous offences",
                                          "Motor vehicle offences")),
-         month = factor(month, levels = month.name),
+         
+#         month = factor(month, levels = month.name),
+         date = as.Date(paste(year, month, "01"), format = "%Y %B %d") %>%
+           lubridate::ceiling_date(unit = "month") - lubridate::days(1),
          text = paste0(
            "<b>",
            format(recorded, big.mark = ","),
@@ -447,26 +553,43 @@ datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%
            grepl("total", crime_group, ignore.case = TRUE) ~ TRUE,
            TRUE ~ FALSE
          )) %>%
-  arrange(year, month)
+  arrange(year, date)
 
 datasets[["3.3_crime_spark"]] <- datasets[["3.3_crime"]] %>%
   filter(total == TRUE) %>%
-  select(crime_group, recorded, year, month) %>%
-  spread(key = year, value = recorded) %>%
+  mutate(year_present = case_when(
+    month=="Jan" ~ year - 1,
+    month!="Jan" ~ year
+  )) %>%
+  select(crime_group, recorded, year_present, month) %>%
+  spread(key = year_present, value = recorded) %>%
   mutate(variation = `2020` - `2019`,
          variation_rate = variation / `2019`,
-         text_variation_short = paste0(
-           "<b>",
-           scales::percent(-variation_rate, accuracy = 0.1),
-           " fewer</b>\n",
-           "crimes than\n",
-           month,
-           " 2019"
-         )) %>%
+         text_variation_short = case_when(
+           month=="Jan" ~ paste0(
+             "<b>",
+             scales::percent(-variation_rate, accuracy = 0.1),
+             " fewer</b>\n",
+             "crimes than\n",
+             month,
+            " 2020"
+         ),
+           month!="Jan"~ paste0(
+             "<b>",
+             scales::percent(-variation_rate, accuracy = 0.1),
+             " fewer</b>\n",
+             "crimes than\n",
+             month,
+             " 2019"
+           ))) %>%
   select(-c(`2019`, `2020`)) %>%
   mutate(date = as.Date(paste("2020", month, "01"), format = "%Y %B %d") %>%
            lubridate::ceiling_date(unit = "month") -
-           lubridate::days(1))
+           lubridate::days(1)) %>%
+  arrange(crime_group, date)
+
+
+
 
 # Loneliness ------------------------------------------------------------------
 datasets[["3.4_loneliness"]] <- datasets[["sg_template"]][["3.4_loneliness"]] %>%

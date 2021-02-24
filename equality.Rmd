@@ -1,0 +1,88 @@
+---
+title: "Equality analysis"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    toc_depth: 4
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, out.width = '100%')
+library(htmltools)
+
+for (script in list.files("scripts", full.names = TRUE)) {
+  source(script)
+}
+```
+
+Last updated: **`r format.Date(dates[["data_updated"]], "%d %B %Y")`**
+  
+```{r}
+narrative %>% 
+  filter(harm == 0, section == "Equality") %>% 
+  pull("text") %>%
+  create_html()
+```
+
+**Colour Code**
+
+```{r}
+narrative %>% 
+  filter(section == "Equality") %>% 
+  equality_text()
+br()
+br()
+br()
+```
+
+## 1. A young woman of Pakistani Scottish ethnicity
+
+```{r}
+narrative %>% 
+  filter(section == "Equality1") %>% 
+  equality_text()
+br()
+br()
+```
+
+## 2. A young, gay, disabled man
+
+```{r}
+narrative %>% 
+  filter(section == "Equality2") %>% 
+  equality_text()
+br()
+br()
+```
+
+## 3. Older man living in a deprived area
+
+```{r}
+narrative %>% 
+  filter(section == "Equality3") %>% 
+  equality_text()
+br()
+br()
+```
+
+## 4. A socio-economically disadvantaged, middle aged, lone parent
+
+```{r}
+narrative %>% 
+  filter(section == "Equality4") %>% 
+  equality_text()
+br()
+br()
+```
+
+## 5. A mixed sex couple in their early 20s where the woman is pregnant
+
+```{r}
+narrative %>% 
+  filter(section == "Equality5") %>% 
+  equality_text()
+br()
+br()
+```
+
