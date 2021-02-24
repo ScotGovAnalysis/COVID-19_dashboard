@@ -16,6 +16,9 @@ navbar:
   - text: "Detailed analysis"
     href: detail.html
     icon: glyphicon-stats
+  - text: "Equality analysis"
+    href: equality.html
+    icon: fa-balance-scale
   - text: "Data"
     href: data.html
     icon: glyphicon-download-alt
