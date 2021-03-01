@@ -391,7 +391,7 @@ plots[["4.1_turnover_spark"]] <- datasets[["4.1_turnover"]] %>%
 plots[["4.2_GDP_spark"]] <- datasets[["4.2_GDP"]] %>%
   plot_ly(
     x = ~ date,
-    y = ~ `GDP (2016=100)`,
+    y = ~ `GDP (2017=100)`,
     height = spark_height,
     text = ~ text_short
   ) %>%

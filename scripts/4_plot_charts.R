@@ -1017,7 +1017,7 @@ plots[["4.1.3_turnover"]] <- ggplotly(p,
 plots[["4.2_GDP"]] <- plot_ly(
   data = datasets[["4.2_GDP"]],
   x = ~ date,
-  y = ~ `GDP (2016=100)`,
+  y = ~ `GDP (2017=100)`,
   marker = list(size = 7),
   hoverinfo = ~ "text",
   text = ~text

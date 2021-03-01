@@ -730,8 +730,8 @@ datasets[["4.2_GDP"]] <- datasets[["sg_template"]][["4.2_GDP"]] %>%
   mutate(
     date = lubridate::as_date(paste0(year, month, "01")),
     text = paste0(
-      "<b>Scottish GDP (2016=100) ",
-      round(`GDP (2016=100)`, 1),
+      "<b>Scottish GDP (2017=100) ",
+      round(`GDP (2017=100)`, 1),
       "</b>\n",
       "(",
       month,
@@ -741,9 +741,9 @@ datasets[["4.2_GDP"]] <- datasets[["sg_template"]][["4.2_GDP"]] %>%
     ),
     text_short = paste0(
       "<b>",
-      round(`GDP (2016=100)`, 1),
+      round(`GDP (2017=100)`, 1),
       "</b>\n",
-      "2016 = 100\n",
+      "2017 = 100\n",
       month,
       " ",
       year
