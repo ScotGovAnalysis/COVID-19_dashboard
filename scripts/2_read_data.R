@@ -486,40 +486,47 @@ datasets[["3.2_crisis"]] <-
            "(month ending ",
            format(month_ending_date, "%d %B %Y"),
            ")"
-         ))
+         ),
+         text_short = paste0(
+           "<b>",
+           format(crisis_applications, big.mark = ","),
+           "</b> \n",
+           format(month_ending_date, "%d %B %Y")
+         )
+         )
 
-datasets[["3.2_crisis_spark"]] <-
-  datasets[["3.2_crisis"]] %>%
-  mutate(
-    year = lubridate::year(month_ending_date),
-    month = lubridate::month(month_ending_date, label = TRUE)
-  ) %>%
-  select(-c(text, month_ending_date)) %>%
-  spread(key = year, value = crisis_applications) %>%
-  drop_na() %>%
-  mutate(
-    variation = `2020` - mean(c(`2018`, `2019`)),
-    month_ending_date = datasets[["3.2_crisis"]] %>%
-      filter(lubridate::year(month_ending_date) == 2020) %>%
-      pull(month_ending_date),
-    text = paste0(
-      "<b>",
-      format(round(variation), big.mark = ","),
-      " more crisis applications</b> (",
-      format(month_ending_date, "%d %B %Y"),
-      ")",
-      "\nthan average of previous 2 years."
-    ),
-    text_short = paste0(
-      "<b>",
-      format(round(variation), big.mark = ","),
-      " more</b> \n",
-      "than 2018/19 \n",
-      "(",
-      format(month_ending_date, "%B"),
-      ")"
-    )
-  )
+#datasets[["3.2_crisis_spark"]] <-
+#  datasets[["3.2_crisis"]] %>%
+#  mutate(
+#    year = lubridate::year(month_ending_date),
+#    month = lubridate::month(month_ending_date, label = TRUE)
+#  ) %>%
+#  select(-c(text, month_ending_date)) %>%
+#  spread(key = year, value = crisis_applications) %>%
+#  drop_na() %>%
+#  mutate(
+#    variation = `2021` - mean(c(`2018`, `2019`)),
+#    month_ending_date = datasets[["3.2_crisis"]] %>%
+#      filter(lubridate::year(month_ending_date) == 2021) %>%
+#      pull(month_ending_date),
+#      text = paste0(
+#      "<b>",
+#      format(crisis_applications, big.mark = ","),
+#      " more crisis applications</b> (",
+#      format(month_ending_date, "%d %B %Y"),
+#      ")",
+#      "\nthan average of 2018/19."
+#    ),
+#    text_short = paste0(
+#      "<b>",
+#      format(crisis_applications, big.mark = ","),
+#      " more</b> \n",
+#      "than 2018/19 \n",
+#      "(",
+#      format(month_ending_date, "%B"),
+#      ")"
+#    )
+#  )
   
 ## Crime ----------------------------------------------------------------------
 datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%

@@ -612,6 +612,14 @@ plots[["3.2_crisis"]] <- plot_ly(
             mode = "markers+lines",
             marker = list(size = 7),
             text = ~ text) %>%
+  add_trace(data = datasets[["3.2_crisis"]] %>% #RB adding 2021 line to chart
+              filter(year(month_ending_date) == 2021),
+            type = "scatter",
+            mode = "markers+lines",
+            marker = list(size = 7,
+            color=rgb(0,176/255,240/255)), 
+            line=list(color=rgb(0,176/255,240/255)), 
+            text = ~ text) %>%
   add_style_chart() %>%
   layout(
     showlegend = FALSE,

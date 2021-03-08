@@ -322,9 +322,9 @@ plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>%
 
 
 plots[["3.2_crisis_spark"]] <-
-  datasets[["3.2_crisis_spark"]] %>%
+  datasets[["3.2_crisis"]] %>%
   plot_ly(x = ~ month_ending_date,
-          y = ~ variation,
+          y = ~ crisis_applications,
           height = spark_height,
           text = ~ text_short) %>%
   add_style_spark()
