@@ -115,7 +115,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                       list(list(color = col_palette["sg_blue"]))),
              xanchor = "right",
              yanchor = c("top", "bottom", "bottom"),
-             yshift = c(-50, 30, 50),   #ave 5 yrs, C19 deaths, Total
+             yshift = c(-30, 45, 65),   #ave 5 yrs, C19 deaths, Total
              measure = stringr::str_replace_all(measure, "_", " ") %>%
                stringr::str_to_sentence()) %>%
       rename(y = count,
@@ -136,7 +136,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                       list(list(color = col_palette["sg_grey"]))),
              xanchor = "right",
              yanchor = c("top", "top", "bottom", "bottom"),
-             yshift = c(-20, -20, 20, 30),    # (emergency 2020, planned 2020, emergency ave, planned ave )
+             yshift = c(-25, -17, 20, 20),    # (emergency 2020, planned 2020, emergency ave, planned ave )
         #     xshift = c(-20,0,0,0),
              align = "right",
              text = case_when(measure == "Count" ~
