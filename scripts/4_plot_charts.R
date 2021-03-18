@@ -217,7 +217,7 @@ plots[["1.3_cases_logscale"]] <- plot_ly(
         x0 = dates[["lockdown"]],
         x1 = dates[["lockdown"]],
         y0 = 0,
-        y1 = 450,
+        y1 = 650,
         line = list(color = col_palette["sg_grey"], dash = "dot")
       )
     ),
@@ -524,25 +524,27 @@ library('stringr')
 plots[["3.1_schools"]] <- plot_ly(
   data = datasets[["3.1_schools"]],
   x = ~ date,
-  y = ~ attendance,
+  y = ~ count,
   marker = list(size = 7),
+  name = ~ Measure,
   hoverinfo = ~ "text",
   text = ~text
 ) %>%
   add_trace(
     type = "scatter",
     mode = "markers+lines",
-    line = list(color = col_palette["sg_blue"]),
-    marker = list(color = col_palette["sg_blue"])
+    connectgaps = TRUE
   ) %>%
   add_style_chart() %>%
-  layout(
-    yaxis = list(
-      tickformat = "%"
-    )
-  )
+   layout(
+     showlegend = FALSE,
+     yaxis = list(tickformat = "%"),
+     colorway = c("#0065bd", "#66CBFF", "#66CBFF", "#8E979C")
+   )
 
-
+# "#8E979C" - light grey SG
+# "#66CBFF" - light blue from A&E chart
+# "#0065bd" - blue SG
 
 # plots[["3.1_schools"]] <-plot_ly(
 #   #data = filter(datasets[["3.1_schools"]],Measure!='All_attending'),

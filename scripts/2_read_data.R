@@ -309,39 +309,86 @@ datasets[["2.4_avoiding"]] <- datasets[["sg_template"]][["2.4_avoiding"]] %>%
 
 
 
-
-
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
 datasets[["3.1_schools"]] <-
   datasets[["sg_template"]][["3.1_schools"]] %>%
-  mutate(date = as.Date(Date),
-         attendance = All_attending) %>%
+  mutate(date = as.Date(Date)) %>%
   full_join(tibble(date = seq(
     from = as_date(min(.$date)),
     to = as_date(max(.$date)),
     by = 1
   )), by = "date") %>% #add breaks for weekends
   arrange(date) %>%
-  filter(!is.na(attendance)) %>%
-  mutate(text = paste0(
-    "<b>",
-             format(round(attendance*100,1), big.mark = ","),
-    "% of children physically attended school</b>\n",
-    "</b>\n",
-    "(",
-    format(date, "%A %d %B %Y"),
-    ")"
-  ),
-  text_short = paste0(
-    "<b>",
-    format(round(attendance*100,1), big.mark = ","),
-    "%",
-    "</b>\n",
-    "physical attendance",
-    "\n",
-    format(date, "%d %B"))) %>%
-  select(date, attendance,text, text_short)
+  gather(key = "Measure",
+         value = "count",
+         Primary,
+         Secondary_AM,
+         Secondary_PM,
+         Special
+         ) %>%
+   mutate(
+     CYP_label = case_when(
+       grepl("Primary", Measure, ignore.case = TRUE) ~
+         "% of openings where primary school pupils were in attendance",
+       grepl("Secondary_AM", Measure, ignore.case = TRUE) ~
+         "% of secondary pupils physically attending in the morning",
+       grepl("Secondary_PM", Measure, ignore.case = TRUE) ~
+         "% of secondary pupils physically attending in the afternoon",
+       grepl("Special", Measure, ignore.case = TRUE) ~
+         "% of pupils at special schools physically attending"
+     ),
+       text = paste0(
+       "<b>",
+        format(round(count*100,1), big.mark = ","),
+        CYP_label,
+        "</b>\n",
+        "(",
+        format(date, "%A %d %B %Y"),
+        ")"
+      ),
+      text_short = paste0(
+        "<b>",
+        format(round(count*100,1), big.mark = ","),
+        "% attendance \n",
+        "at special schools",
+        "</b>\n",
+        format(date, "%a %d %B %Y")
+      )
+   ) %>%
+   select(Measure, date, count, text, text_short)
+
+#up to 15 March chart: 
+#datasets[["3.1_schools"]] <-
+#  datasets[["sg_template"]][["3.1_schools"]] %>%
+#  mutate(date = as.Date(Date),
+#         attendance = All_attending) %>%
+#  full_join(tibble(date = seq(
+#    from = as_date(min(.$date)),
+#    to = as_date(max(.$date)),
+#    by = 1
+#  )), by = "date") %>% #add breaks for weekends
+#  arrange(date) %>%
+#  filter(!is.na(attendance)) %>%
+#  mutate(text = paste0(
+#    "<b>",
+#    format(round(attendance*100,1), big.mark = ","),
+#    "% of children physically attended school</b>\n",
+#    "</b>\n",
+#    "(",
+#    format(date, "%A %d %B %Y"),
+#    ")"
+#  ),
+#  text_short = paste0(
+#    "<b>",
+#    format(round(attendance*100,1), big.mark = ","),
+#    "%",
+#    "</b>\n",
+#    "physical attendance",
+#    "\n",
+#    format(date, "%d %B"))) %>%
+#  select(date, attendance,text, text_short)
+
 #   gather("Measure",
 #          "count",
 #          All_attending,
@@ -375,7 +422,6 @@ datasets[["3.1_schools"]] <-
 #     )
 #   ) %>%
 #   select(Measure, date, count, text, text_short)
-
 
 
 
