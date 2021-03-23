@@ -307,9 +307,10 @@ plots[["2.4_avoiding_spark"]] <- datasets[["2.4_avoiding"]] %>%
 #   )
 
 
-plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>%
+plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>% 
+  filter(Measure=='Primary') %>% 
   plot_ly(x = ~ date,
-          y = ~ attendance,
+          y = ~ count,
           height = spark_height,
           text = ~ text_short) %>%
   add_style_spark()
@@ -333,7 +334,8 @@ plots[["3.3_crime_spark"]] <- datasets[["3.3_crime_spark"]] %>%
   filter(crime_group == "Total crimes") %>%
   mutate(date_present=case_when(
     month=="Jan" ~ dmy("31-01-21"),
-    month!="Jan" ~ date
+    month=="Feb" ~ dmy("28-02-21"),
+    month!="Jan" & month!="Feb" ~ date
     ),
   ) %>%
   arrange(date_present) %>%

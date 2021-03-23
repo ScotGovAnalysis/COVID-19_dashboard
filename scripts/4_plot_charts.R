@@ -470,6 +470,8 @@ plots[["2.3_admissions"]] <- plot_ly(
                               dataset == "2_admissions") %>%
            pmap(list),
          margin = list(r = 10))
+
+
 # Avoiding GPs and hospitals --------------------------------------------------
 # "#333e48" - grey from SG branding guidelines
 # "#99A4AE" - same grey as above but lightened 40%
@@ -521,27 +523,83 @@ plots[["2.4_avoiding"]] <-
 ## Children at school ---------------------------------------------------------
 library('stringr')
 
-plots[["3.1_schools"]] <- plot_ly(
+#Separate primary, secondary and special charts: 
+
+p <- ggplot(
   data = datasets[["3.1_schools"]],
-  x = ~ date,
-  y = ~ attendance,
-  marker = list(size = 7),
-  hoverinfo = ~ "text",
-  text = ~text
-) %>%
-  add_trace(
-    type = "scatter",
-    mode = "markers+lines",
-    line = list(color = col_palette["sg_blue"]),
-    marker = list(color = col_palette["sg_blue"])
-  ) %>%
-  add_style_chart() %>%
-  layout(
-    yaxis = list(
-      tickformat = "%"
-    )
+  mapping = aes(x = date,
+                y = count,
+                group = Measure,
+                text = text)
+) +
+  geom_point(colour = col_palette["sg_blue"]) +
+  geom_line(data = datasets[["3.1_schools"]][!is.na(datasets[["3.1_schools"]]$count),],
+            colour = col_palette["sg_blue"]) +
+  facet_wrap( ~ measure2, ncol = 1) +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    strip.background = element_rect(fill = "white"),
+    panel.background = element_blank()#,
+    #panel.spacing = unit(10, "mm")
   )
 
+plots[["3.1_schools"]] <- ggplotly(p,
+                                      height = 660,
+                                      tooltip = "text") %>%
+  config(displayModeBar = FALSE,
+         showAxisDragHandles = FALSE) %>%
+  htmlwidgets::onRender(
+    "function(el, x) {
+    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+  )
+
+#Separate specific chart option
+#plots[["3.1.1_schools"]] <- plot_ly(
+#  data = datasets[["3.1_schools"]] %>% filter(Measure=="Primary"),
+#  x = ~ date,
+#  y = ~ count,
+#  marker = list(size = 7),
+#  hoverinfo = ~ "text",
+#  text = ~text
+#) %>%
+#  add_trace(
+#    type = "scatter",
+#    mode = "markers+lines",
+#    line = list(color = col_palette["sg_blue"]),
+#    marker = list(color = col_palette["sg_blue"])
+#  ) %>%
+#  add_style_chart() %>%
+#  layout(
+#    yaxis = list(
+#      tickformat = "%"
+#    ),
+#    xaxis = list(
+#      tickformat = "%d %b %Y"
+#    )
+#  )
+
+#Option of hybrid chart:
+#plots[["3.1_schools"]] <- plot_ly(
+#  data = datasets[["3.1_schools"]],
+#  x = ~ date,
+#  y = ~ count,
+#  marker = list(size = 7),
+#  name = ~ Measure,
+#  hoverinfo = ~ "text",
+#  text = ~text
+#) %>%
+#  add_trace(
+#    type = "scatter",
+#    mode = "markers+lines",
+#    connectgaps = TRUE
+#  ) %>%
+#  add_style_chart() %>%
+#  layout(
+#    showlegend = FALSE,
+#    yaxis = list(tickformat = "%"),
+#    colorway = c("#0065bd", "#66CBFF", "#66CBFF", "#8E979C")
+#  )
 
 
 # plots[["3.1_schools"]] <-plot_ly(
@@ -775,6 +833,7 @@ plots[["3.3.4_crime"]] <- ggplotly(p) %>%
     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
   )
 
+#--- This is the chart that currently gets plotted (set in detail.Rmd) ---------
 p <- ggplot(
   data = datasets[["3.3_crime"]] %>%
     filter(crime_group %in% c("Total crimes",
@@ -782,6 +841,8 @@ p <- ggplot(
     mutate(year_present = case_when(
       month=="Jan" & year==2020 ~ '2019-20',
       month=="Jan" & year==2021 ~ '2020-21',
+      month=="Feb" & year==2020 ~ '2019-20',
+      month=="Feb" & year==2021 ~ '2020-21',
       year==2019 ~ '2019-20',
       year==2020 ~ '2020-21'
     )
@@ -963,7 +1024,8 @@ p <- ggplot(
     filter(parent == "All Industries"),
   mapping = aes(x = date,
                 y = turnover,
-                group = industry)
+                group = industry,
+                text = text)
 ) +
   geom_ribbon(mapping = aes(ymin = turnover_baseline,
                             ymax = turnover),
@@ -980,7 +1042,7 @@ p <- ggplot(
 
 plots[["4.1.2_turnover"]] <- ggplotly(p,
                                       height = 240,
-                                      tooltip = c("date", "turnover", "industry")) %>%
+                                      tooltip = "text") %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
   htmlwidgets::onRender(
@@ -995,7 +1057,8 @@ p <- ggplot(
     mutate(industry = forcats::fct_reorder(industry, turnover, .fun = min)),
   mapping = aes(x = date,
                 y = turnover,
-                group = industry)
+                group = industry,
+                text = text)
 ) +
   geom_ribbon(mapping = aes(ymin = turnover_baseline,
                             ymax = turnover),
@@ -1013,7 +1076,7 @@ p <- ggplot(
 # bigger than the default (450).
 plots[["4.1.3_turnover"]] <- ggplotly(p,
                                       height = 450 * 1.2,
-                                      tooltip = c("date", "turnover", "industry")) %>%
+                                      tooltip = "text") %>%
   config(displayModeBar = FALSE,
          showAxisDragHandles = FALSE) %>%
   htmlwidgets::onRender(

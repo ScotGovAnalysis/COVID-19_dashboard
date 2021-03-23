@@ -310,38 +310,68 @@ datasets[["2.4_avoiding"]] <- datasets[["sg_template"]][["2.4_avoiding"]] %>%
 
 
 
-
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
+
+#For separate primary, secondary and special charts
+
 datasets[["3.1_schools"]] <-
   datasets[["sg_template"]][["3.1_schools"]] %>%
-  mutate(date = as.Date(Date),
-         attendance = All_attending) %>%
+  mutate(date = as.Date(Date)) %>%
   full_join(tibble(date = seq(
     from = as_date(min(.$date)),
     to = as_date(max(.$date)),
     by = 1
   )), by = "date") %>% #add breaks for weekends
   arrange(date) %>%
-  filter(!is.na(attendance)) %>%
-  mutate(text = paste0(
-    "<b>",
-             format(round(attendance*100,1), big.mark = ","),
-    "% of children physically attended school</b>\n",
-    "</b>\n",
-    "(",
-    format(date, "%A %d %B %Y"),
-    ")"
-  ),
-  text_short = paste0(
-    "<b>",
-    format(round(attendance*100,1), big.mark = ","),
-    "%",
-    "</b>\n",
-    "physical attendance",
-    "\n",
-    format(date, "%d %B"))) %>%
-  select(date, attendance,text, text_short)
+  gather(key = "Measure",
+         value = "count",
+         Primary,
+         Special,
+         Secondary_AM,
+         Secondary_PM
+  ) %>%
+  mutate(
+    CYP_label = case_when(
+      grepl("Primary", Measure, ignore.case = TRUE) ~
+        "% of openings where primary school pupils were in attendance",
+      grepl("Special", Measure, ignore.case = TRUE) ~
+        "% of pupils at special schools physically attending",
+      grepl("Secondary_AM", Measure, ignore.case = TRUE) ~
+        "% of secondary pupils physically attending in the morning",
+      grepl("Secondary_PM", Measure, ignore.case = TRUE) ~
+        "% of secondary pupils physically attending in the afternoon"
+      
+    ),
+    text = paste0(
+      "<b>",
+      format(round(count*100,1), big.mark = ","),
+      CYP_label,
+      "</b>\n",
+      "(",
+      format(date, "%A %d %B %Y"),
+      ")"
+    ),
+    text_short = paste0(
+      "<b>",
+      format(round(count*100,1), big.mark = ","),
+      "% attendance \n",
+      "</b>\n",
+      format(date, "%a %d %B %Y")
+    ),
+    measure2 = case_when(
+      grepl("Primary", Measure, ignore.case = TRUE) ~
+        "Primary schools",
+      grepl("Special", Measure, ignore.case = TRUE) ~
+        "Special schools",
+      grepl("Secondary_AM", Measure, ignore.case = TRUE) ~
+        "Secondary schools",
+      grepl("Secondary_PM", Measure, ignore.case = TRUE) ~
+        "Secondary schools"
+    )
+  ) %>%
+  select(Measure, measure2, date, count, text, text_short)
+
 #   gather("Measure",
 #          "count",
 #          All_attending,
@@ -375,9 +405,6 @@ datasets[["3.1_schools"]] <-
 #     )
 #   ) %>%
 #   select(Measure, date, count, text, text_short)
-
-
-
 
 
 
@@ -565,15 +592,16 @@ datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%
 datasets[["3.3_crime_spark"]] <- datasets[["3.3_crime"]] %>%
   filter(total == TRUE) %>%
   mutate(year_present = case_when(
-    month=="Jan" ~ year - 1,
-    month!="Jan" ~ year
+    month =="Jan" ~ year - 1,
+    month =="Feb" ~ year - 1,
+    month!="Jan" & month!= "Feb" ~ year
   )) %>%
   select(crime_group, recorded, year_present, month) %>%
   spread(key = year_present, value = recorded) %>%
   mutate(variation = `2020` - `2019`,
          variation_rate = variation / `2019`,
          text_variation_short = case_when(
-           month=="Jan" ~ paste0(
+           month=="Jan" | month=="Feb" ~ paste0(
              "<b>",
              scales::percent(-variation_rate, accuracy = 0.1),
              " fewer</b>\n",
@@ -581,7 +609,7 @@ datasets[["3.3_crime_spark"]] <- datasets[["3.3_crime"]] %>%
              month,
             " 2020"
          ),
-           month!="Jan"~ paste0(
+           month!="Jan" & month!="Feb" ~ paste0(
              "<b>",
              scales::percent(-variation_rate, accuracy = 0.1),
              " fewer</b>\n",
@@ -697,7 +725,8 @@ datasets[["4.1_turnover"]] <- datasets[["sg_template"]][["4.1_turnover"]] %>%
     # "in real terms compared to 12 months ago\n",
     # "(",
     month_long,
-    " 2020"
+    " ",
+    year
   ),
   text_short = paste0(
     "<b>",
