@@ -42,7 +42,7 @@ dates <- c(
   WHO_declares_pandemic = "2020-03-11",
   start_sparklines = "2020-03-07",
   start_sparklines_economy = "2016-01-01",
-  data_updated = "2021-03-08"
+  data_updated = "2021-03-24"
 )
 spark_height <- 80 * 1.2 # Temporarily increasing this until we reduce the word
                          # count of some headlines
@@ -152,17 +152,6 @@ shapes <- list(
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   ),
-  "3_crisis_applications" = list(
-    list(
-      type = "line",
-      layer = "below",
-      x0 = 2,
-      x1 = 2,
-      y0 = 24000,
-      y1 = 26200,
-      line = list(color = col_palette["sg_grey"], dash = "dot")
-    )
-  ),
   "4a" = list(
     list(
       type = "line",
@@ -180,6 +169,39 @@ shapes <- list(
       x1 = dates[["lockdown"]],
       y0 = 0,
       y1 = 9500,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
+  "4.2_GDP" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = as.Date("2020-03-01"),
+      x1 = as.Date("2020-03-01"),
+      y0 = 40,
+      y1 = 95,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
+  "4.3_unemployment" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = as.Date("2020-03-01"),
+      x1 = as.Date("2020-03-01"),
+      y0 = 0.02,
+      y1 = 0.04164,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
+  "4.4_claimants" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = as.Date("2020-03-01"),
+      x1 = as.Date("2020-03-01"),
+      y0 = 50000,
+      y1 = 111400,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   )

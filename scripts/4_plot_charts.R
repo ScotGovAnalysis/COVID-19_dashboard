@@ -115,21 +115,6 @@ plots[["1.3_cases"]] <- plot_ly(
   add_style_chart() %>%
   layout(
     showlegend = FALSE,
-    shapes = list(
-      list(
-        type = "line",
-        layer = "below",
-        x0 = dates[["lockdown"]],
-        x1 = dates[["lockdown"]],
-        y0 = 0,
-        y1 = 450,
-        line = list(color = col_palette["sg_grey"], dash = "dot")
-      )
-    ),
-    annotations = filter(annotations,
-                         plot == "1_cases",
-                         dataset == "1_cases") %>%
-      pmap(list),
     legend = list(orientation = "h",
                   x = 0, y = 100),
     margin = list(r = 15)
@@ -1099,7 +1084,13 @@ plots[["4.2_GDP"]] <- plot_ly(
     line = list(color = col_palette["sg_blue"]),
     marker = list(color = col_palette["sg_blue"])
   ) %>%
-  add_style_chart()
+    add_style_chart() %>%
+  layout(
+    shapes = shapes[["4.2_GDP"]],
+    annotations = filter(annotations,
+                     plot == "4.2_GDP",
+                     dataset == "4.2_GDP")
+  )
 
 # Unemployment ----------------------------------------------------------------
 plots[["4.3_unemployment"]] <- plot_ly(
@@ -1120,7 +1111,11 @@ plots[["4.3_unemployment"]] <- plot_ly(
   layout(
     yaxis = list(
       tickformat = "%"
-    )
+    ),
+    shapes = shapes[["4.3_unemployment"]],
+    annotations = filter(annotations,
+                         plot == "4.3_unemployment",
+                         dataset == "4.3_unemployment")
   )
 
 # Claimant counts -------------------------------------------------------------
@@ -1140,5 +1135,9 @@ plots[["4.4_claimants"]] <- plot_ly(
   ) %>%
   add_style_chart() %>%
   layout(
-    margin = list(r = 30)
+    margin = list(r = 30),
+    shapes = shapes[["4.4_claimants"]],
+    annotations = filter(annotations,
+                         plot == "4.4_claimants",
+                         dataset == "4.4_claimants")
   )

@@ -50,6 +50,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                           # properly so have hardcoded it to ignore this one.
                           TRUE ~ text)) %>%
   bind_rows(
+    
     datasets[["1.2_infectious"]] %>%
       filter(date == min(date)) %>%
       select(date, lowerbound, upperbound) %>%
@@ -63,6 +64,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              align = "left") %>%
       rename(y = value,
              x = date),
+    
     datasets[["1.2_infectious"]] %>%
       filter(date == max(date)) %>%
       select(date, lowerbound, upperbound) %>%
@@ -77,6 +79,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              value = log10(value)) %>%
       rename(y = value,
              x = date),
+    
     datasets[["1.3_cases"]] %>%
       filter(date == max(date)) %>%
       select(count_7day_avg, date) %>%
@@ -90,6 +93,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              align = "left") %>%
       rename(y = count_7day_avg,
              x = date),
+    
     datasets[["2.1_A&E"]] %>%
       filter(week_ending_date == max(week_ending_date)) %>%
       select(week_ending_date, attendance) %>%
@@ -103,6 +107,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
       #        align = "left") %>%
       rename(y = attendance,
              x = week_ending_date),
+    
     datasets[["2.2_excess"]] %>%
       filter(date == max(date)) %>%
       select(date, measure, count) %>%
@@ -121,6 +126,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
       rename(y = count,
              x = date,
              text = measure),
+    
     datasets[["2.3_admissions"]] %>%
       group_by(Admission_type) %>% # In case the latest date is different for planned vs admissions
       filter(Week_ending == max(Week_ending)) %>%
@@ -141,7 +147,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              align = "right",
              text = case_when(measure == "Count" ~
                                 paste0("<b>", Admission_type, "</b>\n",
-                                       "admissions 2020"),
+                                       "admissions 2020-21"),
                               TRUE ~
                                 paste0("<b>", Admission_type, "</b>",
                                        "\nadmissions\n(average 2018-19)"))) %>%
@@ -159,27 +165,34 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
              x = as.Date("2020-04-01")) %>%
       rename(y = recorded,
              text = crime_group)#,
-   # datasets[["3.1_schools"]] #%>%
-  #     filter(date == max(date)) %>%
-  #     select(count, date, Measure) %>%
-  #     mutate(
-  #       text = case_when(
-  #         grepl("All", Measure, ignore.case = TRUE) ~ "All CYP attending",
-  #         grepl("Key", Measure, ignore.case = TRUE) ~ "Key worker CYP",
-  #         grepl("Vulnerable", Measure, ignore.case = TRUE) ~ "Vulnerable CYP"
-  #       ),
-  #       font = c(list(list(color = col_palette["sg_grey"])),
-  #                list(list(color = col_palette["sg_blue"])),
-  #                list(list(color = col_palette["sg_blue"]))),
-  #       plot = "3_school",
-  #       dataset = "3_school",
-  #       showarrow = FALSE,
-  #       xanchor = "left",
-  #       xshift = 5,
-  #       align = "left"
-  #     ) %>%
-  #      rename(y = count,
-  #             x = date)
+
+#adding schools labels 15 March    
+#   datasets[["3.1_schools"]] #%>%
+#     filter(date == max(date)) %>%
+#     select(count, date, Measure) %>%
+#     mutate(
+#       text = case_when(
+#         grepl("Primary", Measure, ignore.case = TRUE) ~ "Primary schools",
+#         grepl("Secondary_AM", Measure, ignore.case = TRUE) ~ "Secondary school pupils",
+#         grepl("Secondary_PM", Measure, ignore.case = TRUE) ~ "Secondary school pupils",
+#         grepl("Special", Measure, ignore.case = TRUE) ~ "Special school pupils"
+#       ),
+#       font = c(list(list(color = col_palette["sg_blue"])),
+#                list(list(color = "#66CBFF")),
+#                list(list(color = "#66CBFF")),
+#                list(list(color = col_palette["sg_grey"]))),
+#       # "#8E979C" - light grey SG
+#       # "#66CBFF" - light blue from A&E chart
+#       # "#0065bd" - blue SG
+#       plot = "3_school",
+#       dataset = "3_school",
+#       showarrow = FALSE,
+#       xanchor = "left",
+#       xshift = 5,
+#       align = "left"
+#     ) %>%
+#      rename(y = count,
+#             x = date)
    )
 
 # Read web text -----------------------------------------------------------
