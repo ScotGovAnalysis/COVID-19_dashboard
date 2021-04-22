@@ -206,16 +206,16 @@ plots[["2.4_avoiding_spark"]] <- datasets[["2.4_avoiding"]] %>%
 # 3 Society -------------------------------------------------------------------
 ## Define sparklines ----------------------------------------------------------
 
-# For some reason it's not possible to set connectgaps = TRUE in
-# add_style_spark(). So for now, this just copies that function and adds the
-# option manually
+ #For some reason it's not possible to set connectgaps = TRUE in
+ #add_style_spark(). So for now, this just copies that function and adds the
+ #option manually
 # plots[["3.1_schools_spark"]] <- datasets[["3.1_schools"]] %>%
-#   #filter(grepl("All", Measure, ignore.case = TRUE)) %>%
+#   filter(Measure=='Covid_absence') %>%
 #   plotly_empty(
-#     #x = ~ date, 
-#     #y = ~ count, 
-#     height = spark_height#,
-#           #text = ~ text_short
+#     x = ~ date, 
+#     y = ~ count, 
+#     height = spark_height,
+#           text = ~ text_short
 #     ) %>%
 #   add_trace(
 #     type = "scatter",
@@ -254,7 +254,7 @@ plots[["2.4_avoiding_spark"]] <- datasets[["2.4_avoiding"]] %>%
 #   ) %>%
 #   htmlwidgets::onRender(
 #     "function(el, x) {
-#     Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+#   Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
 #   )
 
 #Get only the pubils absent due to covid-19
@@ -308,9 +308,10 @@ plots[["2.4_avoiding_spark"]] <- datasets[["2.4_avoiding"]] %>%
 
 
 plots[["3.1_schools_spark"]] <-datasets[["3.1_schools"]] %>% 
-  filter(Measure=='Primary') %>% 
+  filter(Measure=='Covid_absence') %>% 
   plot_ly(x = ~ date,
           y = ~ count,
+          name = ~ Phase,
           height = spark_height,
           text = ~ text_short) %>%
   add_style_spark()
@@ -335,7 +336,8 @@ plots[["3.3_crime_spark"]] <- datasets[["3.3_crime_spark"]] %>%
   mutate(date_present=case_when(
     month=="Jan" ~ dmy("31-01-21"),
     month=="Feb" ~ dmy("28-02-21"),
-    month!="Jan" & month!="Feb" ~ date
+    month=="Mar" ~ dmy("31-03-21"),
+    month!="Jan" & month!="Feb" & month!="Mar" ~ date
     ),
   ) %>%
   arrange(date_present) %>%
