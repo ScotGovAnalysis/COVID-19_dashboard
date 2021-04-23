@@ -42,7 +42,7 @@ dates <- c(
   WHO_declares_pandemic = "2020-03-11",
   start_sparklines = "2020-03-07",
   start_sparklines_economy = "2016-01-01",
-  data_updated = "2021-03-08"
+  data_updated = "2021-04-26"
 )
 spark_height <- 80 * 1.2 # Temporarily increasing this until we reduce the word
                          # count of some headlines
@@ -123,8 +123,8 @@ shapes <- list(
       type = "rect",
       layer = "below",
       fillcolor = col_palette[["sg_light_blue"]],
-      x0 = as.Date("2020-04-06"),
-      x1 = as.Date("2020-04-20"),
+      x0 = as.Date("2020-12-24"),
+      x1 = as.Date("2021-01-05"),
       yref = "paper",
       y0 = 0,
       y1 = 1,
@@ -134,33 +134,23 @@ shapes <- list(
       type = "rect",
       layer = "below",
       fillcolor = col_palette[["sg_light_blue"]],
-      x0 = as.Date("2020-06-29"),
-      x1 = as.Date("2020-08-05"),
+      x0 = as.Date("2021-03-15"),
+      x1 = as.Date("2021-04-01"),
       yref = "paper",
       y0 = 0,
       y1 = 1,
       line = list(width = 0)
     ),
     list(
-      type = "line",
+      type = "rect",
       layer = "below",
-      x0 = as.Date("2020-05-08"),
-      x1 = as.Date("2020-05-08"),
+      fillcolor = col_palette[["sg_light_blue"]],
+      x0 = as.Date("2021-04-02"),
+      x1 = as.Date("2021-04-11"),
       yref = "paper",
       y0 = 0,
       y1 = 1,
-      line = list(color = col_palette["sg_grey"], dash = "dot")
-    )
-  ),
-  "3_crisis_applications" = list(
-    list(
-      type = "line",
-      layer = "below",
-      x0 = 2,
-      x1 = 2,
-      y0 = 24000,
-      y1 = 26200,
-      line = list(color = col_palette["sg_grey"], dash = "dot")
+      line = list(width = 0)
     )
   ),
   "4a" = list(
@@ -180,6 +170,39 @@ shapes <- list(
       x1 = dates[["lockdown"]],
       y0 = 0,
       y1 = 9500,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
+  "4.2_GDP" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = as.Date("2020-03-01"),
+      x1 = as.Date("2020-03-01"),
+      y0 = 40,
+      y1 = 95,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
+  "4.3_unemployment" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = as.Date("2020-05-01"),
+      x1 = as.Date("2020-05-01"),
+      y0 = 0.02,
+      y1 = 0.04493,
+      line = list(color = col_palette["sg_grey"], dash = "dot")
+    )
+  ),
+  "4.4_claimants" = list(
+    list(
+      type = "line",
+      layer = "below",
+      x0 = as.Date("2020-03-01"),
+      x1 = as.Date("2020-03-01"),
+      y0 = 50000,
+      y1 = 111400,
       line = list(color = col_palette["sg_grey"], dash = "dot")
     )
   )

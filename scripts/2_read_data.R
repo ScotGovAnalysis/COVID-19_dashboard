@@ -313,8 +313,6 @@ datasets[["2.4_avoiding"]] <- datasets[["sg_template"]][["2.4_avoiding"]] %>%
 # 3 Society -------------------------------------------------------------------
 ## Children at school ---------------------------------------------------------
 
-#For separate primary, secondary and special charts
-
 datasets[["3.1_schools"]] <-
   datasets[["sg_template"]][["3.1_schools"]] %>%
   mutate(date = as.Date(Date)) %>%
@@ -324,87 +322,89 @@ datasets[["3.1_schools"]] <-
     by = 1
   )), by = "date") %>% #add breaks for weekends
   arrange(date) %>%
-  gather(key = "Measure",
-         value = "count",
-         Primary,
-         Special,
-         Secondary_AM,
-         Secondary_PM
-  ) %>%
-  mutate(
-    CYP_label = case_when(
-      grepl("Primary", Measure, ignore.case = TRUE) ~
-        "% of openings where primary school pupils were in attendance",
-      grepl("Special", Measure, ignore.case = TRUE) ~
-        "% of pupils at special schools physically attending",
-      grepl("Secondary_AM", Measure, ignore.case = TRUE) ~
-        "% of secondary pupils physically attending in the morning",
-      grepl("Secondary_PM", Measure, ignore.case = TRUE) ~
-        "% of secondary pupils physically attending in the afternoon"
-      
-    ),
-    text = paste0(
-      "<b>",
-      format(round(count*100,1), big.mark = ","),
-      CYP_label,
-      "</b>\n",
-      "(",
-      format(date, "%A %d %B %Y"),
-      ")"
-    ),
-    text_short = paste0(
-      "<b>",
-      format(round(count*100,1), big.mark = ","),
-      "% attendance \n",
-      "</b>\n",
-      format(date, "%a %d %B %Y")
-    ),
-    measure2 = case_when(
-      grepl("Primary", Measure, ignore.case = TRUE) ~
-        "Primary schools",
-      grepl("Special", Measure, ignore.case = TRUE) ~
-        "Special schools",
-      grepl("Secondary_AM", Measure, ignore.case = TRUE) ~
-        "Secondary schools",
-      grepl("Secondary_PM", Measure, ignore.case = TRUE) ~
-        "Secondary schools"
-    )
-  ) %>%
-  select(Measure, measure2, date, count, text, text_short)
+  
+#---For separate primary, secondary and special charts:
+#  gather(key = "Measure",
+#         value = "count",
+#         Primary,
+#         Special,
+#         Secondary_AM,
+#         Secondary_PM
+#  ) %>%
+#  mutate(
+#    CYP_label = case_when(
+#      grepl("Primary", Measure, ignore.case = TRUE) ~
+#        "% of openings where primary school pupils were in attendance",
+#      grepl("Special", Measure, ignore.case = TRUE) ~
+#        "% of pupils at special schools physically attending",
+#      grepl("Secondary_AM", Measure, ignore.case = TRUE) ~
+#        "% of secondary pupils physically attending in the morning",
+#      grepl("Secondary_PM", Measure, ignore.case = TRUE) ~
+#        "% of secondary pupils physically attending in the afternoon"
+#      
+#    ),
+#    text = paste0(
+#      "<b>",
+#      format(round(count*100,1), big.mark = ","),
+#      CYP_label,
+#      "</b>\n",
+#      "(",
+#      format(date, "%A %d %B %Y"),
+#      ")"
+#    ),
+#    text_short = paste0(
+#      "<b>",
+#      format(round(count*100,1), big.mark = ","),
+#      "% attendance \n",
+#      "</b>\n",
+#      format(date, "%a %d %B %Y")
+#    ),
+#    measure2 = case_when(
+#      grepl("Primary", Measure, ignore.case = TRUE) ~
+#        "Primary schools",
+#      grepl("Special", Measure, ignore.case = TRUE) ~
+#        "Special schools",
+#      grepl("Secondary_AM", Measure, ignore.case = TRUE) ~
+#        "Secondary schools",
+#      grepl("Secondary_PM", Measure, ignore.case = TRUE) ~
+#        "Secondary schools"
+#    )
+#  ) %>%
+#  select(Measure, measure2, date, count, text, text_short)
 
-#   gather("Measure",
-#          "count",
-#          All_attending,
-#          Non_covid_absence,
-#          Covid_absence) %>%
-#   mutate(
-#     CYP_label = case_when(
-#       grepl("All", Measure, ignore.case = TRUE) ~
-#         "Percentage attendance",
-#       grepl("Non_covid_absence", Measure, ignore.case = TRUE) ~
-#         "Percentage of opening where pupils were not in school for non COVID \n related reasons (authorised and unauthorised, including exclusions)",
-#       grepl("Covid_absence", Measure, ignore.case = TRUE) ~
-#         "Percentage of openings where pupils were not in school because of \n COVID-19 related reasons"
-#     ),
-#     text = paste0(
-#       "<b>",
-#       format(round(count*100,0), big.mark = ","),
-#       "% ",
-#       CYP_label,
-#       "</b>\n",
-#       "(",
-#       format(date, "%A %d %B %Y"),
-#       ")"
-#     ),
-#     text_short = paste0(
-#       "<b>",
-#       format(round(count*100,0), big.mark = ","),
-#       "% Covid-19\n related\n absence",
-#       "</b>\n",
-#       format(date, "%d %B")
-#     )
-#   ) %>%
-#   select(Measure, date, count, text, text_short)
+   gather("Measure",
+          "count",
+          All_attending,
+          Non_covid_absence,
+          Covid_absence) %>%
+   mutate(
+     CYP_label = case_when(
+       grepl("All", Measure, ignore.case = TRUE) ~
+         "attendance",
+       grepl("Non_covid_absence", Measure, ignore.case = TRUE) ~
+         "of opening where pupils were not in school for non COVID \n related reasons (authorised and unauthorised, including exclusions)",
+       grepl("Covid_absence", Measure, ignore.case = TRUE) ~
+         "of openings where pupils were not in school because of \n COVID-19 related reasons"
+     ),
+     text = paste0(
+       "<b>",
+       format(round(count*100,1), big.mark = ","),
+       "% ",
+       CYP_label,
+       "</b>\n",
+       "(",
+       format(date, "%A %d %B %Y"),
+       ")"
+     ),
+     text_short = paste0(
+       "<b>",
+       format(round(count*100,1), big.mark = ","),
+       "% Covid-19\n related\n absence",
+       "</b>\n",
+       format(date, "%d %B")
+     )
+   ) %>%
+   select(Measure, date, count, text, text_short, Phase)
 
 
 
@@ -594,14 +594,15 @@ datasets[["3.3_crime_spark"]] <- datasets[["3.3_crime"]] %>%
   mutate(year_present = case_when(
     month =="Jan" ~ year - 1,
     month =="Feb" ~ year - 1,
-    month!="Jan" & month!= "Feb" ~ year
+    month =="Mar" ~ year - 1,
+    month!="Jan" & month!= "Feb" & month!="Mar" ~ year
   )) %>%
   select(crime_group, recorded, year_present, month) %>%
   spread(key = year_present, value = recorded) %>%
   mutate(variation = `2020` - `2019`,
          variation_rate = variation / `2019`,
          text_variation_short = case_when(
-           month=="Jan" | month=="Feb" ~ paste0(
+           month=="Jan" | month=="Feb" | month=="Mar" ~ paste0(
              "<b>",
              scales::percent(-variation_rate, accuracy = 0.1),
              " fewer</b>\n",
@@ -609,7 +610,7 @@ datasets[["3.3_crime_spark"]] <- datasets[["3.3_crime"]] %>%
              month,
             " 2020"
          ),
-           month!="Jan" & month!="Feb" ~ paste0(
+           month!="Jan" & month!="Feb" & month!="Mar" ~ paste0(
              "<b>",
              scales::percent(-variation_rate, accuracy = 0.1),
              " fewer</b>\n",
@@ -819,7 +820,7 @@ datasets[["4_unemployment_spark"]] <- datasets[["4.3_unemployment"]] %>%
 
 # Claimant counts -------------------------------------------------------------
 datasets[["4.4_claimants"]] <- datasets[["sg_template"]][["4.4_claimants"]] %>%
-  rename(count = `Number of claimant counts`,
+  rename(count = `Number of claimant counts ('000)`,
          change = `% change in claimant counts`) %>%
   mutate(count = count * 1000,
          date = lubridate::as_date(paste0(year, month, "01")),

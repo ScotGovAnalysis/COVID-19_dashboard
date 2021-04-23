@@ -508,38 +508,38 @@ plots[["2.4_avoiding"]] <-
 ## Children at school ---------------------------------------------------------
 library('stringr')
 
-#Separate primary, secondary and special charts: 
+#-------Separate primary, secondary and special charts from 15 March 
 
-p <- ggplot(
-  data = datasets[["3.1_schools"]],
-  mapping = aes(x = date,
-                y = count,
-                group = Measure,
-                text = text)
-) +
-  geom_point(colour = col_palette["sg_blue"]) +
-  geom_line(data = datasets[["3.1_schools"]][!is.na(datasets[["3.1_schools"]]$count),],
-            colour = col_palette["sg_blue"]) +
-  facet_wrap( ~ measure2, ncol = 1) +
-  theme(
-    axis.title = element_blank(),
-    axis.ticks = element_blank(),
-    strip.background = element_rect(fill = "white"),
-    panel.background = element_blank()#,
-    #panel.spacing = unit(10, "mm")
-  )
+#p <- ggplot(
+#  data = datasets[["3.1_schools"]],
+#  mapping = aes(x = date,
+#                y = count,
+#                group = Measure,
+#                text = text)
+#) +
+#  geom_point(colour = col_palette["sg_blue"]) +
+#  geom_line(data = datasets[["3.1_schools"]][!is.na(datasets[["3.1_schools"]]$count),],
+#            colour = col_palette["sg_blue"]) +
+#  facet_wrap( ~ measure2, ncol = 1) +
+#  theme(
+#    axis.title = element_blank(),
+#    axis.ticks = element_blank(),
+#    strip.background = element_rect(fill = "white"),
+#    panel.background = element_blank()#,
+#    #panel.spacing = unit(10, "mm")
+#  )
+#
+#plots[["3.1_schools"]] <- ggplotly(p,
+#                                      height = 660,
+#                                      tooltip = "text") %>%
+#  config(displayModeBar = FALSE,
+#         showAxisDragHandles = FALSE) %>%
+#  htmlwidgets::onRender(
+#    "function(el, x) {
+#    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
+#  )
 
-plots[["3.1_schools"]] <- ggplotly(p,
-                                      height = 660,
-                                      tooltip = "text") %>%
-  config(displayModeBar = FALSE,
-         showAxisDragHandles = FALSE) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-  )
-
-#Separate specific chart option
+#---------Separate specific chart option for 15 March----------
 #plots[["3.1.1_schools"]] <- plot_ly(
 #  data = datasets[["3.1_schools"]] %>% filter(Measure=="Primary"),
 #  x = ~ date,
@@ -564,7 +564,7 @@ plots[["3.1_schools"]] <- ggplotly(p,
 #    )
 #  )
 
-#Option of hybrid chart:
+#Option of hybrid chart for 15 March
 #plots[["3.1_schools"]] <- plot_ly(
 #  data = datasets[["3.1_schools"]],
 #  x = ~ date,
@@ -586,7 +586,7 @@ plots[["3.1_schools"]] <- ggplotly(p,
 #    colorway = c("#0065bd", "#66CBFF", "#66CBFF", "#8E979C")
 #  )
 
-
+#-------Old bar chart with absences------
 # plots[["3.1_schools"]] <-plot_ly(
 #   #data = filter(datasets[["3.1_schools"]],Measure!='All_attending'),
 #   data = datasets[["3.1_schools"]] %>% filter(Measure!='All_attending'),
@@ -610,32 +610,47 @@ plots[["3.1_schools"]] <- ggplotly(p,
 #                        y = 1.05),
 #          colorway = c("#66CBFF", "#0065bd"))
 
-# plots[["3.1_schools"]] <- plot_ly(
-#   data = datasets[["3.1_schools"]],
-#   x = ~ date,
-#   y = ~ count,
-#   name = ~ Measure,
-#   hoverinfo = ~ "text"
-# ) %>%
-#   add_style_chart() %>%
-#   add_trace(type = "scatter",
-#             mode = "markers+lines",
-#             marker = list(size = 7),
-#             text = ~ text) %>%
-#   add_trace(data = filter(datasets[["3.1_schools"]],
-#                           date > as.Date("2020-06-26")),
-#             type = "scatter",
-#             mode = "lines",
-#             connectgaps = TRUE) %>%
-#   layout(
-#     showlegend = FALSE,
-#     colorway = col_palette[c("sg_grey", "sg_blue", "sg_blue")],
-#     shapes = shapes[["3_school"]],
-#     annotations = filter(annotations,
-#                          plot == "3_school",
-#                          dataset == "3_school") %>%
-#       pmap(list)
-#   )
+#--------------Line graph from 19 April------------ 
+ plots[["3.1_schools"]] <- plot_ly(
+   data = datasets[["3.1_schools"]],
+   x = ~ date,
+   y = ~ count,
+   name = ~ Measure,
+   hoverinfo = ~ "text"
+ ) %>%
+   add_style_chart() %>%
+   add_trace(data = filter(datasets[["3.1_schools"]],
+                           date <= as.Date("2020-12-23")),
+             type = "scatter",
+             mode = "markers+lines",
+             marker = list(size = 7),
+             text = ~ text,
+             connectgaps = TRUE) %>%
+  add_trace(data = filter(datasets[["3.1_schools"]],
+                          date >= as.Date("2021-03-15"),
+                          date <= as.Date("2021-04-11")),
+            type = "scatter",
+            mode = "markers+lines",
+            marker = list(size = 7),
+            text = ~ text,
+            connectgaps = TRUE) %>%
+  add_trace(data = filter(datasets[["3.1_schools"]],
+                          date >= as.Date("2021-04-12")),
+            type = "scatter",
+            mode = "markers+lines",
+            marker = list(size = 7),
+            text = ~ text,
+            connectgaps = TRUE) %>%
+   layout(
+     showlegend = FALSE,
+     yaxis = list(tickformat = "%"),
+     colorway = c("#0065bd", "#66CBFF", "#8E979C"),
+     shapes = shapes[["3_school"]],
+     annotations = filter(annotations,
+                          plot == "3_school",
+                          dataset == "3_school") %>%
+       pmap(list)
+   )
 
 ## Crisis applications --------------------------------------------------------
 plots[["3.2_crisis"]] <- plot_ly(
@@ -827,6 +842,8 @@ p <- ggplot(
       month=="Jan" & year==2021 ~ '2020-21',
       month=="Feb" & year==2020 ~ '2019-20',
       month=="Feb" & year==2021 ~ '2020-21',
+      month=="Mar" & year==2020 ~ '2019-20',
+      month=="Mar" & year==2021 ~ '2020-21',
       year==2019 ~ '2019-20',
       year==2020 ~ '2020-21'
     )
