@@ -602,17 +602,33 @@ datasets[["3.3_crime_spark"]] <- datasets[["3.3_crime"]] %>%
   mutate(variation = `2020` - `2019`,
          variation_rate = variation / `2019`,
          text_variation_short = case_when(
-           month=="Jan" | month=="Feb" | month=="Mar" ~ paste0(
+           month=="Jan" | month=="Feb" ~ paste0(
              "<b>",
-             scales::percent(-variation_rate, accuracy = 0.1),
+             scales::percent(-variation_rate, accuracy = 1),
              " fewer</b>\n",
              "crimes than\n",
              month,
             " 2020"
          ),
-           month!="Jan" & month!="Feb" & month!="Mar" ~ paste0(
+         month=="Mar" ~ paste0(
+           "<b>",
+           scales::percent(variation_rate, accuracy = 1),
+           " more</b>\n",
+           "crimes than\n",
+           month,
+           " 2020"
+         ),
+         month=="Nov" ~ paste0(
+           "<b>",
+           scales::percent(variation_rate, accuracy = 1),
+           " more</b>\n",
+           "crimes than\n",
+           month,
+           " 2019"
+         ),
+           month!="Jan" & month!="Feb" & month!="Mar" & month!="Nov" ~ paste0(
              "<b>",
-             scales::percent(-variation_rate, accuracy = 0.1),
+             scales::percent(-variation_rate, accuracy = 1),
              " fewer</b>\n",
              "crimes than\n",
              month,
