@@ -226,8 +226,8 @@ datasets[["2.2_excess_spark"]] <- datasets[["2.2_excess"]] %>%
          text = paste0(
            "<b>",
            round(excess_deaths, digits = 1),
-           " excess deaths</b>\n",
-           "(week beginning ",
+           "\n","excess deaths</b>\n",
+           "(w/b ",
            format(date, "%d %B %Y"),
            ")"
          ),

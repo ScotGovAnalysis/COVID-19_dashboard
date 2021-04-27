@@ -167,7 +167,7 @@ plots[["2.2_excess_spark"]] <- datasets[["2.2_excess_spark"]] %>%
   plot_ly(x = ~ date,
           y = ~ excess_deaths,
           height = spark_height,
-          text = ~ text_short) %>%
+          text = ~ text) %>%
   add_style_spark()
 
 plots[["2.3.1_admissions_spark"]] <- datasets[["2.3_admissions"]] %>%
