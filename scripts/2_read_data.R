@@ -41,7 +41,8 @@ datasets[["1.2_infectious"]] <- datasets[["sg_template"]][["1.2_infectious"]] %>
       format(Date, "%d %B %Y")
     ),
     text_short = paste0("<b>", format(lowerbound, big.mark = ","), " to ",
-                        format(upperbound, big.mark = ","), "</b>\n",
+                        format(upperbound, trim=TRUE, big.mark = ","), "</b>\n",
+                        #setting trim to TRUE removes blanks before 1 or 2 digit values
                         format(Date, "%d %B %Y"))
   ) %>%
   rename(date = Date)
