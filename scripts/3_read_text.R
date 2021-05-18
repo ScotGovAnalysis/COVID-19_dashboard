@@ -120,7 +120,7 @@ annotations <- datasets[["sg_template"]][["ANNOTATIONS"]] %>%
                       list(list(color = col_palette["sg_blue"]))),
              xanchor = "right",
              yanchor = c("top", "bottom", "bottom"),
-             yshift = c(-25, 45, 35),   #ave 5 yrs, C19 deaths, Total
+             yshift = c(-25, 30, 35),   #ave 5 yrs, C19 deaths, Total
              measure = stringr::str_replace_all(measure, "_", " ") %>%
                stringr::str_to_sentence()) %>%
       rename(y = count,
