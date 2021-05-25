@@ -568,10 +568,21 @@ datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%
                                          "Total offences",
                                          "Miscellaneous offences",
                                          "Motor vehicle offences")),
-         
-#         month = factor(month, levels = month.name),
-         date = as.Date(paste(year, month, "01"), format = "%Y %B %d") %>%
-           lubridate::ceiling_date(unit = "month") - lubridate::days(1),
+         year_start = case_when(
+           month=="Jan" ~ year -1,
+           month=="Feb" ~ year -1,
+           month=="Mar" ~ year -1,
+           month!="Jan" & month!="Feb" & month!="Mar" ~ year),
+         year_present = case_when(
+             year_start=='2019' ~ '2019-20',
+             year_start=='2020' ~ '2020-21',
+             year_start=='2021' ~ '2021-22'
+           ),
+#         date = as.Date(paste("2019", month, "01"), format = "%Y %B %d") %>%
+#           lubridate::ceiling_date(unit = "month") - lubridate::days(1),
+         month = factor(month, 
+                        levels = c("Apr", "May", "Jun", "Jul", "Aug", "Sep", 
+                                   "Oct", "Nov", "Dec", "Jan", "Feb", "Mar")),
          text = paste0(
            "<b>",
            format(recorded, big.mark = ","),
@@ -588,58 +599,41 @@ datasets[["3.3_crime"]] <- datasets[["sg_template"]][["3.3_crime"]] %>%
            grepl("total", crime_group, ignore.case = TRUE) ~ TRUE,
            TRUE ~ FALSE
          )) %>%
-  arrange(year, date)
+  arrange(year_start, month)
 
 datasets[["3.3_crime_spark"]] <- datasets[["3.3_crime"]] %>%
-  filter(total == TRUE) %>%
-  mutate(year_present = case_when(
-    month =="Jan" ~ year - 1,
-    month =="Feb" ~ year - 1,
-    month =="Mar" ~ year - 1,
-    month!="Jan" & month!= "Feb" & month!="Mar" ~ year
-  )) %>%
-  select(crime_group, recorded, year_present, month) %>%
-  spread(key = year_present, value = recorded) %>%
-  mutate(variation = `2020` - `2019`,
-         variation_rate = variation / `2019`,
-         text_variation_short = case_when(
-           month=="Jan" | month=="Feb" ~ paste0(
+  filter(crime_group == "Total crimes") %>%
+  select(recorded, year_start, month) %>%
+  spread(key = year_start, value = recorded, fill = NA) %>%
+  mutate(variation20 = (`2020` - `2019`) / `2019`,
+         variation21 = (`2021` - `2019`) / `2019`) %>%
+  select(month, variation20, variation21) %>%
+  gather(key = "var_year", value = "variation_rate","variation20":"variation21",na.rm = TRUE) %>%
+    mutate(year_present = case_when(
+      var_year == "variation20" ~ 2020,
+      var_year == "variation21" ~ 2021),
+      word = case_when(
+            variation_rate < 0 ~ "fewer",
+            variation_rate > 0 ~ "more"),
+      text_variation_short = paste0(
              "<b>",
-             scales::percent(-variation_rate, accuracy = 1),
-             " fewer</b>\n",
-             "crimes than\n",
-             month,
-            " 2020"
-         ),
-         month=="Mar" ~ paste0(
-           "<b>",
-           scales::percent(variation_rate, accuracy = 1),
-           " more</b>\n",
-           "crimes than\n",
-           month,
-           " 2020"
-         ),
-         month=="Nov" ~ paste0(
-           "<b>",
-           scales::percent(variation_rate, accuracy = 1),
-           " more</b>\n",
-           "crimes than\n",
-           month,
-           " 2019"
-         ),
-           month!="Jan" & month!="Feb" & month!="Mar" & month!="Nov" ~ paste0(
-             "<b>",
-             scales::percent(-variation_rate, accuracy = 1),
-             " fewer</b>\n",
-             "crimes than\n",
+             scales::percent(abs(variation_rate), accuracy = 1)," ",
+             word,
+             "</b>\n","crimes than\n",
              month,
              " 2019"
-           ))) %>%
-  select(-c(`2019`, `2020`)) %>%
-  mutate(date = as.Date(paste("2020", month, "01"), format = "%Y %B %d") %>%
+             ),
+      year = case_when(
+        month =="Jan" ~ year_present + 1,
+        month =="Feb" ~ year_present + 1,
+        month =="Mar" ~ year_present + 1,
+        month!="Jan" & month!= "Feb" & month!="Mar" ~ year_present
+      )
+         )%>%
+  mutate(date = as.Date(paste(year, month, "01"), format = "%Y %B %d") %>%
            lubridate::ceiling_date(unit = "month") -
            lubridate::days(1)) %>%
-  arrange(crime_group, date)
+  arrange(date)
 
 
 

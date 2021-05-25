@@ -332,16 +332,8 @@ plots[["3.2_crisis_spark"]] <-
   add_style_spark()
 
 plots[["3.3_crime_spark"]] <- datasets[["3.3_crime_spark"]] %>%
-  filter(crime_group == "Total crimes") %>%
-  mutate(date_present=case_when(
-    month=="Jan" ~ dmy("31-01-21"),
-    month=="Feb" ~ dmy("28-02-21"),
-    month=="Mar" ~ dmy("31-03-21"),
-    month!="Jan" & month!="Feb" & month!="Mar" ~ date
-    ),
-  ) %>%
-  arrange(date_present) %>%
-  plot_ly(x = ~ date_present, y = ~ variation_rate, height = spark_height,
+  arrange(date) %>%
+  plot_ly(x = ~ date, y = ~ variation_rate, height = spark_height,
           text = ~ text_variation_short) %>%
   add_style_spark()
 

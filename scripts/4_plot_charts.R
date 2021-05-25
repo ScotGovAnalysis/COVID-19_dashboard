@@ -705,150 +705,14 @@ plots[["3.2_crisis"]] <- plot_ly(
 #                       tickformat = "[[ ]<]"),
 #          xaxis = list(tickformat = ","))
 
-plots[["3.3.1_crime"]] <- plot_ly(
-  data = datasets[["3.3_crime"]] %>%
-    filter(crime_group == "Total crimes"),
-  x = ~ month,
-  y = ~ recorded,
-  name = ~ year,
-  text = ~ text,
-  hoverinfo = ~ "text",
-  height = 200
-) %>%
-  add_trace(type = "scatter",
-            mode = "lines+markers") %>%
-  add_style_chart() %>%
-  layout(
-    colorway = c(col_palette),
-    legend = list(xanchor = "left",
-                  yanchor = "bottom",
-                  orientation = "h",
-                  x = 0,
-                  y = 1.05)
-  )
 
-p <- ggplot(
-  data = datasets[["3.3_crime"]] %>%
-    filter(crime_group %in% c("Non-sexual crimes of violence",
-                              "Sexual crimes",
-                              "Crimes of dishonesty",
-                              "Fire-raising, vandalism etc.",
-                              "Other crimes")),
-  mapping = aes(x = reorder(month, date),
-                y = recorded,
-                group = year,
-                colour = as.factor(year))
-) +
-  geom_line() +
-  geom_point() +
-  facet_wrap( ~ crime_group, ncol = 2) +
-  # facet_grid(cols = vars(crime_group)) +
-  scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
-  scale_colour_manual(values = c(col_palette[["sg_grey"]],
-                                 col_palette[["sg_blue"]],
-                                 col_palette[["sg_blue"]])) +
-  theme(
-    axis.title = element_blank(),
-    axis.ticks = element_blank(),
-    strip.background = element_rect(fill = "white"),
-    panel.background = element_blank(),
-    legend.title = element_blank()
-  )
-
-plots[["3.3.2_crime"]] <- ggplotly(p) %>%
-  config(displayModeBar = FALSE,
-         showAxisDragHandles = FALSE) %>%
-  layout(
-    legend = list(xanchor = "left",
-                  yanchor = "bottom",
-                  orientation = "h",
-                  x = 0,
-                  y = 1.05)
-  ) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-  )
-
-plots[["3.3.3_crime"]] <- plot_ly(
-  data = datasets[["3.3_crime"]] %>%
-    filter(crime_group == "Total offences"),
-  x = ~ month,
-  y = ~ recorded,
-  name = ~ year,
-  text = ~ text,
-  hoverinfo = ~ "text",
-  height = 200
-) %>%
-  add_trace(type = "scatter",
-            mode = "lines+markers") %>%
-  add_style_chart() %>%
-  layout(
-    colorway = c(col_palette),
-    legend = list(xanchor = "left",
-                  yanchor = "bottom",
-                  orientation = "h",
-                  x = 0,
-                  y = 1.05)
-  )
-
-p <- ggplot(
-  data = datasets[["3.3_crime"]] %>%
-    filter(crime_group %in% c("Miscellaneous offences",
-                              "Motor vehicle offences")),
-  mapping = aes(x = reorder(month, date),
-                y = recorded,
-                group = year,
-                colour = as.factor(year))
-) +
-  geom_line() +
-  geom_point() +
-  facet_wrap( ~ crime_group, ncol = 2) +
-  # facet_grid(cols = vars(crime_group)) +
-  scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
-  scale_colour_manual(values = c(col_palette[["sg_grey"]],
-                                 col_palette[["sg_blue"]],
-                                 col_palette[["sg_blue"]])) +
-  theme(
-    axis.title = element_blank(),
-    axis.ticks = element_blank(),
-    strip.background = element_rect(fill = "white"),
-    panel.background = element_blank(),
-    legend.title = element_blank()
-  )
-
-plots[["3.3.4_crime"]] <- ggplotly(p) %>%
-  config(displayModeBar = FALSE,
-         showAxisDragHandles = FALSE) %>%
-  layout(
-    legend = list(xanchor = "left",
-                  yanchor = "bottom",
-                  orientation = "h",
-                  x = 0,
-                  y = 1.05)
-  ) %>%
-  htmlwidgets::onRender(
-    "function(el, x) {
-    Plotly.d3.selectAll('.cursor-pointer').style('cursor', 'crosshair')}"
-  )
-
-#--- This is the chart that currently gets plotted (set in detail.Rmd) ---------
+################################################################################
+#--- This is the chart that currently gets plotted (set in detail.Rmd) --------#
 p <- ggplot(
   data = datasets[["3.3_crime"]] %>%
     filter(crime_group %in% c("Total crimes",
-                              "Total offences")) %>%
-    mutate(year_present = case_when(
-      month=="Jan" & year==2020 ~ '2019-20',
-      month=="Jan" & year==2021 ~ '2020-21',
-      month=="Feb" & year==2020 ~ '2019-20',
-      month=="Feb" & year==2021 ~ '2020-21',
-      month=="Mar" & year==2020 ~ '2019-20',
-      month=="Mar" & year==2021 ~ '2020-21',
-      year==2019 ~ '2019-20',
-      year==2020 ~ '2020-21'
-    )
-    ),
-  mapping = aes(x = reorder(month, date),
+                              "Total offences")),
+  mapping = aes(x = month,
                 y = recorded,
                 group = year_present,
                 colour = as.factor(year_present),
@@ -861,7 +725,7 @@ p <- ggplot(
   scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
   scale_colour_manual(values = c(col_palette[["sg_grey"]],
                                  col_palette[["sg_blue"]],
-                                 col_palette[["sg_blue"]])) +
+                                 rgb(0,176/255,240/255))) +
   theme(
     axis.title = element_blank(),
     axis.ticks = element_blank(),
