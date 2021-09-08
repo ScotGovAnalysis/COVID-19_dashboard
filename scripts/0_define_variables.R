@@ -152,6 +152,17 @@ shapes <- list(
       y1 = 1,
       line = list(width = 0)
     )
+    list(
+      type = "rect",
+      layer = "below",
+      fillcolor = col_palette[["sg_light_blue"]],
+      x0 = as.Date("2021-06-26"),
+      x1 = as.Date("2021-08-17"),
+      yref = "paper",
+      y0 = 0,
+      y1 = 1,
+      line = list(width = 0)
+    )
   ),
   "4a" = list(
     list(
