@@ -151,7 +151,7 @@ shapes <- list(
       y0 = 0,
       y1 = 1,
       line = list(width = 0)
-    )
+    ),
     list(
       type = "rect",
       layer = "below",
