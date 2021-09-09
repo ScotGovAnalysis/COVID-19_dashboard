@@ -634,8 +634,16 @@ library('stringr')
             marker = list(size = 7),
             text = ~ text,
             connectgaps = TRUE) %>%
+ add_trace(data = filter(datasets[["3.1_schools"]],
+                          date >= as.Date("2021-04-12"),
+                          date <= as.Date("2021-06-25")),
+            type = "scatter",
+            mode = "markers+lines",
+            marker = list(size = 7),
+            text = ~ text,
+            connectgaps = TRUE) %>%
   add_trace(data = filter(datasets[["3.1_schools"]],
-                          date >= as.Date("2021-04-12")),
+                          date >= as.Date("2021-08-18")),
             type = "scatter",
             mode = "markers+lines",
             marker = list(size = 7),
