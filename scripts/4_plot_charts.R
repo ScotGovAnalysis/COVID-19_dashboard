@@ -611,21 +611,21 @@ library('stringr')
 #          colorway = c("#66CBFF", "#0065bd"))
 
 #--------------Line graph from 19 April------------ 
- plots[["3.1_schools"]] <- plot_ly(
-   data = datasets[["3.1_schools"]],
-   x = ~ date,
-   y = ~ count,
-   name = ~ Measure,
-   hoverinfo = ~ "text"
- ) %>%
-   add_style_chart() %>%
-   add_trace(data = filter(datasets[["3.1_schools"]],
-                           date <= as.Date("2020-12-23")),
-             type = "scatter",
-             mode = "markers+lines",
-             marker = list(size = 7),
-             text = ~ text,
-             connectgaps = TRUE) %>%
+plots[["3.1_schools"]] <- plot_ly(
+  data = datasets[["3.1_schools"]],
+  x = ~ date,
+  y = ~ count,
+  name = ~ Measure,
+  hoverinfo = ~ "text"
+) %>%
+  add_style_chart() %>%
+  add_trace(data = filter(datasets[["3.1_schools"]],
+                          date <= as.Date("2020-12-23")),
+            type = "scatter",
+            mode = "markers+lines",
+            marker = list(size = 7),
+            text = ~ text,
+            connectgaps = TRUE) %>%
   add_trace(data = filter(datasets[["3.1_schools"]],
                           date >= as.Date("2021-03-15"),
                           date <= as.Date("2021-04-11")),
@@ -634,7 +634,7 @@ library('stringr')
             marker = list(size = 7),
             text = ~ text,
             connectgaps = TRUE) %>%
- add_trace(data = filter(datasets[["3.1_schools"]],
+  add_trace(data = filter(datasets[["3.1_schools"]],
                           date >= as.Date("2021-04-12"),
                           date <= as.Date("2021-06-25")),
             type = "scatter",
@@ -643,22 +643,30 @@ library('stringr')
             text = ~ text,
             connectgaps = TRUE) %>%
   add_trace(data = filter(datasets[["3.1_schools"]],
-                          date >= as.Date("2021-08-18")),
+                          date >= as.Date("2021-08-18"),
+                          date <= as.Date("2021-12-17")),
             type = "scatter",
             mode = "markers+lines",
             marker = list(size = 7),
             text = ~ text,
             connectgaps = TRUE) %>%
-   layout(
-     showlegend = FALSE,
-     yaxis = list(tickformat = "%"),
-     colorway = c("#0065bd", "#66CBFF", "#8E979C"),
-     shapes = shapes[["3_school"]],
-     annotations = filter(annotations,
-                          plot == "3_school",
-                          dataset == "3_school") %>%
-       pmap(list)
-   )
+  add_trace(data = filter(datasets[["3.1_schools"]],
+                          date >= as.Date("2022-01-05")),
+            type = "scatter",
+            mode = "markers+lines",
+            marker = list(size = 7),
+            text = ~ text,
+            connectgaps = TRUE) %>%
+  layout(
+    showlegend = FALSE,
+    yaxis = list(tickformat = "%"),
+    colorway = c("#0065bd", "#66CBFF", "#8E979C"),
+    shapes = shapes[["3_school"]],
+    annotations = filter(annotations,
+                         plot == "3_school",
+                         dataset == "3_school") %>%
+      pmap(list)
+  )
 
 ## Crisis applications --------------------------------------------------------
 plots[["3.2_crisis"]] <- plot_ly(
@@ -667,12 +675,17 @@ plots[["3.2_crisis"]] <- plot_ly(
   hoverinfo = ~ "text"
 ) %>%
   add_trace(data = datasets[["3.2_crisis"]] %>%
-              group_by(year = year(month_ending_date)) %>%
-              filter(year%in% c(2018,2019)),
+              filter(year(month_ending_date) == 2018),
             type = "scatter",
             mode = "lines",
             text = ~ text,
-            name = "2018-19") %>%
+            name = "2018") %>%
+  add_trace(data = datasets[["3.2_crisis"]] %>%
+              filter(year(month_ending_date) == 2019),
+            type = "scatter",
+            mode = "lines",
+            text = ~ text,
+            name = "2019") %>%
   add_trace(data = datasets[["3.2_crisis"]] %>%
               filter(year(month_ending_date) == 2020),
             type = "scatter",
@@ -694,8 +707,9 @@ plots[["3.2_crisis"]] <- plot_ly(
     showlegend = TRUE,
     legend = list(font=list(size=10),
                   x = 0.8, y = 0.1),
-    colorway = c(col_palette)
+    colorway = c("#8e979c", "#333e48", "#0065bd", "#E5F0F8")
   )
+
 
 ## Crime ----------------------------------------------------------------------
 # plots[["3.3_crime"]] <- plot_ly(
